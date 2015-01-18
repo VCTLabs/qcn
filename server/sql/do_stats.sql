@@ -43,7 +43,7 @@ BEGIN
          WHERE f.resultid IS NULL and t.runtime_clock>0
                    GROUP BY r.id);
 
-    /* archived triggers */
+    /* archived triggers 
     INSERT INTO qcn_recalcresult
       (SELECT r.id resultid,                              
        exp(-(abs(unix_timestamp()-max(t.time_received))*0.69314718/604800.0)) weight,
@@ -55,7 +55,7 @@ BEGIN
            JOIN sensor_archive.qcn_trigger t ON r.name=t.result_name
          WHERE f.resultid IS NULL AND q.result_name IS NULL AND t.runtime_clock>0
                    GROUP BY r.id);
-
+     */
 
     TRUNCATE TABLE qcn_stats;
     INSERT INTO qcn_stats 
