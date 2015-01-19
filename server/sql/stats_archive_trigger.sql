@@ -16,6 +16,6 @@ SELECT r.id resultid,       exp(-(abs(unix_timestamp()-max(t.time_received))*0.6
            JOIN continual_archive.qcn_trigger t ON r.name=t.result_name
          WHERE f.resultid IS NULL AND q.result_name IS NULL AND t.runtime_clock>0
                    GROUP BY r.id
-INTO OUTFILE 'sensor_archive_stats_dump.sql'
+INTO OUTFILE 'continualr_archive_stats_dump.sql'
 
 
