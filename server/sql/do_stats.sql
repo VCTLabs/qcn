@@ -43,6 +43,8 @@ BEGIN
          WHERE f.resultid IS NULL and t.runtime_clock>0
                    GROUP BY r.id);
 
+    INSERT INTO qcn_recalcresult
+      SELECT * FROM qcn_recalcresult_archive;
     /* archived triggers 
     INSERT INTO qcn_recalcresult
       (SELECT r.id resultid,                              
