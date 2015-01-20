@@ -225,9 +225,8 @@
       </cmd>
     </daemon>
     <daemon>
-      <disabled>1</disabled>
       <cmd>
-        QCNTrigMonitor -d 2 -sleep_interval 1 -time_interval 120 -delete_interval 200
+        QCNTrigMonitor -d 2 -sleep_interval 3 -time_interval 120 -delete_interval 200
       </cmd>
     </daemon>
     <daemon>

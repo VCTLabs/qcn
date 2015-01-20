@@ -173,11 +173,8 @@
         do_stats.py
       </cmd>
       <period>
-        2 days
+        7 days
       </period>
-      <disabled>
-        0
-      </disabled>
       <output>
         do_stats.out
       </output>
