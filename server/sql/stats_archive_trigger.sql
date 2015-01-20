@@ -5,6 +5,7 @@
     TRUNCATE TABLE qcn_recalcresult;
     CREATE TABLE qcn_recalcresult_archive SELECT * FROM qcn_recalcresult;
  */
+   LOCK TABLES qcn_recalcresult_archive, result READ, qcn_finalstats READ, qcn_trigger READ, sensor_archive.qcn_trigger READ;
    TRUNCATE TABLE qcn_recalcresult_archive;
    INSERT INTO qcn_recalcresult_archive
       (SELECT r.id resultid,
@@ -17,8 +18,10 @@
            JOIN sensor_archive.qcn_trigger t ON r.name=t.result_name
          WHERE f.resultid IS NULL AND q.result_name IS NULL AND t.runtime_clock>0
                    GROUP BY r.id);
+   UNLOCK TABLES;
 
-    USE continual;
+   USE continual;
+   LOCK TABLES qcn_recalcresult_archive, result READ, qcn_finalstats READ, qcn_trigger READ, continual_archive.qcn_trigger READ;
     TRUNCATE TABLE qcn_recalcresult_archive;
     INSERT INTO qcn_recalcresult_archive
       (SELECT r.id resultid,
@@ -31,5 +34,6 @@
            JOIN continual_archive.qcn_trigger t ON r.name=t.result_name
          WHERE f.resultid IS NULL AND q.result_name IS NULL AND t.runtime_clock>0
                    GROUP BY r.id);
+   UNLOCK TABLES;
 
 
