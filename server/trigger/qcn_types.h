@@ -29,7 +29,9 @@ using namespace std;
 #include "filesys.h"
 
 extern DB_CONN boinc_db;
-extern DB_CONN trigmem_db;
+#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
+  extern DB_CONN trigmem_db;
+#endif
 
 #define ESCAPE(x) escape_string(x, sizeof(x))
 #define UNESCAPE(x) unescape_string(x, sizeof(x))
@@ -108,6 +110,7 @@ struct QCN_TRIGGER
     void clear() {memset(this, 0x00, sizeof(QCN_TRIGGER)); varietyid = -1; }
 };
 
+#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
 struct QCN_TRIGGER_MEMORY
 {
     char db_name[16];
@@ -156,6 +159,7 @@ struct QCN_TRIGGER_MEMORY
        mz4a = 0;
      }
 };
+#endif
 
 struct QCN_QUAKE
 {
@@ -412,6 +416,7 @@ public:
     }
 };
 
+#ifdef QCN_TRIGGER_MEMORY_TABLE
 class DB_QCN_TRIGGER_MEMORY : public DB_BASE, public QCN_TRIGGER_MEMORY
 {
 public:
@@ -530,6 +535,7 @@ public:
       posted = (bool) safe_atoi(r[i++]);
     }
 };
+#endif
 
 class DB_QCN_QUAKE: public DB_BASE, public QCN_QUAKE
 {

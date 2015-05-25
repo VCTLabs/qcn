@@ -54,7 +54,9 @@ using namespace std;
 #endif
 
 extern DB_CONN boinc_db;
-extern DB_CONN trigmem_db;
+#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
+  extern DB_CONN trigmem_db;
+#endif
 
 extern int qcn_doTriggerHostLookup(
    DB_QCN_HOST_IPADDR& qhip,
