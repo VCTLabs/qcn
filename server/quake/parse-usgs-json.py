@@ -30,7 +30,12 @@ FILE_QCN_WORLD85_CSV  = "/var/www/boinc/sensor/qcn-quake-world85.csv"
 DBNAME = "sensor"
 DBHOST = "db-private"
 DBUSER = "qcn"
-DBPASSWD = "pwd"
+DBPASSWD = ""
+
+DBNAME_TRIGMEM = "trigmem"
+DBHOST_TRIGMEM = "localhost"
+DBUSER_TRIGMEM = "trigmem"
+DBPASSWD_TRIGMEM = ""
 
 TIME_PATTERN = '%Y/%m/%d %H:%M:%S'
 
@@ -130,6 +135,20 @@ def printLevel(outFile, level):
         outFile.write('    ')
 
 def run(inFileName):                                            # [5]
+   # flush the memory tables periodically
+   try:
+      dbconn = MySQLdb.connect (host = DBHOST_TRIGMEM,
+                           user = DBUSER_TRIGMEM,
+                           passwd = DBPASSWD_TRIGMEM,
+                           db = DBNAME_TRIGMEM)
+   except:
+       print "Database error!"
+       sys.exit(1)
+
+   cursor = dbconn.cursor()
+   cursor.execute("DELETE FROM qcn_trigger_memory ")
+   cursor.close()
+   dbconn.close()
 
    try:
       dbconn = MySQLdb.connect (host = DBHOST,
