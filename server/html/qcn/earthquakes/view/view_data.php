@@ -26,7 +26,7 @@ if (preg_match("/conti/i","substr($file,0,4)")) {
 $file_orig = $url.$file;
 //echo $file_orig;
 if (!file_exists($file_orig)) {
-   echo "Waveform Not Found. Try again later.";
+   echo "Waveform Not Found. Try again later.<BR><BR>" . $file_orig;
    return;
 }
 

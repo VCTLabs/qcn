@@ -10,7 +10,7 @@
     <cgi_url>http://qcn.stanford.edu/sensor_cgi/</cgi_url>
     <msg_to_host/>
     <sched_debug_level>
-      2
+      1
     </sched_debug_level>
     <send_result_abort/>
     <uldl_dir_fanout>
@@ -186,6 +186,14 @@
       </period>
     </task>
     <task>
+      <cmd>
+        zap-trigmem.py
+      </cmd>
+      <period>
+        5 minutes
+      </period>
+    </task>
+    <task>
       <output>
         get_quakes.out
       </output>
@@ -225,6 +233,7 @@
       </cmd>
     </daemon>
     <daemon>
+      <disabled>1</disabled>
       <cmd>
         QCNTrigMonitor -d 2 -sleep_interval 3 -time_interval 120 -delete_interval 200
       </cmd>
