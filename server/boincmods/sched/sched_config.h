@@ -48,11 +48,13 @@ struct SCHED_CONFIG {
     char db_passwd[256];
     char db_host[256];
 // CMC start - trigmem db fields
+#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
     char trigmem_db_name[256];
     char trigmem_db_user[256];
     char trigmem_db_passwd[256];
     char trigmem_db_host[256];
     int  trigmem_db_port;
+#endif
 // CMC end
     char replica_db_name[256];
     char replica_db_user[256];
