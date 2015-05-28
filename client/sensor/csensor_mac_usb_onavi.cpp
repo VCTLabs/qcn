@@ -204,9 +204,9 @@ Values >32768 are positive g and <32768 are negative g. The sampling rate is set
                                            }
                                         }
 
-					x = (bytesIn[2] * 255) + bytesIn[3];
-					y = (bytesIn[4] * 255) + bytesIn[5];
-					z = (bytesIn[6] * 255) + bytesIn[7];
+					x = (bytesIn[2] * 256) + bytesIn[3];
+					y = (bytesIn[4] * 256) + bytesIn[5];
+					z = (bytesIn[6] * 256) + bytesIn[7];
 					cs   = bytesIn[8];
 					for (int i = 2; i <= 7; i++) iCS += bytesIn[i];
 
@@ -259,9 +259,9 @@ Values >32768 are positive g and <32768 are negative g. The sampling rate is set
  		}
 		if (lOffset[0] && lOffset[1] && lOffset[1] == (lOffset[0] + 8)) { 
 			// we found both, the bytes in between are what we want (really bytes after lOffset[0]
-			x = (bytesIn[lOffset[0]] * 255) + bytesIn[lOffset[0]+1];
-			y = (bytesIn[lOffset[0]+2] * 255) + bytesIn[lOffset[0]+3];
-			z = (bytesIn[lOffset[0]+4] * 255) + bytesIn[lOffset[0]+5];
+			x = (bytesIn[lOffset[0]] * 256) + bytesIn[lOffset[0]+1];
+			y = (bytesIn[lOffset[0]+2] * 256) + bytesIn[lOffset[0]+3];
+			z = (bytesIn[lOffset[0]+4] * 256) + bytesIn[lOffset[0]+5];
 			cs   = bytesIn[lOffset[0]+6];
 			for (int i = 0; i <= 5; i++) iCS += bytesIn[lOffset[0] + i];
 

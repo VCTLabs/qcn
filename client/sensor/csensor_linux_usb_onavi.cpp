@@ -200,9 +200,11 @@ Values >32768 are positive g and <32768 are negative g. The sampling rate is set
                        m_usBitSensor = 24; break;
                     }
                   }
-          	x = (bytesIn[2] * 255) + bytesIn[3];
-	        y = (bytesIn[4] * 255) + bytesIn[5];
-	        z = (bytesIn[6] * 255) + bytesIn[7];
+
+                  // scale appropriately
+          	x = (bytesIn[2] * 256) + bytesIn[3];
+	        y = (bytesIn[4] * 256) + bytesIn[5];
+	        z = (bytesIn[6] * 256) + bytesIn[7];
 	        cs   = bytesIn[8];
 /*
 	        for (int i = 2; i <= 7; i++) iCS += bytesIn[i];
