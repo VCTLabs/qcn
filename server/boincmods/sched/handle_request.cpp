@@ -68,6 +68,7 @@
 #include "../../qcn/server/trigger/qcn_trigger.h"
 // CMC end section
 
+
 // find the user's most recently-created host with given various characteristics
 //
 static bool find_host_by_other(DB_USER& user, HOST req_host, DB_HOST& host) {
@@ -503,11 +504,16 @@ static int modify_host_struct(HOST& host) {
     host.timezone = g_request->host.timezone;
     strncpy(host.domain_name, g_request->host.domain_name, sizeof(host.domain_name));
     char buf[1024], buf2[1024];
-    sprintf(buf, "[BOINC|%d.%d.%d]",
+    sprintf(buf, "[BOINC|%d.%d.%d",
         g_request->core_client_major_version,
         g_request->core_client_minor_version,
         g_request->core_client_release
     );
+    if (strlen(g_request->client_brand)) {
+        strcat(buf, "|");
+        strcat(buf, g_request->client_brand);
+    }
+    strcat(buf, "]");
     g_request->coprocs.summary_string(buf2, sizeof(buf2));
     strlcpy(host.serialnum, buf, sizeof(host.serialnum));
     strlcat(host.serialnum, buf2, sizeof(host.serialnum));
@@ -831,51 +837,88 @@ int handle_global_prefs() {
 
 // if the client has an old code sign public key,
 // send it the new one, with a signature based on the old one.
-// If they don't have a code sign key, send them one
+// If they don't have a code sign key, send them one.
+// Return false if they have a key we don't recognize
+// (in which case we won't send them work).
 //
 bool send_code_sign_key(char* code_sign_key) {
     char* oldkey, *signature;
     int i, retval;
     char path[MAXPATHLEN];
 
-    if (strlen(g_request->code_sign_key)) {
-        if (strcmp(g_request->code_sign_key, code_sign_key)) {
-            log_messages.printf(MSG_NORMAL, "received old code sign key\n");
+    if (!strlen(g_request->code_sign_key)) {
+        safe_strcpy(g_reply->code_sign_key, code_sign_key);
+        return true;
+    }
+    if (!strcmp(g_request->code_sign_key, code_sign_key)) {
+        return true;
+    }
 
-            // look for a signature file
+    log_messages.printf(MSG_NORMAL, "received old code sign key\n");
+
+    // look for a signature file for the client's key.
+    // These are in pairs of files (N = 0, 1, ...)
+    // old_key_N: contains an old key
+    // signature_N: contains a signature for new key,
+    // based on the old key
+    // signature_stripped_N: signature for new key w/ trailing \n removed
+    // (needed for 7.0+ clients, which strip trailing whitespace)
+    //
+    // A project can have several of these if it wants,
+    // e.g. if it changes keys a lot.
+    //
+    for (i=0; ; i++) {
+        sprintf(path, "%s/old_key_%d", config.key_dir, i);
+        retval = read_file_malloc(path, oldkey);
+        if (retval) {
+            // we've scanned all the signature files and
+            // didn't find one that worked.
+            // User must reattach.
             //
-            for (i=0; ; i++) {
-                sprintf(path, "%s/old_key_%d", config.key_dir, i);
-                retval = read_file_malloc(path, oldkey);
-                if (retval) {
-                    g_reply->insert_message(
-                       _("Invalid code signing key.  To fix, remove and add this project."),
-                       "notice"
-                    );
-                    return false;
-                }
-                if (!strcmp(oldkey, g_request->code_sign_key)) {
-                    sprintf(path, "%s/signature_%d", config.key_dir, i);
-                    retval = read_file_malloc(path, signature);
-                    if (retval) {
-                        g_reply->insert_message(
-                           _("The project has changed its security key.  Please remove and add this project."),
-                           "notice"
-                        );
-                    } else {
-                        safe_strcpy(g_reply->code_sign_key, code_sign_key);
-                        safe_strcpy(g_reply->code_sign_key_signature, signature);
-                        free(signature);
-                    }
-                }
+            log_messages.printf(MSG_CRITICAL,
+                "scanned old_key_i files, can find client's key\n"
+            );
+            break;
+        }
+        strip_whitespace(oldkey);
+        if (!strcmp(oldkey, g_request->code_sign_key)) {
+            // We've found the client's key.
+            // Get the signature for the new key.
+            //
+            if (g_request->core_client_major_version < 7) {
+                sprintf(path, "%s/signature_%d", config.key_dir, i);
+            } else {
+                sprintf(path, "%s/signature_stripped_%d", config.key_dir, i);
+            }
+            retval = read_file_malloc(path, signature);
+            if (retval) {
+                // project is missing the signature file.
+                // Tell the user to reattach.
+                //
+                log_messages.printf(MSG_CRITICAL,
+                    "Missing signature file for old key %d\n", i
+                );
                 free(oldkey);
-                return false;
+                break;
+            } else {
+                log_messages.printf(MSG_NORMAL,
+                    "sending new code sign key and signature\n"
+                );
+                safe_strcpy(g_reply->code_sign_key, code_sign_key);
+                safe_strcpy(g_reply->code_sign_key_signature, signature);
+                free(signature);
+                free(oldkey);
+                return true;
             }
         }
-    } else {
-        safe_strcpy(g_reply->code_sign_key, code_sign_key);
+        free(oldkey);
     }
-    return true;
+
+    g_reply->insert_message(
+       _("The project has changed its security key.  Please remove and add this project."),
+       "notice"
+    );
+    return false;
 }
 
 // If <min_core_client_version_announced> is set,
@@ -890,7 +933,7 @@ void warn_user_if_core_client_upgrade_scheduled() {
         int remaining = config.min_core_client_upgrade_deadline-time(0);
         remaining /= 3600;
 
-        if (0 < remaining) {
+        if (remaining > 0) {
 
             char msg[512];
             int days  = remaining / 24;
@@ -1006,11 +1049,11 @@ inline static const char* get_remote_addr() {
 }
 
 void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
+//void andle_msgs_from_host() {
     unsigned int i;
     DB_MSG_FROM_HOST mfh;
     int retval;
 
-    // CMC here -- may want to limit max # of triggers?
     for (i=0; i<g_request->msgs_from_host.size(); i++) {
         g_reply->send_msg_ack = true;
         MSG_FROM_HOST_DESC& md = g_request->msgs_from_host[i];
@@ -1024,9 +1067,7 @@ void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
             "got msg from host; variety %s \n",
             mfh.variety
         );
-       log_messages.printf(MSG_DEBUG,
-            "   xml = %s", mfh.xml);
-
+  
    // CMC here -- begin handle triggers via handle_qcn_trigger
        // retval = mfh.insert();
         retval = 0;
@@ -1050,7 +1091,6 @@ void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
         }
 //        retval = mfh.insert();
 // CMC here - end block for mfh insert
-
         if (retval) {
             log_messages.printf(MSG_CRITICAL,
                 "[HOST#%d] message insert failed: %s\n",
@@ -1115,11 +1155,13 @@ bool bad_install_type() {
 }
 
 static inline bool requesting_work() {
+    if (g_request->dont_send_work) return false;
     if (g_request->work_req_seconds > 0) return true;
     if (g_request->cpu_req_secs > 0) return true;
-    if (g_request->coprocs.nvidia.count && g_request->coprocs.nvidia.req_secs) return true;
-    if (g_request->coprocs.ati.count && g_request->coprocs.ati.req_secs) return true;
-    if (g_request->coprocs.intel_gpu.count && g_request->coprocs.intel_gpu.req_secs) return true;
+    for (int i=1; i<NPROC_TYPES; i++) {
+        COPROC* cp = g_request->coprocs.proc_type_to_coproc(i);
+        if (cp && cp->count && cp->req_secs) return true;
+    }
     if (ssp->have_nci_app) return true;
     return false;
 }
@@ -1131,6 +1173,7 @@ void process_request(
 //    SCHEDULER_REQUEST& sreq, SCHEDULER_REPLY& reply, char* code_sign_key, bool bTrigger
 // void process_request(char* code_sign_key) {
 // CMC end new declaration of process_request
+
     PLATFORM* platform;
     int retval;
     double last_rpc_time, x;
@@ -1165,6 +1208,7 @@ void process_request(
 
     warn_user_if_core_client_upgrade_scheduled();
 
+    g_wreq->no_jobs_available = false;
     if (requesting_work()) {
         if (config.locality_scheduling || config.locality_scheduler_fraction || config.enable_assignment) {
             have_no_work = false;
@@ -1208,7 +1252,7 @@ void process_request(
 
     retval = open_database();
     if (retval) {
-        send_error_message("Server can't open database", 3600);
+        send_error_message("Server can't open database", config.maintenance_delay);
         g_reply->project_is_down = true;
         goto leave;
     }
@@ -1225,6 +1269,17 @@ void process_request(
 
     log_request();
 
+#if 0
+    // if you need to debug a problem w/ a particular host or user,
+    // edit the following
+    //
+    if (g_reply->user.id == XX || g_reply.host.id == YY) {
+        config.sched_debug_level = 3;
+        config.debug_send = true;
+        ...
+    }
+#endif
+
     // is host blacklisted?
     //
     if (g_reply->host._max_results_day == -1) {
@@ -1236,8 +1291,8 @@ void process_request(
         int pid_with_lock = lock_sched();
         if (pid_with_lock > 0) {
             log_messages.printf(MSG_CRITICAL,
-                "Another scheduler instance [PID=%d] is running for this host\n",
-                pid_with_lock
+                "Another scheduler instance [PID=%d] is running for [HOST#%d]\n",
+                pid_with_lock, g_reply->host.id
             );
         } else if (pid_with_lock) {
             log_messages.printf(MSG_CRITICAL,
@@ -1333,6 +1388,11 @@ void process_request(
             && !g_request->results_truncated
         ) {
             if (resend_lost_work()) {
+                if (config.debug_send) {
+                    log_messages.printf(MSG_NORMAL,
+                        "[send] Resent lost jobs, don't send more\n"
+                    );
+                }
                 ok_to_send_work = false;
             }
         }
@@ -1383,7 +1443,6 @@ void process_request(
             g_reply->insert_message("Project has no tasks available", "low");
         }
     }
-
 
     handle_msgs_from_host(qhip); // CMC mod line
     if (config.msg_to_host) {

@@ -4,7 +4,6 @@
 include $(top_srcdir)/Makefile.incl
 
 AM_CPPFLAGS += $(MYSQL_CFLAGS) $(PTHREAD_CFLAGS)
-
 # CMC need libcurl for GeoIP lookup etc
 AM_LDFLAGS += -static -lcurl
 
@@ -14,6 +13,7 @@ libsched_sources = \
     credit.cpp \
     sched_shmem.cpp \
     sched_util.cpp \
+    sched_util_basic.cpp \
     sched_config.cpp \
     sched_limit.cpp \
     sched_msgs.cpp \
@@ -98,25 +98,28 @@ schedbin_PROGRAMS = \
     delete_file \
     get_file \
     make_work \
-    sched_driver \
     put_file \
+    sched_driver \
     show_shmem \
     wu_check
 
 schedshare_PROGRAMS = \
+    antique_file_deleter \
     census \
     credit_test \
     db_dump \
     db_purge \
     feeder \
     file_deleter \
-    antique_file_deleter \
     message_handler \
     sample_assimilator \
-    sample_dummy_assimilator \
     sample_bitwise_validator \
+    sample_dummy_assimilator \
+    sample_substr_validator \
     sample_trivial_validator \
     sample_work_generator \
+	script_assimilator \
+	script_validator \
     single_job_assimilator \
     size_regulator \
     transitioner \
@@ -143,6 +146,7 @@ noinst_HEADERS = \
     plan_class_spec.h \
     sched_main.h \
     sched_locality.h \
+    sched_nci.h \
     sched_score.h \
     sched_send.h \
     sched_shmem.h \
@@ -152,7 +156,6 @@ noinst_HEADERS = \
 EXTRA_DIST = \
     start
 
-# CMC note we have added the qcn_trigger file below
 cgi_sources = \
     ../../qcn/server/trigger/qcn_trigger.cpp \
 	credit.cpp \
@@ -170,6 +173,7 @@ cgi_sources = \
     sched_limit.cpp \
     sched_locality.cpp \
     sched_main.cpp \
+    sched_nci.cpp \
     sched_resend.cpp \
     sched_result.cpp \
     sched_score.cpp \
@@ -222,6 +226,10 @@ sample_bitwise_validator_SOURCES = $(VALIDATOR_SOURCES) \
 	sample_bitwise_validator.cpp 
 sample_bitwise_validator_LDADD = $(SERVERLIBS)
 
+sample_substr_validator_SOURCES = $(VALIDATOR_SOURCES) \
+	sample_substr_validator.cpp
+sample_substr_validator_LDADD = $(SERVERLIBS)
+
 sample_trivial_validator_SOURCES = $(VALIDATOR_SOURCES) \
 	sample_trivial_validator.cpp
 sample_trivial_validator_LDADD = $(SERVERLIBS)
@@ -245,6 +253,14 @@ single_job_assimilator_LDADD = $(SERVERLIBS)
 sample_work_generator_SOURCES = sample_work_generator.cpp
 sample_work_generator_LDADD = $(SERVERLIBS)
 
+script_assimilator_SOURCES = $(ASSIMILATOR_SOURCES) \
+	script_assimilator.cpp
+script_assimilator_LDADD = $(SERVERLIBS)
+
+script_validator_SOURCES = $(VALIDATOR_SOURCES) \
+	script_validator.cpp
+script_validator_LDADD = $(SERVERLIBS)
+
 db_dump_SOURCES = db_dump.cpp
 db_dump_LDADD = $(SERVERLIBS)
 
@@ -263,8 +279,8 @@ trickle_echo_LDADD = $(SERVERLIBS)
 update_stats_SOURCES = update_stats.cpp
 update_stats_LDADD = $(SERVERLIBS)
 
-file_upload_handler_SOURCES = file_upload_handler.cpp
-file_upload_handler_LDADD = $(SERVERLIBS)
+file_upload_handler_SOURCES = file_upload_handler.cpp sched_msgs.cpp sched_config.cpp sched_util_basic.cpp sched_limit.cpp
+file_upload_handler_LDADD = $(FUHLIBS)
 
 make_work_SOURCES = make_work.cpp
 make_work_LDADD = $(SERVERLIBS)
@@ -293,23 +309,6 @@ adjust_user_priority_LDADD = $(SERVERLIBS)
 sched_driver_SOURCES = sched_driver.cpp
 sched_driver_LDADD = $(SERVERLIBS)
 
-if ENABLE_FCGI
-
-schedcgi_PROGRAMS += fcgi fcgi_file_upload_handler
-
-fcgi_SOURCES = $(cgi_sources)
-fcgi_CPPFLAGS = -D_USING_FCGI_ $(AM_CPPFLAGS)
-fcgi_LDADD = $(SERVERLIBS_FCGI)
-
-fcgi_file_upload_handler_SOURCES = \
-    file_upload_handler.cpp \
-    sched_config.cpp \
-    sched_msgs.cpp 
-fcgi_file_upload_handler_CPPFLAGS = -D_USING_FCGI_ $(AM_CPPFLAGS)
-fcgi_file_upload_handler_LDADD = $(SERVERLIBS_FCGI)
-
-endif
-# end of "if ENABLE_FCGI"
 endif 
 # end of "if ENABLE_SERVER"
 

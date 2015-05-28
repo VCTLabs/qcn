@@ -84,6 +84,7 @@ bool all_apps_use_hr;
 #endif
 // end CMC
 
+
 static void usage(char* p) {
     fprintf(stderr,
         "Usage: %s [OPTION]...\n\n"
@@ -332,7 +333,7 @@ void attach_to_feeder_shmem() {
             getuid(), geteuid(), getgid(), getegid()
         );
         send_message(
-            "Server error: feeder not running", 3600
+            "Server error: feeder not running", config.maintenance_delay
         );
         exit(0);
     } else {
@@ -342,7 +343,7 @@ void attach_to_feeder_shmem() {
             log_messages.printf(MSG_CRITICAL,
                 "shmem has wrong struct sizes - recompile\n"
             );
-            send_message("Server error: recompile needed", 3600);
+            send_message("Server error: recompile needed", config.maintenance_delay);
             exit(0);
         }
 
@@ -358,7 +359,7 @@ void attach_to_feeder_shmem() {
                 "feeder doesn't seem to be running\n"
             );
             send_message(
-                "Server error: feeder not running", 3600
+                "Server error: feeder not running", config.maintenance_delay
             );
             exit(0);
         }
@@ -457,7 +458,7 @@ int main(int argc, char** argv) {
         if (!freopen(path, "a", stderr)) {
             fprintf(stderr, "Can't redirect stderr\n");
             sprintf(buf, "Server can't open log file (%s)", path);
-            send_message(buf, 3600);
+            send_message(buf, config.maintenance_delay);
             exit(1);
         }
 #else
@@ -468,7 +469,7 @@ int main(int argc, char** argv) {
             char buf[256];
             fprintf(stderr, "Can't redirect FCGI log messages\n");
             sprintf(buf, "Server can't open log file for FCGI (%s)", path);
-            send_message(buf, 3600);
+            send_message(buf, config.maintenance_delay);
             exit(1);
         }
 #endif
@@ -514,7 +515,7 @@ int main(int argc, char** argv) {
         log_messages.printf(MSG_CRITICAL,
             "Can't parse config.xml: %s\n", boincerror(retval)
         );
-        send_message("Server can't parse configuration file", 3600);
+        send_message("Server can't parse configuration file", config.maintenance_delay);
         exit(0);
     }
 
@@ -531,7 +532,7 @@ int main(int argc, char** argv) {
         log_messages.printf(MSG_CRITICAL,
             "Can't read code sign key file (%s)\n", path
         );
-        send_message("Server can't find key file", 3600);
+        send_message("Server can't find key file", config.maintenance_delay);
         exit(0);
     }
     strip_whitespace(code_sign_key);
@@ -549,7 +550,10 @@ int main(int argc, char** argv) {
     }
 
     if (!debug_log && check_stop_sched()) {
-        send_message("Project is temporarily shut down for maintenance", 3600);
+        send_message(
+            "Project is temporarily shut down for maintenance",
+            config.maintenance_delay
+        );
         goto done;
     }
 
@@ -557,7 +561,7 @@ int main(int argc, char** argv) {
         attach_to_feeder_shmem();
     }
     if (!ssp) {
-        send_message("Server error: can't attach shared memory", 3600);
+        send_message("Server error: can't attach shared memory", config.maintenance_delay);
         goto done;
     }
 
@@ -575,7 +579,7 @@ int main(int argc, char** argv) {
         sprintf(reply_path, "%s/%d_%u_sched_reply.xml", config.debug_req_reply_dir, g_pid, counter);
 
         // keep an own 'log' per PID in case general logging fails
-        // this allows to associate at leas the scheduler request with the client
+        // this allows to associate at least the scheduler request with the client
         // IP address (as shown in httpd error log) in case of a crash
         sprintf(log_path, "%s/%d_%u_sched.log", config.debug_req_reply_dir, g_pid, counter);
 #ifndef _USING_FCGI_
@@ -583,6 +587,12 @@ int main(int argc, char** argv) {
 #else
         fout = FCGI::fopen(log_path,"a");
 #endif
+        if (!fout) {
+            log_messages.printf(MSG_CRITICAL,
+                "can't write client log file %s\n", log_path
+            );
+            exit(1);
+        }
         fprintf(fout, "PID: %d Client IP: %s\n", g_pid, get_remote_addr());
         fclose(fout);
 
@@ -678,8 +688,8 @@ done:
             log_messages.printf(MSG_NORMAL,
                 "FCGI: counter: %d\n", counter
             );
-            log_messages.flush();
         }
+        log_messages.flush();
     }   // do()
     if (counter == MAX_FCGI_COUNT) {
         fprintf(stderr, "FCGI: counter passed MAX_FCGI_COUNT - exiting..\n");
@@ -714,8 +724,8 @@ void RSC_JOB_LIMIT::print_log(const char* rsc_name) {
 
 void JOB_LIMIT::print_log() {
     if (total.any_limit()) total.print_log("total");
-    if (cpu.any_limit()) cpu.print_log("CPU");
-    if (gpu.any_limit()) gpu.print_log("GPU");
+    if (proc_type_limits[0].any_limit()) proc_type_limits[0].print_log("CPU");
+    if (proc_type_limits[1].any_limit()) proc_type_limits[1].print_log("GPU");
 }
 
 void JOB_LIMITS::print_log() {
