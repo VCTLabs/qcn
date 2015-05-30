@@ -12,6 +12,7 @@
     <sched_debug_level>
       1
     </sched_debug_level>
+   <min_sendwork_interval>7200</min_sendwork_interval>
     <send_result_abort/>
     <uldl_dir_fanout>
       1024
@@ -183,14 +184,6 @@
       </cmd>
       <period>
         30 minutes
-      </period>
-    </task>
-    <task>
-      <cmd>
-        zap-trigmem.py
-      </cmd>
-      <period>
-        5 minutes
       </period>
     </task>
     <task>
