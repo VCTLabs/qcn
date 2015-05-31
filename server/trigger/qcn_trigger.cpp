@@ -573,7 +573,8 @@ int lookupGeoIPWebService(
                        memset(strURL, 0x00, sizeof(char) * BYTESIZE_URL);
                        memset(strReply, 0x00, sizeof(char) * BYTESIZE_CURL);
                        sprintf(strURL, FORMAT_MAXMIND, qtrig.ipaddr);
-                       if (strlen(qtrig.ipaddr) > 6 && strlen(qtrig.ipaddr) < 16 &&  execute_curl(strURL, strReply, 512))  {
+                       if (strlen(qtrig.ipaddr) > 6 && strlen(qtrig.ipaddr) < 16
+                         && execute_curl(strURL, strReply, BYTESIZE_CURL))  {
                           // returned OK, now check strReply -- should be a single line of comma-delimited fields:
                           // Returns: ISO 3166 Two-letter Country Code, Region Code, City, Latitude, Longitude, Error code
                           // good reply: (note 4 commas/5 fields)
@@ -761,6 +762,12 @@ int lookupGeoIPWebService(
 
 bool execute_curl(const char* strURL, char* strReply, const int iLen)
 {
+  memset(strReply, 0x00, iLen);
+#ifndef USE_MAXMIND
+  strncpy(strReply, "GB,K2,Oxford,51.750000,-1.25000", iLen-1);
+  return true;
+#endif
+
    // easycurl should be fine, just send a request to maxmind (strURL has the key & ip etc),
    // and output to strReply up to iLen size
    CURLcode cc;
