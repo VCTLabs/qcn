@@ -102,6 +102,7 @@
       </period>
     </task>
     <task>
+      <disabled>1</disabled>
       <output>
         weekly-host.out
       </output>
@@ -168,6 +169,7 @@
       </period>
     </task>
     <task>
+      <disabled>1</disabled>
       <cmd>
         trig24.sh
       </cmd>

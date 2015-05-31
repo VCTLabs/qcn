@@ -67,11 +67,13 @@ echo "
     <p><A HREF=maptrigtime.php>Click here for trigger maps for the past day / week / month</A>";
 
 // end map stuff
+/*
 echo "<BR><p><h2>".tra("Participants by Week")."</h2>";
 
 echo "
     <img src=\"img/weekly.png\" alt=\"Weekly QCN Participant Machines\">
     ";
+*/
 
 }
 
