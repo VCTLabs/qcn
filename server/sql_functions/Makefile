@@ -1,3 +1,12 @@
+## don't forget:
+## USE sensor;
+## DROP FUNCTION quake_hit_test;
+## DROP FUNCTION lat_lon_distance_m;
+##
+## CREATE FUNCTION lat_lon_distance_m RETURNS REAL SONAME "udf_qcn.so";
+## CREATE FUNCTION quake_hit_test RETURNS INTEGER SONAME "udf_qcn.so";
+##
+
 CC    = gcc
 CXX   = g++
 INCLUDEDIR  = -I/usr/local/mysql/include
@@ -7,7 +16,7 @@ ISMAC = $(shell uname -s)
 ifeq ($(ISMAC), Darwin)
   EXTRA = -dynamiclib
 else
-  EXTRA = -shared
+  EXTRA = -rdynamic -shared
 endif
 
 all:
