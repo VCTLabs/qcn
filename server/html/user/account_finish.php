@@ -20,11 +20,6 @@
 // They've already entered an email address and password.
 // Now get a name, country, and zip code
 
-
-// CMC add next 2 lines
-require_once("../project/project.inc");
-require_once("../inc/prefs.inc");
-
 require_once('../inc/boinc_db.inc');
 require_once('../inc/util.inc');
 require_once('../inc/countries.inc');
@@ -32,35 +27,32 @@ require_once('../inc/countries.inc');
 check_get_args(array("auth"));
 
 $auth = get_str("auth");
-$user = lookup_user_auth($auth);
+$user = BoincUser::lookup_auth($auth);
 if (!$user) {
     error_page("no such account");
 }
-// CMC here next 2 lines
-$psprefs = project_specific_prefs_parse($user->project_prefs);
-page_head(tra("Finish account setup"), true, $psprefs);
-//page_head(tra("Finish account setup"));
+page_head(tra("Finish account setup"));
 
 echo "
     <form action=account_finish_action.php method=post>
 ";
 start_table();
 row2(
-    tra("Name")."<br><span class=\"description\">".tra("Identifies you on our web site. Use your real name or a nickname.")."</span>",
+    tra("Name")."<br><p class=\"text-info\">".tra("Identifies you on our web site. Use your real name or a nickname.")."</p>",
     "<input name=\"name\" size=\"30\" value=\"$user->name\">"
 );
 row2_init(
-    tra("Country")."<br><span class=\"description\">".tra("Select the country you want to represent, if any.")."</span>",
+    tra("Country")."<br><p class=\"text-info\">".tra("Select the country you want to represent, if any.")."</p>",
     "<select name=\"country\">"
 );
 print_country_select();
 echo "</select></td></tr>\n";
 row2(
-    tra("Postal or ZIP Code")."<br><span class=\"description\">".tra("Optional")."</span>",
+    tra("Postal or ZIP Code")."<br><p class=\"text-info\">".tra("Optional")."</span>",
     "<input name=\"postal_code\" size=\"20\">"
 );
 row2("",
-    "<input type=\"submit\" value=\"OK\">"
+    "<input class=\"btn btn-primary\" type=\"submit\" value=\"OK\">"
 );
 end_table();
 echo "

@@ -1,5 +1,6 @@
 <?php
 
+error_reporting(0);
 
 // the below function is quite similar to the validate_form from edit_host_info_form.php, but conforms to PHP rather than javascript
 function validate_form_line($testlat, $testlng, $testip, $testlevel, &$errmsg)
@@ -151,12 +152,13 @@ for ($i = 0; $i < 5; $i++) {
   }
 }
 
+$errheader = "";
 page_head($errheader);
 
 // check the host map location info
 
-$iMapCount = $_POST["txthidMAPEXACT"];
-$bMapExact = $_POST["cbmapexact"];
+$iMapCount = isset($_POST["txthidMAPEXACT"]) ?  $_POST["txthidMAPEXACT"] : 0;
+$bMapExact = isset($_POST["cbmapexact"]) ? $_POST["cbmapexact"] : false;
 $txtMsg = "";
 
 
@@ -183,5 +185,4 @@ else {
       echo "<BR><BR>" . $txtMsg . "<BR>";
   }
   page_tail();
-
 ?>

@@ -1,11 +1,12 @@
 <?php
-
+error_reporting(0);
 ini_set('display_errors', 0);
 require_once("../project/project.inc");
 require_once("../inc/prefs.inc");
 require_once("../inc/db.inc");
 require_once("../inc/util.inc");
 require_once("../inc/utils.inc");
+require_once("../project/project_specific_prefs.inc");
 
 
 db_init();

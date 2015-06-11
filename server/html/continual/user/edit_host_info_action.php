@@ -1,5 +1,6 @@
 <?php
 
+error_reporting(0);
 
 // the below function is quite similar to the validate_form from edit_host_info_form.php, but conforms to PHP rather than javascript
 function validate_form_line($testlat, $testlng, $testip, $testlevel, &$errmsg)
@@ -183,5 +184,4 @@ else {
       echo "<BR><BR>" . $txtMsg . "<BR>";
   }
   page_tail();
-
 ?>
