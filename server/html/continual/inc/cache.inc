@@ -16,8 +16,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with BOINC.  If not, see <http://www.gnu.org/licenses/>.
 
-// mechanism for caching commonly-accessed pages
-
 require_once("../project/cache_parameters.inc");
 
 // If we can't see request headers, don't do caching
@@ -26,6 +24,8 @@ $no_cache = false;
 if (!function_exists("apache_request_headers")) {
     $no_cache = true;
 }
+
+// mechanism for caching commonly-accessed pages
 
 function make_cache_dirs() {
     if (!@filemtime("../cache")) {
@@ -105,15 +105,18 @@ function clean_cache($max_age, $dir) {
 } 
 
 
-// check cache size every once in a while, purge if too big
-//
+// check free disk space every once in a while
 function cache_check_diskspace(){
-    if ((rand() % CACHE_SIZE_CHECK_FREQ)) return;
-    if (disk_usage("../cache") < MAX_CACHE_USAGE) return;
-    $x = max(TEAM_PAGE_TTL, USER_PAGE_TTL, USER_HOST_TTL,
-        USER_PROFILE_TTL, TOP_PAGES_TTL, INDEX_PAGE_TTL
-    );
-    clean_cache($x, "../cache");
+    if (!(rand() % CACHE_SIZE_CHECK_FREQ)) {
+        set_time_limit(0);  // this may take a while
+        $max_age = 86400;
+        while ((disk_free_space("../cache") < MIN_FREE_SPACE) ||
+            (disk_usage("../cache") > MAX_CACHE_USAGE)
+        ) {
+            clean_cache($max_age, "../cache");
+            $max_age/=2;
+        }
+    }
 }
 
 function cache_need_to_regenerate($path, $max_age){
@@ -123,6 +126,22 @@ function cache_need_to_regenerate($path, $max_age){
     clearstatcache();
     $lastmodified = @filemtime($path);
     if ($lastmodified) {
+
+        // Check to see if this is a conditional fetch.
+        //
+        $if_modified_since = isset($request['If-Modified-Since']) ?
+            (explode(';',$request['If-Modified-Since'])) : false;
+
+        if ($if_modified_since) {
+            $if_modified_since=strtotime($if_modified_since[0]);
+        }
+
+        if ($if_modified_since && ($if_modified_since == $lastmodified)) {
+            Header("Last-Modified: " . gmdate("D, d M Y H:i:s",$lastmodified) . " GMT");
+            Header('HTTP/1.0 304 Not Modified');
+            exit;
+        }
+
         // See if cached copy is too old.
         // If so regenerate,
         // and touch the cached copy so other processes
@@ -138,13 +157,20 @@ function cache_need_to_regenerate($path, $max_age){
     return $regenerate;
 }
 
-// Returns cached data or false if nothing was found
-function get_cached_data($max_age, $params=""){
+// Returns cached data or false if nothing was found -- CMC note the addition of $mypath so I can 'hardcode' a cache file to use
+function get_cached_data($max_age, $params="", $mypath=""){
     global $no_cache;
 
     if ($no_cache) return;
 
-    $path = get_path($params);
+    if ($mypath) {
+       get_path($params); // note need this to create dirs
+       $path = $mypath;
+    }
+    else {
+       $path = get_path($params);
+    }
+
     if ($max_age) {
         if (defined('MEMCACHE_SERVERS')) {
             $cache = BoincMemcache::get()->get($path);
@@ -173,7 +199,6 @@ function start_cache($max_age, $params=""){
 
     if ($max_age) {
         $path = get_path($params);
-        $cache = null;
         if (defined('MEMCACHE_SERVERS')) {
             $cache = BoincMemcache::get()->get($path);
             if ($cache) {
@@ -211,7 +236,7 @@ function start_cache($max_age, $params=""){
             Header("Last-Modified: " . gmdate("D, d M Y H:i:s",$lastmodified) . " GMT");
             Header("Expires: " . gmdate("D, d M Y H:i:s",$lastmodified+$max_age) . " GMT");
             Header("Cache-Control: public, max-age=" . $max_age );
-            if ($cache && $cache->content) {
+            if ($cache->content) {
                 echo $cache->content;
                 exit;
             }
@@ -244,8 +269,8 @@ function end_cache($max_age,$params=""){
             ob_end_flush();
             $cache = BoincMemcache::get()->set($path, $cache, $max_age);
         } else {
-            $fhandle = fopen($path, "w");
-            $page = ob_get_contents();
+            $fhandle=fopen($path, "w");
+            $page=ob_get_contents();
             ob_end_flush();
             fwrite($fhandle, $page);
             fclose($fhandle);
@@ -253,24 +278,32 @@ function end_cache($max_age,$params=""){
     }
 }
 
-function set_cached_data($max_age, $data, $params=""){
+// CMC modded so we could save our own path
+function set_cache_data($data,$params="",$mypath=""){
+    set_cached_data(86400, $data, $params, $mypath);
+}
+
+// CMC mod
+function set_cached_data($max_age, $data, $params="", $mypath=""){
     // for the benefit of hackers
     if (strstr($params, "..")) {
-        return "bad params";
+        return;
     }
-    $path = get_path($params);
+    if ($mypath) {
+      get_path($params); // note need this to create dirs
+      $path = $mypath;
+    }
+    else {
+      $path = get_path($params);
+    }
     if (defined('MEMCACHE_SERVERS')) {
         $cache = array('content' => $data, 'timestamp' => time());
         BoincMemcache::get()->set($path, $cache, $max_age);
     } else {
-        $fhandle = @fopen($path, "w");
-        if (!$fhandle) {
-            return "can't open $path";
-        }
+        $fhandle = fopen($path, "w");
         fwrite($fhandle, $data);
         fclose($fhandle);
     }
-    return "";
 }
 
 function clear_cache_entry($phpfile, $params) {
@@ -281,7 +314,7 @@ function clear_cache_entry($phpfile, $params) {
         return;
     }
     $path = get_path($params, $phpfile);
-    @unlink($path);
+    unlink($path);
 }
 
 // Memcached class

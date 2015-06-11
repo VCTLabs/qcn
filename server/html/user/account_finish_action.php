@@ -26,7 +26,7 @@ $name = post_str("name");
 if (strlen($name)==0) {
     error_page(tra("You must supply a name for your account"));
 }
-if ($name != sanitize_tags($name)) {
+if ($new_name != sanitize_tags($new_name)) {
     error_page(tra("HTML tags not allowed in name"));
 }
 
@@ -53,11 +53,17 @@ if (!$retval) {
 // team may have already been joined in create_account RPC.
 // if so, skip team-finder
 //
+/*
 if ($user->teamid) {
     Header("Location: home.php");
 } else {
     Header("Location: team_search.php");
 }
+*/
+
+// CMC here
+Header("Location: edit_host_info_form.php");
 send_cookie('auth', $auth, true);
 send_cookie('init', "1", true);
+
 ?>

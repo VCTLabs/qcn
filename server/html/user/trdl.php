@@ -745,9 +745,6 @@ if ($start_at || $last < $count) {
 
 echo "<p>\n";
 
-$file_url = "";
-$ftmp = "";
-$fileTemp = "";
 
 if ($bUseCSV) {   
    // tmp file name tied to user ID & server time
@@ -1132,7 +1129,7 @@ global $unixtimeArchive;
        ($res->varietyid!=0 || $res->received_file == 100 || $res->trigger_timereq>0 || $res->trigger_time < $unixtimeArchive ? " disabled " : " " ) . 
        "></font size></td>
         <td><font size=\"1\"><input type=\"checkbox\" name=\"cb_" . $archpre . "_dlfile[]\" id=\"cb_" . $archpre . "_dlfile[]\" value=\"$res->triggerid\"" . 
-       (($res->received_file != 100 || $file_url == "N/A") ? " disabled " : ($bDownloadAll ? " checked " : " " )) . 
+       (($res->received_file != 100 || file_url == "N/A") ? " disabled " : ($bDownloadAll ? " checked " : " " )) . 
        "></font size></td>";
       }
     }

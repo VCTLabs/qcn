@@ -16,35 +16,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with BOINC.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once("../inc/db.inc");
+// Should not be enabled for public code
+//ini_set('display_errors', 'stdout');
+//error_reporting(E_ALL);
 
-// represents a connection to a database.
+/// represents a connection to a database.
 // Intended to be subclassed (e.g., BoincDb, BossaDb)
-//
+
 class DbConn {
     var $db_conn;
     var $db_name;
 
     function init_conn($user, $passwd, $host, $name) {
-        if (MYSQLI) {
-            $x = explode(":", $host);
-            if (sizeof($x)>1) {
-                $host = $x[0];
-                $port = $x[1];
-            } else {
-                $port = null;
-            }
-            //if (version_compare(PHP_VERSION, '5.3.0') < 0) {
-            if (1) {        // don't use persistent connections for now
-                $this->db_conn = new mysqli($host, $user, $passwd, $name, $port);
-            } else {
-                $this->db_conn = new mysqli("p:".$host, $user, $passwd, $name, $port);
-            }
-            global $mysqli;
-            $mysqli = $this->db_conn;
-        } else {
-            $this->db_conn = mysql_pconnect($host, $user, $passwd);
-        }
+        $this->db_conn = mysql_pconnect($host, $user, $passwd);
         if (!$this->db_conn) {
             return false;
         }
@@ -52,23 +36,12 @@ class DbConn {
         return true;
     }
 
-    // in keeping with PHP/MySQL convention, return true (nonzero) on success.
-    // (This is the opposite of the BOINC convention)
-    //
     function do_query($q) {
-        global $generating_xml;
-        $q = str_replace('DBNAME', $this->db_name, $q);
         //echo "query: $q<br>\n";
-        if (MYSQLI) {
-            $ret = $this->db_conn->query($q);
-        } else {
-            $ret = mysql_query($q, $this->db_conn);
-        }
+        $ret = mysql_query($q, $this->db_conn);
         if (!$ret) {
-            if (!$generating_xml) {
-                echo "Database Error<br>\n";
-            }
-            //echo ": ", $this->base_error(), "\n<pre>";
+            echo "Database Error<br>\n";
+            //echo ": ", mysql_error(), "\n<pre>";
             //var_dump(debug_backtrace());
             //echo "</pre>query: $q\n";
             return null;
@@ -76,38 +49,33 @@ class DbConn {
         return $ret;
     }
 
-    // # rows affected by last query
-    //
     function affected_rows() {
-        if (MYSQLI) {
-            $this->db_conn->affected_rows;
-        } else {
-            return mysql_affected_rows($this->db_conn);
-        }
+        return mysql_affected_rows($this->db_conn);
     }
 
     function lookup_fields($table, $classname, $fields, $clause) {
-        $query = "select $fields from DBNAME.$table where $clause";
+        $query = "select $fields from ".$this->db_name.".$table where $clause";
         $result = $this->do_query($query);
         if (!$result) {
             return null;
         }
-        if (MYSQLI) {
-            $obj = $result->fetch_object($classname);
-            $result->free();
-        } else {
-            $obj = mysql_fetch_object($result, $classname);
-            mysql_free_result($result);
-        }
+        $obj = mysql_fetch_object($result, $classname);
+        mysql_free_result($result);
         return $obj;
     }
 
     function lookup($table, $classname, $clause) {
-        return $this->lookup_fields($table, $classname, "*", $clause);
+        $query = "select * from ".$this->db_name.".$table where $clause";
+        $result = $this->do_query($query);
+        if (!$result) {
+            return null;
+        }
+        $obj = mysql_fetch_object($result, $classname);
+        mysql_free_result($result);
+        return $obj;
     }
 
     function lookup_id($id, $table, $classname) {
-        $id = (int)$id;
         return $this->lookup($table, $classname, "id=$id");
     }
 
@@ -115,17 +83,10 @@ class DbConn {
         $result = $this->do_query($query);
         if (!$result) return null;
         $x = array();
-        if (MYSQLI) {
-            while ($obj = $result->fetch_object($classname)) {
-                $x[] = $obj;
-            }
-            $result->free();
-        } else {
-            while ($obj = mysql_fetch_object($result, $classname)) {
-                $x[] = $obj;
-            }
-            mysql_free_result($result);
+        while ($obj = mysql_fetch_object($result, $classname)) {
+            $x[] = $obj;
         }
+        mysql_free_result($result);
         return $x;
     }
 
@@ -136,10 +97,16 @@ class DbConn {
         if ($where_clause) {
             $where_clause = "where $where_clause";
         }
-        $query = "select $fields from DBNAME.$table $where_clause $order_clause";
-        return $this->enum_general($classname,$query);
+        $query = "select $fields from ".$this->db_name.".$table $where_clause $order_clause";
+        $result = $this->do_query($query);
+        if (!$result) return null;
+        $x = array();
+        while ($obj = mysql_fetch_object($result, $classname)) {
+            $x[] = $obj;
+        }
+        mysql_free_result($result);
+        return $x;
     }
-
     function enum($table, $classname, $where_clause=null, $order_clause=null) {
         return self::enum_fields(
             $table, $classname, '*', $where_clause, $order_clause
@@ -147,105 +114,66 @@ class DbConn {
     }
 
     function update($obj, $table, $clause) {
-        $query = "update DBNAME.$table set $clause where id=$obj->id";
+        $query = "update ".$this->db_name.".$table set $clause where id=$obj->id";
         return $this->do_query($query);
     }
     function update_aux($table, $clause) {
-        $query = "update DBNAME.$table set $clause";
+        $query = "update ".$this->db_name.".$table set $clause";
         return $this->do_query($query);
     }
     function insert($table, $clause) {
-        $query = "insert into DBNAME.$table $clause";
+        $query = "insert into ".$this->db_name.".$table $clause";
         return $this->do_query($query);
     }
     function delete($obj, $table) {
-        $query = "delete from DBNAME.$table where id=$obj->id";
+        $query = "delete from ".$this->db_name.".$table where id=$obj->id";
         return $this->do_query($query);
     }
     function delete_aux($table, $clause) {
-        $query = "delete from DBNAME.$table where $clause";
+        $query = "delete from ".$this->db_name.".$table where $clause";
         return $this->do_query($query);
     }
     function insert_id() {
-        if (MYSQLI) {
-            return $this->db_conn->insert_id;
-        } else {
-            return mysql_insert_id($this->db_conn);
-        }
+        return mysql_insert_id($this->db_conn);
     }
-    function get_int($query, $field) {
+    function count($table, $clause) {
+        $query = "select count(*) as total from ".$this->db_name.".$table where $clause";
         $result = $this->do_query($query);
-        if (!$result) error_page("database error on query $query");
-        if (MYSQLI) {
-            $x = $result->fetch_object("StdClass");
-            $result->free();
-        } else {
-            $x = mysql_fetch_object($result);
-            mysql_free_result($result);
-        }
-        if ($x) return $x->$field;
-        return false;
-    }
-    function get_double($query, $field) {
-        $result = $this->do_query($query);
-        if (!$result) error_page("database error on query $query");
-        if (MYSQLI) {
-            $x = $result->fetch_object("StdClass");
-            $result->free();
-        } else {
-            $x = mysql_fetch_object($result);
-            mysql_free_result($result);
-        }
-        if ($x) return (double)$x->$field;
-        return false;
-    }
-    function count($table, $clause="TRUE") {
-        $query = "select count(*) as total from DBNAME.$table where $clause";
-        return $this->get_int($query, 'total');
+        $cnt = mysql_fetch_object($result);
+        mysql_free_result($result);
+        if ($cnt) return $cnt->total;
+        return null;
     }
     function sum($table, $field, $clause="") {
-        $query = "select sum($field) as total from DBNAME.$table $clause";
-        return $this->get_double($query, 'total');
+        $query = "select sum($field) as total from ".$this->db_name.".$table $clause";
+        $result = $this->do_query($query);
+        $cnt = mysql_fetch_object($result);
+        mysql_free_result($result);
+        if ($cnt) return (double)$cnt->total;
+        return null;
     }
     function max($table, $field, $clause="") {
-        $query = "select max($field) as total from DBNAME.$table $clause";
-        return $this->get_double($query, 'total');
-    }
-    function percentile($table, $field, $clause, $pct) {
-        $n = $this->count($table, $clause);
-        if (!$n) return false;
-        $m = (int)($n*$pct/100);
-        $query = "select $field from DBNAME.$table where $clause order by $field limit $m,1";
-        return $this->get_double($query, $field);
+        $query = "select max($field) as total from ".$this->db_name.".$table $clause";
+        $result = $this->do_query($query);
+        $cnt = mysql_fetch_object($result);
+        mysql_free_result($result);
+        if ($cnt) return (double)$cnt->total;
+        return null;
     }
     function replace($table, $clause) {
-        $query = "replace into DBNAME.$table set $clause";
+        $query = "replace into ".$this->db_name.".$table set $clause";
         return $this->do_query($query);
     }
     function base_escape_string($string) {
-        if (MYSQLI) {
-            return $this->db_conn->escape_string($string);
-        } else {
-            return mysql_real_escape_string($string);
-        }
+        return mysql_real_escape_string($string);
     }
     function base_error() {
-        if (MYSQLI) {
-            return $this->db_conn->error;
-        } else {
-            return mysql_error($this->db_conn);
-        }
+        return mysql_error($this->db_conn);
     }
     function table_exists($table_name) {
-        $result = $this->do_query("show tables from DBNAME like '$table_name'");
-        if (!$result) error_page("database error on query $query");
-        if (MYSQLI) {
-            $t = $result->fetch_array();
-            $result->free();
-        } else {
-            $t = mysql_fetch_array($result);
-            mysql_free_result($result);
-        }
+        $result = $this->do_query("show tables from ".$this->db_name." like '$table_name'");
+        $t = mysql_fetch_array($result);
+        mysql_free_result($result);
         if ($t[0] == "$table_name") return true;
         return false;
     }

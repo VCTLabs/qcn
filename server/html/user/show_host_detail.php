@@ -33,13 +33,12 @@ if (!$host) {
 }
 
 $user = get_logged_in_user(false);
-if ($user && $user->id != $host->userid) {
+if ($user->id != $host->userid) {
     $user = null;
 }
 
 page_head(tra("Computer %1", $hostid));
 show_host($host, $user, $ipprivate);
-$heading = "Host Detail";
 show_trigger($host->id,$heading, $host->userid == $user->id);
 page_tail();
 

@@ -18,7 +18,7 @@
 
 // RPC handler for account creation
 
-require_once("../inc/boinc_db.inc");
+require_once("../inc/db.inc");
 require_once("../inc/util.inc");
 require_once("../inc/email.inc");
 require_once("../inc/xml.inc");
@@ -32,16 +32,13 @@ if ($retval) xml_error($retval);
 
 $config = get_config();
 if (parse_bool($config, "disable_account_creation")) {
-    xml_error(ERR_ACCT_CREATION_DISABLED);
-}
-if (parse_bool($config, "disable_account_creation_rpc")) {
-    xml_error(ERR_ACCT_CREATION_DISABLED);
+    xml_error(-208);
 }
 
 if(defined('INVITE_CODES')) {
     $invite_code = get_str("invite_code");
     if (!preg_match(INVITE_CODES, $invite_code)) {
-        xml_error(ERR_ATTACH_FAIL_INIT);
+        xml_error(-209);
     }
 } 
 
@@ -52,35 +49,35 @@ $user_name = get_str("user_name");
 $team_name = get_str("team_name", true);
 
 if (!is_valid_user_name($user_name, $reason)) {
-    xml_error(ERR_BAD_USER_NAME, $reason);
+    xml_error(-188, $reason);
 }
 
 if (!is_valid_email_addr($email_addr)) {
-    xml_error(ERR_BAD_EMAIL_ADDR);
+    xml_error(-205);
 }
 
 if (is_banned_email_addr($email_addr)) {
-    xml_error(ERR_BAD_EMAIL_ADDR);
+    xml_error(-205);
 }
 
 if (strlen($passwd_hash) != 32) {
     xml_error(-1, "password hash length not 32");
 }
 
-$user = BoincUser::lookup_email_addr($email_addr);
+$user = lookup_user_email_addr($email_addr);
 if ($user) {
     if ($user->passwd_hash != $passwd_hash) {
-        xml_error(ERR_DB_NOT_UNIQUE);
+        xml_error(-137);
     } else {
         $authenticator = $user->authenticator;
     }
 } else {
     $user = make_user($email_addr, $user_name, $passwd_hash, 'International');
     if (!$user) {
-        xml_error(ERR_DB_NOT_UNIQUE);
+        xml_error(-137);
     }
     
-    if (defined('INVITE_CODES')) {
+    if(defined('INVITE_CODES')) {
         error_log("Account for '$email_addr' created using invitation code '$invite_code'");
     }
 }
