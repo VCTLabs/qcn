@@ -13,7 +13,6 @@ libsched_sources = \
     credit.cpp \
     sched_shmem.cpp \
     sched_util.cpp \
-    sched_util_basic.cpp \
     sched_config.cpp \
     sched_limit.cpp \
     sched_msgs.cpp \
@@ -89,56 +88,45 @@ endif
 
 if ENABLE_SERVER
 
-schedcgidir = $(prefix)/lib/boinc-server-maker/sched
-schedsharedir = $(prefix)/lib/boinc-server-maker/sched
-schedbindir = $(prefix)/lib/boinc-server-maker/sched
+cgidir = $(libexecdir)/cgi-bin
+scheddir = $(libexecdir)/sched
 
-schedbin_PROGRAMS = \
-    adjust_user_priority \
+bin_PROGRAMS = \
+	adjust_user_priority \
     delete_file \
     get_file \
     make_work \
-    put_file \
     sched_driver \
+    put_file \
     show_shmem \
     wu_check
 
-schedshare_PROGRAMS = \
-    antique_file_deleter \
+sched_PROGRAMS = \
     census \
-    credit_test \
+	credit_test \
     db_dump \
     db_purge \
     feeder \
     file_deleter \
+    antique_file_deleter \
     message_handler \
     sample_assimilator \
-    sample_bitwise_validator \
     sample_dummy_assimilator \
-    sample_substr_validator \
+    sample_bitwise_validator \
     sample_trivial_validator \
     sample_work_generator \
-	script_assimilator \
-	script_validator \
     single_job_assimilator \
-    size_regulator \
     transitioner \
     trickle_credit \
-    trickle_deadline \
     trickle_echo \
     update_stats
 
-schedcgi_PROGRAMS= \
+cgi_PROGRAMS= \
     cgi \
     file_upload_handler
 
-schedshare_DATA = \
-    db_dump_spec.xml \
-    assimilator.py \
-    pymw_assimilator.py
-
 # scripts that 'make install' should put in bindir
-schedshare_SCRIPTS = start stop status transitioner_catchup.php
+bin_SCRIPTS = start stop status
 
 noinst_HEADERS = \
     assimilate_handler.h \
@@ -146,7 +134,6 @@ noinst_HEADERS = \
     plan_class_spec.h \
     sched_main.h \
     sched_locality.h \
-    sched_nci.h \
     sched_score.h \
     sched_send.h \
     sched_shmem.h \
@@ -156,6 +143,7 @@ noinst_HEADERS = \
 EXTRA_DIST = \
     start
 
+# CMC note we have added the qcn_trigger file below
 cgi_sources = \
     ../../qcn/server/trigger/qcn_trigger.cpp \
 	credit.cpp \
@@ -166,14 +154,12 @@ cgi_sources = \
     plan_class_spec.cpp \
     sched_array.cpp \
     sched_assign.cpp \
-    sched_check.cpp \
     sched_customize.cpp \
     sched_files.cpp \
     sched_hr.cpp \
     sched_limit.cpp \
     sched_locality.cpp \
     sched_main.cpp \
-    sched_nci.cpp \
     sched_resend.cpp \
     sched_result.cpp \
     sched_score.cpp \
@@ -226,10 +212,6 @@ sample_bitwise_validator_SOURCES = $(VALIDATOR_SOURCES) \
 	sample_bitwise_validator.cpp 
 sample_bitwise_validator_LDADD = $(SERVERLIBS)
 
-sample_substr_validator_SOURCES = $(VALIDATOR_SOURCES) \
-	sample_substr_validator.cpp
-sample_substr_validator_LDADD = $(SERVERLIBS)
-
 sample_trivial_validator_SOURCES = $(VALIDATOR_SOURCES) \
 	sample_trivial_validator.cpp
 sample_trivial_validator_LDADD = $(SERVERLIBS)
@@ -253,14 +235,6 @@ single_job_assimilator_LDADD = $(SERVERLIBS)
 sample_work_generator_SOURCES = sample_work_generator.cpp
 sample_work_generator_LDADD = $(SERVERLIBS)
 
-script_assimilator_SOURCES = $(ASSIMILATOR_SOURCES) \
-	script_assimilator.cpp
-script_assimilator_LDADD = $(SERVERLIBS)
-
-script_validator_SOURCES = $(VALIDATOR_SOURCES) \
-	script_validator.cpp
-script_validator_LDADD = $(SERVERLIBS)
-
 db_dump_SOURCES = db_dump.cpp
 db_dump_LDADD = $(SERVERLIBS)
 
@@ -270,26 +244,20 @@ db_purge_LDADD = $(SERVERLIBS)
 trickle_credit_SOURCES = trickle_credit.cpp trickle_handler.cpp
 trickle_credit_LDADD = $(SERVERLIBS)
 
-trickle_deadline_SOURCES = trickle_deadline.cpp trickle_handler.cpp
-trickle_deadline_LDADD = $(SERVERLIBS)
-
 trickle_echo_SOURCES = trickle_echo.cpp trickle_handler.cpp
 trickle_echo_LDADD = $(SERVERLIBS)
 
 update_stats_SOURCES = update_stats.cpp
 update_stats_LDADD = $(SERVERLIBS)
 
-file_upload_handler_SOURCES = file_upload_handler.cpp sched_msgs.cpp sched_config.cpp sched_util_basic.cpp sched_limit.cpp
-file_upload_handler_LDADD = $(FUHLIBS)
+file_upload_handler_SOURCES = file_upload_handler.cpp
+file_upload_handler_LDADD = $(SERVERLIBS)
 
 make_work_SOURCES = make_work.cpp
 make_work_LDADD = $(SERVERLIBS)
 
 transitioner_SOURCES = transitioner.cpp
 transitioner_LDADD = $(SERVERLIBS)
-
-size_regulator_SOURCES = size_regulator.cpp
-size_regulator_LDADD = $(SERVERLIBS)
 
 message_handler_SOURCES = message_handler.cpp
 message_handler_LDADD = $(SERVERLIBS)
@@ -309,6 +277,24 @@ adjust_user_priority_LDADD = $(SERVERLIBS)
 sched_driver_SOURCES = sched_driver.cpp
 sched_driver_LDADD = $(SERVERLIBS)
 
+if ENABLE_FCGI
+
+cgi_PROGRAMS += fcgi \
+                fcgi_file_upload_handler
+
+fcgi_SOURCES = $(cgi_sources)
+fcgi_CPPFLAGS = -D_USING_FCGI_ $(AM_CPPFLAGS)
+fcgi_LDADD = $(SERVERLIBS_FCGI)
+
+fcgi_file_upload_handler_SOURCES = \
+    file_upload_handler.cpp \
+    sched_config.cpp \
+    sched_msgs.cpp 
+fcgi_file_upload_handler_CPPFLAGS = -D_USING_FCGI_ $(AM_CPPFLAGS)
+fcgi_file_upload_handler_LDADD = $(SERVERLIBS_FCGI)
+
+endif
+# end of "if ENABLE_FCGI"
 endif 
 # end of "if ENABLE_SERVER"
 

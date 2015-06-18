@@ -21,7 +21,6 @@
 #include <vector>
 
 #include "average.h"
-#include "opencl_boinc.h"
 #include "parse.h"
 
 // Sizes of text buffers in memory, corresponding to database BLOBs.
@@ -32,11 +31,9 @@
 // The following are for "medium blobs",
 // which are 16MB in the DB
 //
-// CMC begin 
 #define APP_VERSION_XML_BLOB_SIZE   262144
-#define MSG_FROM_HOST_BLOB_SIZE     1048576
+#define MSG_FROM_HOST_BLOB_SIZE     262144
 #define MSG_TO_HOST_BLOB_SIZE       262144
-// CMC end
 
 struct BEST_APP_VERSION;
 
@@ -54,8 +51,6 @@ struct PLATFORM {
 
 #define LOCALITY_SCHED_NONE     0
 #define LOCALITY_SCHED_LITE     1
-
-#define MAX_SIZE_CLASSES    10
 
 // An application.
 //
@@ -82,17 +77,12 @@ struct APP {
     bool non_cpu_intensive;
     int locality_scheduling;
         // type of locality scheduling used by this app (see above)
-    int n_size_classes;
-        // for multi-size apps, number of size classes
-    bool fraction_done_exact;
-        // fraction done reported by app is accurate
 
     int write(FILE*);
     void clear();
 
     // not in DB:
     bool have_job;
-    double size_class_quantiles[MAX_SIZE_CLASSES];
 };
 
 // A version of an application.
@@ -128,23 +118,24 @@ struct APP_VERSION {
     char plan_class[256];
     AVERAGE pfc;
         // the stats of (claimed PFC)/wu.rsc_fpops_est
-        // What does this mean?
-        // Suppose X is the error in rsc_fpops_est
-        // (i.e. actual FPOPS = X*rsc_fpops_est)
-        // and Y is average efficiency
-        // (actual FLOPS = Y*peak FLOPS)
-        // Then this is X/Y.
+        // If wu.rsc_fpops_est is accurate,
+        // this is the reciprocal of efficiency
     double pfc_scale;
         // PFC scaling factor for this app (or 0 if not enough data)
         // The reciprocal of this version's efficiency, averaged over all jobs,
         // relative to that of the most efficient version
     double expavg_credit;
     double expavg_time;
-    bool beta;
 
     // the following used by scheduler, not in DB
     //
     BEST_APP_VERSION* bavp;
+
+    // used by validator, not in DB
+    //
+    std::vector<double>pfc_samples;
+    std::vector<double>credit_samples;
+    std::vector<double>credit_times;
 
     int write(FILE*);
     void clear();
@@ -167,7 +158,6 @@ struct USER {
     double expavg_time;             // when the above was computed
     char global_prefs[BLOB_SIZE];
         // global preferences, within <global_preferences> tag
-//    char project_prefs[BLOB_SIZE];
     char project_prefs[APP_VERSION_XML_BLOB_SIZE];  // CMC here
         // project preferences; format:
         // <project_preferences>
@@ -200,13 +190,8 @@ struct USER {
     double seti_total_cpu;          // number of CPU seconds
     char signature[256];
         // deprecated as of 9/2004 - may be used as temp
-        // currently used to store a nonce ID while email address
-        // is being verified.
     bool has_profile;
     char cross_project_id[256];
-        // the "internal" cross-project ID;
-        // the "external CPID" that  gets exported to stats sites
-        // is MD5(cpid, email)
     char passwd_hash[256];
     bool email_validated;           // deprecated
     int donated;
@@ -343,21 +328,13 @@ struct HOST {
         // dynamic estimate of fraction of results
         // that fail validation
         // DEPRECATED
-    char product_name[256];
-    double gpu_active_frac;
 
-    // the following items are passed in scheduler requests,
-    // and used in the scheduler,
-    // but not stored in the DB
-    // TODO: move this stuff to a derived class HOST_SCHED
-    //
+    // the following not in DB
     char p_features[1024];
     char virtualbox_version[256];
     bool p_vm_extensions_disabled;
-    int num_opencl_cpu_platforms;
-    OPENCL_CPU_PROP opencl_cpu_prop[MAX_OPENCL_CPU_PLATFORMS];
-
     // stuff from time_stats
+    double gpu_active_frac;
     double cpu_and_network_available_frac;
     double client_start_time;
     double previous_uptime;
@@ -370,11 +347,9 @@ struct HOST {
 
     void fix_nans();
     void clear();
-    bool get_opencl_cpu_prop(const char* platform, OPENCL_CPU_PROP&);
 };
 
 // values for file_delete state
-// see html/inc/common_defs.inc
 #define FILE_DELETE_INIT        0
 #define FILE_DELETE_READY       1
     // set to this value only when we believe all files are uploaded
@@ -392,8 +367,7 @@ struct HOST {
 // There's just a bunch of independent substates
 // (file delete, assimilate, and states of results, error flags)
 
-// bit fields of workunit.error_mask
-// see html/inc/common_defs.inc
+// bit fields of error_mask
 //
 #define WU_ERROR_COULDNT_SEND_RESULT            1
 #define WU_ERROR_TOO_MANY_ERROR_RESULTS         2
@@ -454,8 +428,7 @@ struct WORKUNIT {
     double opaque;              // project-specific; usually external ID
     int min_quorum;             // minimum quorum size
     int target_nresults;
-        // try to get this many "viable" results,
-        // i.e. candidate for canonical result.
+        // try to get this many successful results
         // may be > min_quorum to get consensus quicker or reflect loss rate
     int max_error_results;      // WU error if < #error results
     int max_total_results;      // WU error if < #total results
@@ -473,14 +446,10 @@ struct WORKUNIT {
         // which version this job is committed to (0 if none)
     int transitioner_flags;
         // bitmask; see values above
-    int size_class;
-        // -1 means none; encode this here so that transitioner
-        // doesn't have to look up app
 
     // the following not used in the DB
     char app_name[256];
     void clear();
-    WORKUNIT(){clear();}
 };
 
 struct CREDITED_JOB {
@@ -496,9 +465,8 @@ struct CREDITED_JOB {
 // the database will become inconsistent
 
 // values of result.server_state
-// see html/inc/common_defs.inc
 //
-#define RESULT_SERVER_STATE_INACTIVE       1
+//#define RESULT_SERVER_STATE_INACTIVE       1
 #define RESULT_SERVER_STATE_UNSENT         2
 #define RESULT_SERVER_STATE_IN_PROGRESS    4
 #define RESULT_SERVER_STATE_OVER           5
@@ -506,7 +474,6 @@ struct CREDITED_JOB {
     // Note: we could get a reply even after timing out.
 
 // values of result.outcome
-// see html/inc/common_defs.inc
 //
 #define RESULT_OUTCOME_INIT             0
 #define RESULT_OUTCOME_SUCCESS          1
@@ -526,7 +493,6 @@ struct CREDITED_JOB {
     // we believe that the client detached
 
 // values of result.validate_state
-// see html/inc/common_defs.inc
 //
 #define VALIDATE_STATE_INIT         0
 #define VALIDATE_STATE_VALID        1
@@ -550,7 +516,6 @@ struct CREDITED_JOB {
 #define ASSIGN_TEAM     3
 
 // values for RESULT.app_version_id for anonymous platform
-// see html/inc/common_defs.inc
 #define ANON_PLATFORM_UNKNOWN -1    // relic of old scheduler
 #define ANON_PLATFORM_CPU     -2
 #define ANON_PLATFORM_NVIDIA  -3
@@ -604,16 +569,8 @@ struct RESULT {
     bool runtime_outlier;
         // the validator tagged this as having an unusual elapsed time;
         // don't include it in PFC or elapsed time statistics.
-    int size_class;
-        // -1 means none
-
-    // the following reported by 7.3.16+ clients
-    double peak_working_set_size;
-    double peak_swap_size;
-    double peak_disk_usage;
 
     void clear();
-    RESULT() {clear();}
 };
 
 struct BATCH {
@@ -648,10 +605,19 @@ struct BATCH {
         // project-assigned
     char description[256];
         // project-assigned
-    double expire_time;
-        // if nonzero, retire the batch after this time
-        // Condor calls this the batch's "lease".
 };
+
+// values of batch.state
+//
+#define BATCH_STATE_INIT            0
+#define BATCH_STATE_IN_PROGRESS     1
+#define BATCH_STATE_COMPLETE        2
+    // "complete" means all workunits have either
+    // a canonical result or an error
+#define BATCH_STATE_ABORTED         3
+#define BATCH_STATE_RETIRED         4
+    // input/output files can be deleted,
+    // result and workunit records can be purged.
 
 // info for users who can submit jobs
 //
@@ -770,59 +736,6 @@ struct VDA_CHUNK_HOST {
         return (transfer_in_progress && !present_on_host);
     }
     void print_status(int level);
-};
-
-struct BADGE {
-    int id;
-    double create_time;
-    int type;
-    char name[256];
-    char title[256];
-    char description[256];
-    char image_url[256];
-    char level[256];
-    char tags[256];
-    char sql_rule[256];
-    void clear();
-};
-
-struct BADGE_USER {
-    int badge_id;
-    int user_id;
-    double create_time;
-    double reassign_time;
-    void clear();
-};
-
-struct BADGE_TEAM {
-    int badge_id;
-    int team_id;
-    double create_time;
-    double reassign_time;
-    void clear();
-};
-
-struct CREDIT_USER {
-    int userid;
-    int appid;
-        // need not be an app ID
-    int njobs;
-    double total;
-    double expavg;
-    double expavg_time;
-    int credit_type;
-    void clear();
-};
-
-struct CREDIT_TEAM {
-    int teamid;
-    int appid;
-    int njobs;
-    double total;
-    double expavg;
-    double expavg_time;
-    int credit_type;
-    void clear();
 };
 
 #endif

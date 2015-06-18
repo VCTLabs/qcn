@@ -47,19 +47,17 @@ struct SCHED_CONFIG {
     char db_user[256];
     char db_passwd[256];
     char db_host[256];
-// CMC start - trigmem db fields
-#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
-    char trigmem_db_name[256];
-    char trigmem_db_user[256];
-    char trigmem_db_passwd[256];
-    char trigmem_db_host[256];
-    int  trigmem_db_port;
-#endif
-// CMC end
     char replica_db_name[256];
     char replica_db_user[256];
     char replica_db_passwd[256];
     char replica_db_host[256];
+// CMC HERE  add 4 fields for trigmem databse info
+    char trigmem_db_name[256];
+    char trigmem_db_user[256];
+    char trigmem_db_passwd[256];
+    char trigmem_db_host[256];
+    int trigmem_db_port;
+// CMC end
     int shmem_key;
     char project_dir[256];
     char key_dir[256];
@@ -76,7 +74,6 @@ struct SCHED_CONFIG {
     bool verify_files_on_app_start;
     int homogeneous_redundancy;
     bool hr_allocate_slots;
-    bool hr_class_static;
     bool ignore_upload_certificates;
     bool dont_generate_upload_certificates;
     int uldl_dir_fanout;        // fanout of ul/dl dirs; 0 if none
@@ -132,7 +129,7 @@ struct SCHED_CONFIG {
     int locality_scheduling_send_timeout;
     vector<regex_t> *locality_scheduling_workunit_file;
     vector<regex_t> *locality_scheduling_sticky_file;
-    bool sched_old;
+    bool matchmaker;
     int max_download_urls_per_file;
     int max_ncpus;
     JOB_LIMITS max_jobs_in_progress;
@@ -146,6 +143,8 @@ struct SCHED_CONFIG {
     int min_core_client_version_announced;
     int min_core_client_upgrade_deadline;
     int min_sendwork_interval;
+    int mm_min_slots;
+    int mm_max_slots;
     double next_rpc_delay;
     bool no_amd_k6;
         // don't allow AMD K6 CPUs
@@ -184,24 +183,16 @@ struct SCHED_CONFIG {
         // DEPRECATED: use assignment instead
     bool workload_sim;
         // Do workload simulation in deciding whether to send a result
-    bool estimate_flops_from_hav_pfc;
-        // Use host_app_version peak flop count rather than elapsed time 
-        // to calculate projected_flops when choosing version.
-    bool credit_by_app;
-        // store per-app credit info in credit_user and credit_team
-
-    // time intervals
-    double maintenance_delay;
-        // if stop_sched is set, tell clients to delay this much
 
     // scheduler log flags
     //
+    bool debug_array;               // debug job-cache scheduling
+    bool debug_array_detail;        // show slot-level info
     bool debug_assignment;
     bool debug_credit;
     bool debug_edf_sim_detail;      // show details of EDF sim
     bool debug_edf_sim_workload;    // show workload for EDF sim
     bool debug_fcgi;
-    bool debug_client_files;        // stuff related to sticky files on client
     bool debug_handle_results;
     bool debug_locality;            // locality scheduling
     bool debug_locality_lite;       // locality scheduling Lite
@@ -211,11 +202,6 @@ struct SCHED_CONFIG {
     bool debug_request_headers;
     bool debug_resend;
     bool debug_send;
-        // job dispatch, high-level stuff, e.g. request params and jobs sent
-    bool debug_send_scan;
-        // job dispatch at the level of scans through array
-    bool debug_send_job;
-        // job dispatch: why individual jobs weren't sent (most verbose)
     bool debug_user_messages;
     bool debug_vda;
     bool debug_version_select;

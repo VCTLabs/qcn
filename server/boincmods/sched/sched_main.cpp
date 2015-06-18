@@ -79,11 +79,8 @@ bool batch = false;
 bool mark_jobs_done = false;
 bool all_apps_use_hr;
 // CMC here -- createthe trigmem db connection
-#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
-  DB_CONN trigmem_db;
-#endif
+DB_CONN trigmem_db;
 // end CMC
-
 
 static void usage(char* p) {
     fprintf(stderr,
@@ -189,17 +186,19 @@ int open_database() {
     if (db_opened) {
         retval = boinc_db.ping();
 // CMC here -- test our trigmem ping
-#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
         if (!retval) retval = trigmem_db.ping();
-#endif
 // end CMC
         if (retval) {
             log_messages.printf(MSG_CRITICAL,
                 "lost connection to database - trying to reconnect\n"
             );
-        } else {
+         }
+/* CMC here
+         else {
             return 0;
         }
+// CMC end bypass reutrn
+*/
     }
 
     retval = boinc_db.open(
@@ -209,8 +208,8 @@ int open_database() {
         log_messages.printf(MSG_CRITICAL, "can't open database\n");
         return retval;
     }
+
 // CMC here -- create the trigmem db connection
-#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
     retval = trigmem_db.open(
         config.trigmem_db_name, config.trigmem_db_host, config.trigmem_db_user, config.trigmem_db_passwd
     );
@@ -218,8 +217,8 @@ int open_database() {
         log_messages.printf(MSG_CRITICAL, "can't open trigmem database\n");
         return retval;
     }
-#endif
 // end CMC
+
     db_opened = true;
     return 0;
 }
@@ -232,9 +231,7 @@ void sigterm_handler(int /*signo*/) {
     if (db_opened) {
         boinc_db.close();
 //CMC here
-#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
         trigmem_db.close();
-#endif
 // end CMC
     }
     log_messages.printf(MSG_CRITICAL,
@@ -333,7 +330,7 @@ void attach_to_feeder_shmem() {
             getuid(), geteuid(), getgid(), getegid()
         );
         send_message(
-            "Server error: feeder not running", config.maintenance_delay
+            "Server error: feeder not running", 3600
         );
         exit(0);
     } else {
@@ -343,7 +340,7 @@ void attach_to_feeder_shmem() {
             log_messages.printf(MSG_CRITICAL,
                 "shmem has wrong struct sizes - recompile\n"
             );
-            send_message("Server error: recompile needed", config.maintenance_delay);
+            send_message("Server error: recompile needed", 3600);
             exit(0);
         }
 
@@ -359,7 +356,7 @@ void attach_to_feeder_shmem() {
                 "feeder doesn't seem to be running\n"
             );
             send_message(
-                "Server error: feeder not running", config.maintenance_delay
+                "Server error: feeder not running", 3600
             );
             exit(0);
         }
@@ -458,7 +455,7 @@ int main(int argc, char** argv) {
         if (!freopen(path, "a", stderr)) {
             fprintf(stderr, "Can't redirect stderr\n");
             sprintf(buf, "Server can't open log file (%s)", path);
-            send_message(buf, config.maintenance_delay);
+            send_message(buf, 3600);
             exit(1);
         }
 #else
@@ -469,7 +466,7 @@ int main(int argc, char** argv) {
             char buf[256];
             fprintf(stderr, "Can't redirect FCGI log messages\n");
             sprintf(buf, "Server can't open log file for FCGI (%s)", path);
-            send_message(buf, config.maintenance_delay);
+            send_message(buf, 3600);
             exit(1);
         }
 #endif
@@ -515,7 +512,7 @@ int main(int argc, char** argv) {
         log_messages.printf(MSG_CRITICAL,
             "Can't parse config.xml: %s\n", boincerror(retval)
         );
-        send_message("Server can't parse configuration file", config.maintenance_delay);
+        send_message("Server can't parse configuration file", 3600);
         exit(0);
     }
 
@@ -532,7 +529,7 @@ int main(int argc, char** argv) {
         log_messages.printf(MSG_CRITICAL,
             "Can't read code sign key file (%s)\n", path
         );
-        send_message("Server can't find key file", config.maintenance_delay);
+        send_message("Server can't find key file", 3600);
         exit(0);
     }
     strip_whitespace(code_sign_key);
@@ -550,10 +547,7 @@ int main(int argc, char** argv) {
     }
 
     if (!debug_log && check_stop_sched()) {
-        send_message(
-            "Project is temporarily shut down for maintenance",
-            config.maintenance_delay
-        );
+        send_message("Project is temporarily shut down for maintenance", 3600);
         goto done;
     }
 
@@ -561,7 +555,7 @@ int main(int argc, char** argv) {
         attach_to_feeder_shmem();
     }
     if (!ssp) {
-        send_message("Server error: can't attach shared memory", config.maintenance_delay);
+        send_message("Server error: can't attach shared memory", 3600);
         goto done;
     }
 
@@ -579,7 +573,7 @@ int main(int argc, char** argv) {
         sprintf(reply_path, "%s/%d_%u_sched_reply.xml", config.debug_req_reply_dir, g_pid, counter);
 
         // keep an own 'log' per PID in case general logging fails
-        // this allows to associate at least the scheduler request with the client
+        // this allows to associate at leas the scheduler request with the client
         // IP address (as shown in httpd error log) in case of a crash
         sprintf(log_path, "%s/%d_%u_sched.log", config.debug_req_reply_dir, g_pid, counter);
 #ifndef _USING_FCGI_
@@ -587,12 +581,6 @@ int main(int argc, char** argv) {
 #else
         fout = FCGI::fopen(log_path,"a");
 #endif
-        if (!fout) {
-            log_messages.printf(MSG_CRITICAL,
-                "can't write client log file %s\n", log_path
-            );
-            exit(1);
-        }
         fprintf(fout, "PID: %d Client IP: %s\n", g_pid, get_remote_addr());
         fclose(fout);
 
@@ -688,8 +676,8 @@ done:
             log_messages.printf(MSG_NORMAL,
                 "FCGI: counter: %d\n", counter
             );
+            log_messages.flush();
         }
-        log_messages.flush();
     }   // do()
     if (counter == MAX_FCGI_COUNT) {
         fprintf(stderr, "FCGI: counter passed MAX_FCGI_COUNT - exiting..\n");
@@ -703,9 +691,7 @@ done:
     if (db_opened) {
         boinc_db.close();
 //CMC here
-#ifdef USE_QCN_TRIGGER_MEMORY_TABLE
         trigmem_db.close();
-#endif
 // end CMC
     }
 }
@@ -724,8 +710,8 @@ void RSC_JOB_LIMIT::print_log(const char* rsc_name) {
 
 void JOB_LIMIT::print_log() {
     if (total.any_limit()) total.print_log("total");
-    if (proc_type_limits[0].any_limit()) proc_type_limits[0].print_log("CPU");
-    if (proc_type_limits[1].any_limit()) proc_type_limits[1].print_log("GPU");
+    if (cpu.any_limit()) cpu.print_log("CPU");
+    if (gpu.any_limit()) gpu.print_log("GPU");
 }
 
 void JOB_LIMITS::print_log() {

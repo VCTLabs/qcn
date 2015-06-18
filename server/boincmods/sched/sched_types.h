@@ -15,11 +15,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with BOINC.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SCHED_TYPES_
-#define _SCHED_TYPES_
+#ifndef _SERVER_TYPES_
+#define _SERVER_TYPES_
 
 #include <cstdio>
 #include <vector>
+
+// CMC here include line
+#include "../../qcn/server/trigger/qcn_types.h"
 
 #include "boinc_db.h"
 #include "common_defs.h"
@@ -27,13 +30,6 @@
 #include "coproc.h"
 
 #include "edf_sim.h"
-
-// CMC start
-#include "filesys.h"
-#include "str_replace.h"
-#include "../../qcn/server/trigger/qcn_types.h"
-// CMC end
-
 
 // for projects that support work filtering by app,
 // this records an app for which the user will accept work
@@ -80,9 +76,6 @@ struct HOST_USAGE {
     double peak_flops;
         // stored in result.flops_estimate, and used for credit calculations
     char cmdline[256];
-    char custom_coproc_type[256];
-        // if we're using a custom GPU type, it's name
-        // TODO: get rid of PROC_TYPE_*, and this
 
     HOST_USAGE() {
         proc_type = PROC_TYPE_CPU;
@@ -93,7 +86,6 @@ struct HOST_USAGE {
         projected_flops = 0;
         peak_flops = 0;
         strcpy(cmdline, "");
-        strcpy(custom_coproc_type, "");
     }
     void sequential_app(double flops) {
         proc_type = PROC_TYPE_CPU;
@@ -227,7 +219,7 @@ struct GLOBAL_PREFS {
 struct GUI_URLS {
     char* text;
     void init();
-    void get_gui_urls(USER& user, HOST& host, TEAM& team, char*, int len);
+    void get_gui_urls(USER& user, HOST& host, TEAM& team, char*);
 };
 
 struct PROJECT_FILES {
@@ -297,9 +289,6 @@ struct SCHEDULER_REQUEST {
     char global_prefs_xml[BLOB_SIZE];
     char working_global_prefs_xml[BLOB_SIZE];
     char code_sign_key[4096];
-    bool dont_send_work;
-    char client_brand[256];
-        // as specified in client_brand.txt config file on client
 
     std::vector<CLIENT_APP_VERSION> client_app_versions;
 
@@ -362,7 +351,7 @@ struct DISK_LIMITS {
 // summary of a client's request for work, and our response to it
 // Note: this is zeroed out in SCHEDULER_REPLY constructor
 //
-struct WORK_REQ_BASE {
+struct WORK_REQ {
     bool anonymous_platform;
 
     // the following defined if anonymous platform
@@ -391,12 +380,12 @@ struct WORK_REQ_BASE {
     bool dont_use_proc_type[NPROC_TYPES];
     bool allow_non_preferred_apps;
     bool allow_beta_work;
+    std::vector<APP_INFO> preferred_apps;
 
     bool has_reliable_version;
         // whether the host has a reliable app version
 
     int effective_ncpus;
-        // # of usable CPUs on host, taking prefs into account
     int effective_ngpus;
 
     // 6.7+ clients send separate requests for different resource types:
@@ -405,9 +394,18 @@ struct WORK_REQ_BASE {
         // instance-seconds requested
     double req_instances[NPROC_TYPES];
         // number of idle instances, use if possible
-    inline void clear_req(int proc_type) {
-        req_secs[proc_type] = 0;
-        req_instances[proc_type] = 0;
+    inline bool need_proc_type(int t) {
+        return (req_secs[t]>0) || (req_instances[t]>0);
+    }
+    inline void clear_cpu_req() {
+        req_secs[PROC_TYPE_CPU] = 0;
+        req_instances[PROC_TYPE_CPU] = 0;
+    }
+    inline void clear_gpu_req() {
+        for (int i=1; i<NPROC_TYPES; i++) {
+            req_secs[i] = 0;
+            req_instances[i] = 0;
+        }
     }
 
     // older clients send send a single number, the requested duration of jobs
@@ -418,17 +416,9 @@ struct WORK_REQ_BASE {
     //
     bool rsc_spec_request;
 
-    inline bool need_proc_type(int t) {
-        if (rsc_spec_request) {
-            return (req_secs[t]>0) || (req_instances[t]>0);
-        }
-        return seconds_to_fill > 0;
-    }
-
     double disk_available;
     double ram, usable_ram;
-    double cpu_available_frac;
-    double gpu_available_frac;
+    double running_frac;
     int njobs_sent;
 
     // The following keep track of the "easiest" job that was rejected
@@ -460,6 +450,11 @@ struct WORK_REQ_BASE {
     RESOURCE speed;
     RESOURCE bandwidth;
 
+    std::vector<USER_MESSAGE> no_work_messages;
+    std::vector<BEST_APP_VERSION*> best_app_versions;
+    std::vector<DB_HOST_APP_VERSION> host_app_versions;
+    std::vector<DB_HOST_APP_VERSION> host_app_versions_orig;
+
     // various reasons for not sending jobs (used to explain why)
     //
     bool no_allowed_apps_available;
@@ -467,32 +462,12 @@ struct WORK_REQ_BASE {
     bool hr_reject_perm;
     bool outdated_client;
     bool max_jobs_on_host_exceeded;
-    bool max_jobs_on_host_proc_type_exceeded[NPROC_TYPES];
+    bool max_jobs_on_host_cpu_exceeded;
+    bool max_jobs_on_host_gpu_exceeded;
     bool no_jobs_available;     // project has no work right now
     int max_jobs_per_rpc;
-    void get_job_limits();
-
-    bool max_jobs_exceeded() {
-        if (max_jobs_on_host_exceeded) return true;
-        for (int i=0; i<NPROC_TYPES; i++) {
-            if (max_jobs_on_host_proc_type_exceeded[i]) return true;
-        }
-        return false;
-    }
-    void clear() {
-        memset(this, 0, sizeof(WORK_REQ_BASE));
-    }
-
-};
-
-struct WORK_REQ : public WORK_REQ_BASE {
-    std::vector<APP_INFO> preferred_apps;
-    std::vector<USER_MESSAGE> no_work_messages;
-    std::vector<BEST_APP_VERSION*> best_app_versions;
-    std::vector<DB_HOST_APP_VERSION> host_app_versions;
-    std::vector<DB_HOST_APP_VERSION> host_app_versions_orig;
-
     void add_no_work_message(const char*);
+    void get_job_limits();
 
     ~WORK_REQ() {}
 };
@@ -535,9 +510,9 @@ struct SCHEDULER_REPLY {
 
     SCHEDULER_REPLY();
     ~SCHEDULER_REPLY(){};
-// CMC begin
-    //int write(FILE*, SCHEDULER_REQUEST&);
-     int write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, DB_QCN_HOST_IPADDR& qhip);
+// CMC here -- added the bool below
+    int write(FILE*, SCHEDULER_REQUEST&, bool, DB_QCN_HOST_IPADDR&);
+    // int write(FILE*, SCHEDULER_REQUEST&);
 // CMC end
     void insert_app_unique(APP&);
     void insert_app_version_unique(APP_VERSION&);
@@ -570,5 +545,4 @@ inline bool is_64b_platform(const char* name) {
     return (strstr(name, "64") != NULL);
 }
 
-extern double available_frac(BEST_APP_VERSION&);
 #endif

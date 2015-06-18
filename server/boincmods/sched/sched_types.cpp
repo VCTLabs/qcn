@@ -35,11 +35,10 @@
 #include "time_stats_log.h"
 #include "sched_types.h"
 
-#ifdef _USING_FCGI_
-#include "boinc_fcgi.h"
-#endif
-
-// CMC start
+// CMC here
+#include "filesys.h"
+#include "str_replace.h"
+#include "../../qcn/server/trigger/qcn_types.h"
 
 extern int qcn_process_ipaddr(char* strTrigger, int iLen);
 
@@ -51,14 +50,15 @@ extern int qcn_doTriggerHostLookup(
    const double* dmz
 );
 
-int qcn_send_quakelist(bool bTrigger, int hostid, DB_QCN_HOST_IPADDR& qhip, USER& user, FILE* fout);
-
 inline static const char* get_remote_addr() {
     const char * r = getenv("REMOTE_ADDR");
     return r ? r : "?.?.?.?";
 }
 // CMC end
 
+#ifdef _USING_FCGI_
+#include "boinc_fcgi.h"
+#endif
 
 using std::string;
 
@@ -92,10 +92,8 @@ int CLIENT_APP_VERSION::parse(XML_PARSER& xp) {
 
             double pf = host_usage.avg_ncpus * g_reply->host.p_fpops;
             if (host_usage.proc_type != PROC_TYPE_CPU) {
-                COPROC* cp = g_request->coprocs.proc_type_to_coproc(host_usage.proc_type);
-                if (cp) {
-                    pf += host_usage.gpu_usage*cp->peak_flops;
-                }
+                COPROC* cp = g_request->coprocs.type_to_coproc(host_usage.proc_type);
+                pf += host_usage.gpu_usage*cp->peak_flops;
             }
             host_usage.peak_flops = pf;
             return 0;
@@ -116,15 +114,14 @@ int CLIENT_APP_VERSION::parse(XML_PARSER& xp) {
             COPROC_REQ coproc_req;
             int retval = coproc_req.parse(xp);
             if (!retval) {
-                int rt = coproc_type_name_to_num(coproc_req.type);
-                if (rt <= 0) {
-                    log_messages.printf(MSG_NORMAL,
-                        "UNKNOWN COPROC TYPE %s\n", coproc_req.type
-                    );
-                    continue;
-                }
-                host_usage.proc_type = rt;
                 host_usage.gpu_usage = coproc_req.count;
+                if (!strcmp(coproc_req.type, "CUDA") || !strcmp(coproc_req.type, "NVIDIA")) {
+                    host_usage.proc_type = PROC_TYPE_NVIDIA_GPU;
+                } else if (!strcmp(coproc_req.type, "ATI")) {
+                    host_usage.proc_type = PROC_TYPE_AMD_GPU;
+                } else if (!strcmp(coproc_req.type, "INTEL")) {
+                    host_usage.proc_type = PROC_TYPE_INTEL_GPU;
+                }
             }
             continue;
         }
@@ -207,7 +204,6 @@ const char* SCHEDULER_REQUEST::parse(XML_PARSER& xp) {
     strcpy(authenticator, "");
     strcpy(platform.name, "");
     strcpy(cross_project_id, "");
-    strcpy(client_brand, "");
     hostid = 0;
     core_client_major_version = 0;
     core_client_minor_version = 0;
@@ -224,7 +220,6 @@ const char* SCHEDULER_REQUEST::parse(XML_PARSER& xp) {
     strcpy(global_prefs_xml, "");
     strcpy(working_global_prefs_xml, "");
     strcpy(code_sign_key, "");
-    dont_send_work = false;
     memset(&global_prefs, 0, sizeof(global_prefs));
     memset(&host, 0, sizeof(host));
     have_other_results_list = false;
@@ -312,9 +307,8 @@ const char* SCHEDULER_REQUEST::parse(XML_PARSER& xp) {
         if (xp.parse_double("prrs_fraction", prrs_fraction)) continue;
         if (xp.parse_double("estimated_delay", cpu_estimated_delay)) continue;
         if (xp.parse_double("duration_correction_factor", host.duration_correction_factor)) continue;
-        if (xp.parse_bool("dont_send_work", dont_send_work)) continue;
         if (xp.match_tag("global_preferences")) {
-            safe_strcpy(global_prefs_xml, "<global_preferences>\n");
+            strcpy(global_prefs_xml, "<global_preferences>\n");
             char buf[BLOB_SIZE];
             retval = xp.element_contents(
                 "</global_preferences>", buf, sizeof(buf)
@@ -447,9 +441,6 @@ const char* SCHEDULER_REQUEST::parse(XML_PARSER& xp) {
         if (xp.parse_int("sandbox", sandbox)) continue;
         if (xp.parse_int("allow_multiple_clients", allow_multiple_clients)) continue;
         if (xp.parse_string("client_opaque", client_opaque)) continue;
-        if (xp.parse_str("client_brand", client_brand, sizeof(client_brand))) continue;
-
-        // unused or deprecated stuff follows
 
         if (xp.match_tag("active_task_set")) continue;
         if (xp.match_tag("app")) continue;
@@ -618,7 +609,6 @@ int MSG_FROM_HOST_DESC::parse(XML_PARSER& xp) {
     char buf[256];
 
     msg_text = "";
-    strcpy(variety, "");
     MIOFILE& in = *(xp.f);
     while (in.fgets(buf, sizeof(buf))) {
         if (match_tag(buf, "</msg_from_host>")) return 0;
@@ -629,7 +619,7 @@ int MSG_FROM_HOST_DESC::parse(XML_PARSER& xp) {
 }
 
 SCHEDULER_REPLY::SCHEDULER_REPLY() {
-    wreq.clear();
+    memset(&wreq, 0, sizeof(wreq));
     memset(&disk_limits, 0, sizeof(disk_limits));
     request_delay = 0;
     hostid = 0;
@@ -645,26 +635,19 @@ SCHEDULER_REPLY::SCHEDULER_REPLY() {
     strcpy(email_hash, "");
 }
 
-static bool have_apps_for_client() {
-    for (int i=0; i<NPROC_TYPES; i++) {
-        if (ssp->have_apps_for_proc_type[i]) {
-            if (!i) return true;
-            COPROC* cp = g_request->coprocs.proc_type_to_coproc(i);
-            if (cp && cp->count) return true;
-        }
-    }
-    return false;
-}
-
 // CMC added bool bTrigger which is passed in from handle_request.C so we can bypass
 // quakes and other big messages (i.e. project prefs) for a trigger trickle to
 // expedite the trigger process
 int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, DB_QCN_HOST_IPADDR& qhip) {
 //int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq) {
 // end CMC
-
     unsigned int i;
     char buf[BLOB_SIZE];
+
+    // CMC begin forward var declarations
+         char* strTemp  = NULL;
+         char* strQuake = NULL; // CMC note - read_file_malloc allocates this, make sure to free it! new char[APP_VERSION_XML_BLOB_SIZE];
+    // CMC end var decl
 
     // Note: at one point we had
     // "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n"
@@ -689,6 +672,24 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
     if (config.ended) {
         fprintf(fout, "   <ended>1</ended>\n");
     }
+
+ // CMC block to bypass on triggers
+  if (!bTrigger) {
+    if (request_delay || config.min_sendwork_interval) {
+        double min_delay_needed = 1.01*config.min_sendwork_interval;
+        if (min_delay_needed < config.min_sendwork_interval+1) {
+            min_delay_needed = config.min_sendwork_interval+1;
+        }
+        if (request_delay<min_delay_needed) {
+            request_delay = min_delay_needed;
+        }
+        fprintf(fout, "<request_delay>%f</request_delay>\n", request_delay);
+    }
+    log_messages.printf(MSG_NORMAL,
+        "Sending reply to [HOST#%d]: %d results, delay req %.2f\n",
+        host.id, wreq.njobs_sent, request_delay
+    );
+  } // CMC end bypass on triggers
 
     // if the scheduler has requested a delay OR the sysadmin has configured
     // the scheduler with a minimum time between RPCs, send a delay request.
@@ -738,7 +739,7 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
         char prio[256];
         for (i=0; i<messages.size(); i++) {
             USER_MESSAGE& um = messages[i];
-            safe_strcpy(prio, um.priority.c_str());
+            strcpy(prio, um.priority.c_str());
             if (!strcmp(prio, "notice")) {
                 strcpy(prio, "high");
             }
@@ -808,15 +809,9 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
             );
         }
         if (strlen(user.cross_project_id)) {
-            char external_cpid[MD5_LEN];
-            safe_strcpy(buf, user.cross_project_id);
-            safe_strcat(buf, user.email_addr);
-            md5_block((unsigned char*)buf, strlen(buf), external_cpid);
             fprintf(fout,
-                "<cross_project_id>%s</cross_project_id>\n"
-                "<external_cpid>%s</external_cpid>\n",
-                user.cross_project_id,
-                external_cpid
+                "<cross_project_id>%s</cross_project_id>\n",
+                user.cross_project_id
             );
         }
 
@@ -825,12 +820,116 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
             fputs("\n", fout);
         }
 
+
+
+   // CMC here -- send latest quake list
         // always send project prefs
         //
-        fputs(user.project_prefs, fout);
-        fputs("\n", fout);
+        //fputs(user.project_prefs, fout);
+        //fputs("\n", fout);
+        if (! bTrigger)  { // only sent on ping trickles so every trigger doesn't make the whole quake list
+        // CMC Here - send current latitude / longitude & elev info for this host
+           char* strLatLng = NULL;
+           if (!qhip.hostid) { // host info wasn't set, so do it here and spoof trigger info set varietyid=-1
+              double dmxy[4], dmz[4];
+              qhip.hostid = hostid;
+              DB_QCN_GEO_IPADDR qgip;
+              DB_QCN_TRIGGER qtrig;
+              qtrig.varietyid=-1;
+              qtrig.hostid = qhip.hostid;
+              qtrig.id = 0;
+              strncpy(qtrig.ipaddr, get_remote_addr(), 32);
+              int iIPRetval = qcn_process_ipaddr(qtrig.ipaddr, 32);
+              strncpy(qgip.ipaddr, qtrig.ipaddr, 32);
+              if (iIPRetval || qcn_doTriggerHostLookup(qhip, qgip, qtrig, dmxy, dmz)) {
+                log_messages.printf(MSG_DEBUG,
+                  "sched::handle_request::qcn_host_ipadr hostid lookup %d Failure -- IP Addr %s -- IPRetva = %d\n", 
+                         qhip.hostid, qtrig.ipaddr, iIPRetval);
+                 qhip.hostid = 0; //reset so bypasses the strLatLng creation below
+              }
+              else { // OK
+                log_messages.printf(MSG_DEBUG,
+                  "sched::handle_request::qcn_host_ipadr hostid lookup %d OK\n", qhip.hostid);
+              }
+           }
 
-    }
+           if (qhip.hostid) {
+             strLatLng = new char[512];
+             memset(strLatLng, 0x00, sizeof(char) * 512);
+             sprintf(strLatLng, "\n<qlatlng>\n  <qlllat>%f</qlllat>\n  <qlllng>%f</qlllng>\n  <qlllvv>%f</qlllvv>\n"
+                                "  <qlllvt>%d</qlllvt>\n  <qllal>%d</qllal>\n</qlatlng>\n",
+                qhip.latitude, qhip.longitude, qhip.levelvalue, qhip.levelid, qhip.alignid);
+                log_messages.printf(MSG_DEBUG,
+                  "sched::handle_request::qcn_host_ipadr values: %s\n", strLatLng);
+           }
+
+
+         const char* strWhere = strstr(user.project_prefs, "</project_specific>");
+         strTemp  = new char[APP_VERSION_XML_BLOB_SIZE];
+
+/*
+       if (bTrigger) {  // send lat/lng info back to client for this trigger
+         // send lat/lng on trigger trickles
+         if (strLatLng) {
+           if (strWhere) { // we found </project so prefs exist, insert lat/lng in the middle
+               strTemp[0] = '\n'; // seems to like a leading newline?
+               strncpy(strTemp, user.project_prefs, strWhere - user.project_prefs - 1);
+               strlcat(strTemp, strLatLng, APP_VERSION_XML_BLOB_SIZE);
+               strlcat(strTemp, "</project_specific>\n</project_preferences>\n", APP_VERSION_XML_BLOB_SIZE);
+           }
+           else {  // blank project prefs, so just write quake data
+                 sprintf(strTemp, "<project_preferences>\n<project_specific>\n%s\n</project_specific>\n</project_preferences>\n",
+                     strLatLng);
+           }
+           fputs(strTemp, fout);
+           fputs("\n", fout);
+         } //strLatLng
+       } // bTrigger
+       else { // don't send the big quake list on a trigger trickle
+*/
+         strQuake = NULL; // CMC note - read_file_malloc allocates this, make sure to free it! new char[APP_VERSION_XML_BLOB_SIZE];
+         memset(strTemp,  0x00, sizeof(char) * APP_VERSION_XML_BLOB_SIZE);
+         //memset(strQuake, 0x00, sizeof(char) * APP_VERSION_XML_BLOB_SIZE);
+
+         if (boinc_file_exists("../qcn-quake.xml"))
+            read_file_malloc("../qcn-quake.xml", strQuake); // strQuake holds the quake file contents
+         if (strQuake && strlen(strQuake)>1 && strstr(strQuake, "<quakes>") && strstr(strQuake, "</quakes>")) { // we have valid quake data
+           if (strWhere) { // we found </project so prefs exist, insert quake in the middle
+               strTemp[0] = '\n'; // seems to like a leading newline?
+               strncpy(strTemp, user.project_prefs, strWhere - user.project_prefs - 1);
+               if (strLatLng) strlcat(strTemp, strLatLng, APP_VERSION_XML_BLOB_SIZE);
+               strlcat(strTemp, strQuake, APP_VERSION_XML_BLOB_SIZE);
+               strlcat(strTemp, "\n</project_specific>\n</project_preferences>\n", APP_VERSION_XML_BLOB_SIZE);
+           }
+           else {  // blank project prefs, so just write quake data
+               sprintf(strTemp, "\n<project_preferences>\n<project_specific>\n%s%s</project_specific>\n</project_preferences>\n",
+                 strQuake, strLatLng ? strLatLng : "");
+           }
+
+           fputs(strTemp, fout);
+           fputs("\n", fout);
+         }
+         else { // send normal proj prefs
+           // always send project prefs
+           //
+           strTemp[0] = '\n'; // seems to like a leading newline?
+           strncpy(strTemp, user.project_prefs, strWhere - user.project_prefs - 1);
+           if (strLatLng) strlcat(strTemp, strLatLng, APP_VERSION_XML_BLOB_SIZE);
+           strlcat(strTemp, "\n</project_specific>\n</project_preferences>\n", APP_VERSION_XML_BLOB_SIZE);
+           fputs(strTemp, fout);
+           fputs("\n", fout);
+       } //bTrigger
+
+      if (strTemp) delete [] strTemp;
+      if (strQuake) free(strQuake);  // note malloc was used for strQuake, so use free, not delete[]!
+      if (strLatLng) delete [] strLatLng;
+      // CMC note -- we bypass this if a trigger trickle
+     } // ! bTrigger
+     // end CMC mods
+    }  // userid
+
+// CMC End
+
     if (hostid) {
         fprintf(fout,
             "<hostid>%d</hostid>\n",
@@ -953,34 +1052,17 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
         fprintf(fout, "%s", file_transfer_requests[i].c_str());
     }
 
-    // before writing no_X_apps elements,
-    // make sure that we're not going tell it we have no apps
-    // for any of its resources.
-    // Otherwise (for 7.0.x clients) it will never contact us again
-    //
-    if (have_apps_for_client()) {
-        // write deprecated form for old clients
-        //
-        if (g_request->core_client_version < 70040) {
-            fprintf(fout,
-                "<no_cpu_apps>%d</no_cpu_apps>\n"
-                "<no_cuda_apps>%d</no_cuda_apps>\n"
-                "<no_ati_apps>%d</no_ati_apps>\n",
-                ssp->have_apps_for_proc_type[PROC_TYPE_CPU]?0:1,
-                ssp->have_apps_for_proc_type[PROC_TYPE_NVIDIA_GPU]?0:1,
-                ssp->have_apps_for_proc_type[PROC_TYPE_AMD_GPU]?0:1
-            );
-        }
-
-        // write modern form.
-        //
+    if (g_request->core_client_version < 73000) {
+        fprintf(fout,
+            "<no_cpu_apps>%d</no_cpu_apps>\n"
+            "<no_cuda_apps>%d</no_cuda_apps>\n"
+            "<no_ati_apps>%d</no_ati_apps>\n",
+            ssp->have_apps_for_proc_type[PROC_TYPE_CPU]?0:1,
+            ssp->have_apps_for_proc_type[PROC_TYPE_NVIDIA_GPU]?0:1,
+            ssp->have_apps_for_proc_type[PROC_TYPE_AMD_GPU]?0:1
+        );
+    } else {
         for (i=0; i<NPROC_TYPES; i++) {
-            if (i>0) {
-                // skip types that the client doesn't have
-                //
-                COPROC* cp = g_request->coprocs.proc_type_to_coproc(i);
-                if (!cp || !cp->count) continue;
-            }
             if (!ssp->have_apps_for_proc_type[i]) {
                 fprintf(fout,
                     "<no_rsc_apps>%s</no_rsc_apps>\n",
@@ -988,19 +1070,8 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
                 );
             }
         }
-    } else {
-        if (config.debug_send) {
-            log_messages.printf(MSG_NORMAL,
-                "[send] no app versions for client resources; suppressing no_rsc_apps\n"
-            );
-        }
     }
-
-// CMC here
-  qcn_send_quakelist(bTrigger, hostid, qhip, user, fout);
-// CMC end
-
-    gui_urls.get_gui_urls(user, host, team, buf, sizeof(buf));
+    gui_urls.get_gui_urls(user, host, team, buf);
     fputs(buf, fout);
     if (project_files.text) {
         fputs(project_files.text, fout);
@@ -1066,7 +1137,7 @@ void SCHEDULER_REPLY::insert_message(USER_MESSAGE& um) {
 USER_MESSAGE::USER_MESSAGE(const char* m, const char* p) {
     if (g_request->core_client_version < 61200) {
         char buf[1024];
-        safe_strcpy(buf, m);
+        strcpy(buf, m);
         strip_translation(buf);
         message = buf;
     } else {
@@ -1081,11 +1152,9 @@ int APP::write(FILE* fout) {
         "    <name>%s</name>\n"
         "    <user_friendly_name>%s</user_friendly_name>\n"
         "    <non_cpu_intensive>%d</non_cpu_intensive>\n"
-        "    <fraction_done_exact>%d</fraction_done_exact>\n"
         "</app>\n",
         name, user_friendly_name,
-        non_cpu_intensive?1:0,
-        fraction_done_exact?1:0
+        non_cpu_intensive?1:0
     );
     return 0;
 }
@@ -1093,7 +1162,7 @@ int APP::write(FILE* fout) {
 int APP_VERSION::write(FILE* fout) {
     char buf[APP_VERSION_XML_BLOB_SIZE];
 
-    safe_strcpy(buf, xml_doc);
+    strcpy(buf, xml_doc);
     char* p = strstr(buf, "</app_version>");
     if (!p) {
         fprintf(stderr, "ERROR: app version %d XML has no end tag!\n", id);
@@ -1143,16 +1212,6 @@ int APP_VERSION::write(FILE* fout) {
             bavp->host_usage.gpu_usage
         );
     }
-    if (strlen(bavp->host_usage.custom_coproc_type)) {
-        fprintf(fout,
-            "    <coproc>\n"
-            "        <type>%s</type>\n"
-            "        <count>%f</count>\n"
-            "    </coproc>\n",
-            bavp->host_usage.custom_coproc_type,
-            bavp->host_usage.gpu_usage
-        );
-    }
     if (bavp->host_usage.gpu_ram) {
         fprintf(fout,
             "    <gpu_ram>%f</gpu_ram>\n",
@@ -1166,7 +1225,7 @@ int APP_VERSION::write(FILE* fout) {
 int SCHED_DB_RESULT::write_to_client(FILE* fout) {
     char buf[BLOB_SIZE];
 
-    safe_strcpy(buf, xml_doc_in);
+    strcpy(buf, xml_doc_in);
     char* p = strstr(buf, "</result>");
     if (!p) {
         fprintf(stderr, "ERROR: result %d XML has no end tag!\n", id);
@@ -1214,36 +1273,8 @@ int SCHED_DB_RESULT::parse_from_client(XML_PARSER& xp) {
         }
         if (xp.parse_str("name", name, sizeof(name))) continue;
         if (xp.parse_int("state", client_state)) continue;
-        if (xp.parse_double("final_cpu_time", cpu_time)) {
-            if (!boinc_is_finite(cpu_time)) {
-                cpu_time = 0;
-            }
-            continue;
-        }
-        if (xp.parse_double("final_elapsed_time", elapsed_time)) {
-            if (!boinc_is_finite(elapsed_time)) {
-                elapsed_time = 0;
-            }
-            continue;
-        }
-        if (xp.parse_double("final_peak_working_set_size", peak_working_set_size)) {
-            if (!boinc_is_finite(peak_working_set_size)) {
-                peak_working_set_size = 0;
-            }
-            continue;
-        }
-        if (xp.parse_double("final_peak_swap_size", peak_swap_size)) {
-            if (!boinc_is_finite(peak_swap_size)) {
-                peak_swap_size = 0;
-            }
-            continue;
-        }
-        if (xp.parse_double("final_peak_disk_usage", peak_disk_usage)) {
-            if (!boinc_is_finite(peak_disk_usage)) {
-                peak_disk_usage = 0;
-            }
-            continue;
-        }
+        if (xp.parse_double("final_cpu_time", cpu_time)) continue;
+        if (xp.parse_double("final_elapsed_time", elapsed_time)) continue;
         if (xp.parse_int("exit_status", exit_status)) continue;
         if (xp.parse_int("app_version_num", app_version_num)) continue;
         if (xp.match_tag("file_info")) {
@@ -1302,7 +1333,6 @@ int HOST::parse(XML_PARSER& xp) {
         if (xp.parse_double("p_membw", p_membw)) continue;
         if (xp.parse_str("os_name", os_name, sizeof(os_name))) continue;
         if (xp.parse_str("os_version", os_version, sizeof(os_version))) continue;
-        if (xp.parse_str("product_name", product_name, sizeof(product_name))) continue;
         if (xp.parse_double("m_nbytes", m_nbytes)) continue;
         if (xp.parse_double("m_cache", m_cache)) continue;
         if (xp.parse_double("m_swap", m_swap)) continue;
@@ -1313,11 +1343,6 @@ int HOST::parse(XML_PARSER& xp) {
         if (xp.parse_str("p_features", p_features, sizeof(p_features))) continue;
         if (xp.parse_str("virtualbox_version", virtualbox_version, sizeof(virtualbox_version))) continue;
         if (xp.parse_bool("p_vm_extensions_disabled", p_vm_extensions_disabled)) continue;
-        if (xp.match_tag("opencl_cpu_prop")) {
-            int retval = opencl_cpu_prop[num_opencl_cpu_platforms].parse(xp);
-            if (!retval) num_opencl_cpu_platforms++;
-            continue;
-        }
 
         // parse deprecated fields to avoid error messages
         //
@@ -1332,7 +1357,7 @@ int HOST::parse(XML_PARSER& xp) {
         if (xp.parse_string("accelerators", stemp)) continue;
 
 #if 1
-        // deprecated items
+        // not sure where these fields belong in the above categories
         //
         if (xp.parse_string("cpu_caps", stemp)) continue;
         if (xp.parse_string("cache_l1", stemp)) continue;
@@ -1418,7 +1443,7 @@ void GLOBAL_PREFS::parse(const char* buf, const char* venue) {
         // mod_time is outside of venue
         if (mod_time > dtime()) mod_time = dtime();
     }
-    extract_venue(buf, venue, buf2, sizeof(buf2));
+    extract_venue(buf, venue, buf2);
     parse_double(buf2, "<disk_max_used_gb>", disk_max_used_gb);
     parse_double(buf2, "<disk_max_used_pct>", disk_max_used_pct);
     parse_double(buf2, "<disk_min_free_gb>", disk_min_free_gb);
@@ -1439,15 +1464,14 @@ void GLOBAL_PREFS::defaults() {
 void GUI_URLS::init() {
     text = 0;
     read_file_malloc(config.project_path("gui_urls.xml"), text);
-    if (text) text = lf_terminate(text);
 }
 
-void GUI_URLS::get_gui_urls(USER& user, HOST& host, TEAM& team, char* buf, int len) {
+void GUI_URLS::get_gui_urls(USER& user, HOST& host, TEAM& team, char* buf) {
     bool found;
     char userid[256], teamid[256], hostid[256], weak_auth[256], rss_auth[256];
     strcpy(buf, "");
     if (!text) return;
-    strlcpy(buf, text, len);
+    strcpy(buf, text);
 
     sprintf(userid, "%d", user.id);
     sprintf(hostid, "%d", host.id);
@@ -1464,16 +1488,14 @@ void GUI_URLS::get_gui_urls(USER& user, HOST& host, TEAM& team, char* buf, int l
     get_rss_auth(user, rss_auth);
     while (1) {
         found = false;
-        found |= str_replace(buf, "<authenticator/>", user.authenticator);
-        found |= str_replace(buf, "<hostid/>", hostid);
-        found |= str_replace(buf, "<master_url/>", config.master_url);
-        found |= str_replace(buf, "<project_name/>", config.long_name);
-        found |= str_replace(buf, "<rss_auth/>", rss_auth);
-        found |= str_replace(buf, "<teamid/>", teamid);
-        found |= str_replace(buf, "<team_name/>", team.name);
         found |= str_replace(buf, "<userid/>", userid);
         found |= str_replace(buf, "<user_name/>", user.name);
+        found |= str_replace(buf, "<hostid/>", hostid);
+        found |= str_replace(buf, "<teamid/>", teamid);
+        found |= str_replace(buf, "<team_name/>", team.name);
+        found |= str_replace(buf, "<authenticator/>", user.authenticator);
         found |= str_replace(buf, "<weak_auth/>", weak_auth);
+        found |= str_replace(buf, "<rss_auth/>", rss_auth);
         if (!found) break;
     }
 }
@@ -1481,11 +1503,10 @@ void GUI_URLS::get_gui_urls(USER& user, HOST& host, TEAM& team, char* buf, int l
 void PROJECT_FILES::init() {
     text = 0;
     read_file_malloc(config.project_path("project_files.xml"), text);
-    if (text) text = lf_terminate(text);
 }
 
 void get_weak_auth(USER& user, char* buf) {
-    char buf2[1024], out[256];
+    char buf2[256], out[256];
     sprintf(buf2, "%s%s", user.authenticator, user.passwd_hash);
     md5_block((unsigned char*)buf2, strlen(buf2), out);
     sprintf(buf, "%d_%s", user.id, out);
@@ -1562,107 +1583,5 @@ double capped_host_fpops() {
     }
     return x;
 }
-
-bool HOST::get_opencl_cpu_prop(const char* platform, OPENCL_CPU_PROP& ocp) {
-    for (int i=0; i<num_opencl_cpu_platforms; i++) {
-        OPENCL_CPU_PROP& p = opencl_cpu_prop[i];
-        if (strcmp(p.platform_vendor, platform)) continue;
-        ocp = p;
-        return true;
-    }
-    return false;
-}
-
-// CMC start
-int qcn_send_quakelist(bool bTrigger, int hostid, DB_QCN_HOST_IPADDR& qhip, USER& user, FILE* fout)
-{
-         char* strTemp  = NULL;
-         char* strQuake = NULL; // CMC note - read_file_malloc allocates this, make sure to free it! new char[APP_VERSION_XML_BLOB_SIZE];
-
-      // CMC note -- we bypass this if a trigger trickle
-        if (bTrigger || ! user.id) return 0;
-   // CMC here -- send latest quake list
-        // always send project prefs
-        //
-        //fputs(user.project_prefs, fout);
-        //fputs("\n", fout);
-        // CMC Here - send current latitude / longitude & elev info for this host
-           char* strLatLng = NULL;
-           if (!qhip.hostid) { // host info wasn't set, so do it here and spoof trigger info set varietyid=-1
-              double dmxy[4], dmz[4];
-              qhip.hostid = hostid;
-              DB_QCN_GEO_IPADDR qgip;
-              DB_QCN_TRIGGER qtrig;
-              qtrig.varietyid=-1;
-              qtrig.hostid = qhip.hostid;
-              qtrig.id = 0;
-              strncpy(qtrig.ipaddr, get_remote_addr(), 32);
-              int iIPRetval = qcn_process_ipaddr(qtrig.ipaddr, 32);
-              strncpy(qgip.ipaddr, qtrig.ipaddr, 32);
-              if (iIPRetval || qcn_doTriggerHostLookup(qhip, qgip, qtrig, dmxy, dmz)) {
-                log_messages.printf(MSG_DEBUG,
-                  "sched::handle_request::qcn_host_ipadr hostid lookup %d Failure -- IP Addr %s -- IPRetva = %d\n",
-                         qhip.hostid, qtrig.ipaddr, iIPRetval);
-                 qhip.hostid = 0; //reset so bypasses the strLatLng creation below
-              }
-              else { // OK
-                log_messages.printf(MSG_DEBUG,
-                  "sched::handle_request::qcn_host_ipadr hostid lookup %d OK\n", qhip.hostid);
-              }
-           }
-
-           if (qhip.hostid) {
-             strLatLng = new char[512];
-             memset(strLatLng, 0x00, sizeof(char) * 512);
-             sprintf(strLatLng, "\n<qlatlng>\n  <qlllat>%f</qlllat>\n  <qlllng>%f</qlllng>\n  <qlllvv>%f</qlllvv>\n"
-                                "  <qlllvt>%d</qlllvt>\n  <qllal>%d</qllal>\n</qlatlng>\n",
-                qhip.latitude, qhip.longitude, qhip.levelvalue, qhip.levelid, qhip.alignid);
-                log_messages.printf(MSG_DEBUG,
-                  "sched::handle_request::qcn_host_ipadr values: %s\n", strLatLng);
-           }
-
-
-         const char* strWhere = strstr(user.project_prefs, "</project_specific>");
-         strTemp  = new char[APP_VERSION_XML_BLOB_SIZE];
-         strQuake = NULL; // CMC note - read_file_malloc allocates this, make sure to free it! new char[APP_VERSION_XML_BLOB_SIZE];
-         memset(strTemp,  0x00, sizeof(char) * APP_VERSION_XML_BLOB_SIZE);
-         //memset(strQuake, 0x00, sizeof(char) * APP_VERSION_XML_BLOB_SIZE);
-
-         if (boinc_file_exists("../qcn-quake.xml"))
-            read_file_malloc("../qcn-quake.xml", strQuake); // strQuake holds the quake file contents
-         if (strQuake && strlen(strQuake)>1 && strstr(strQuake, "<quakes>") && strstr(strQuake, "</quakes>")) { // we have valid quake data
-           if (strWhere) { // we found </project so prefs exist, insert quake in the middle
-               strTemp[0] = '\n'; // seems to like a leading newline?
-               strncpy(strTemp, user.project_prefs, strWhere - user.project_prefs - 1);
-               if (strLatLng) strlcat(strTemp, strLatLng, APP_VERSION_XML_BLOB_SIZE);
-               strlcat(strTemp, strQuake, APP_VERSION_XML_BLOB_SIZE);
-               strlcat(strTemp, "\n</project_specific>\n</project_preferences>\n", APP_VERSION_XML_BLOB_SIZE);
-           }
-           else {  // blank project prefs, so just write quake data
-               sprintf(strTemp, "\n<project_preferences>\n<project_specific>\n%s%s</project_specific>\n</project_preferences>\n",
-                 strQuake, strLatLng ? strLatLng : "");
-           }
-
-           fputs(strTemp, fout);
-           fputs("\n", fout);
-         }
-         else { // send normal proj prefs
-           // always send project prefs
-           //
-           strTemp[0] = '\n'; // seems to like a leading newline?
-           strncpy(strTemp, user.project_prefs, strWhere - user.project_prefs - 1);
-           if (strLatLng) strlcat(strTemp, strLatLng, APP_VERSION_XML_BLOB_SIZE);
-           strlcat(strTemp, "\n</project_specific>\n</project_preferences>\n", APP_VERSION_XML_BLOB_SIZE);
-           fputs(strTemp, fout);
-           fputs("\n", fout);
-       } //bTrigger
-
-      if (strTemp) delete [] strTemp;
-      if (strQuake) free(strQuake);  // note malloc was used for strQuake, so use free, not delete[]!
-      if (strLatLng) delete [] strLatLng;
-
-      return 0;
-}
-// CMC end
 
 const char *BOINC_RCSID_ea659117b3 = "$Id$";
