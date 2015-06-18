@@ -51,3 +51,24 @@ alter table app
         alter post_min_total_credit set default 0,
         alter parent_type set default 0;
 
+============ rollback ------------
+
+use sensor;
+
+alter table app
+            drop column fraction_done_exact;
+
+alter table app_version
+            drop column beta;
+
+alter table host drop column gpu_active_frac;
+
+lock tables result write;
+
+alter table result 
+     drop column peak_working_set_size,
+     drop column peak_swap_size,
+     drop column peak_disk_usage;
+
+unlock tables;
+
