@@ -20,11 +20,6 @@
 // They've already entered an email address and password.
 // Now get a name, country, and zip code
 
-
-// CMC add next 2 lines
-require_once("../project/project.inc");
-require_once("../inc/prefs.inc");
-
 require_once('../inc/boinc_db.inc');
 require_once('../inc/util.inc');
 require_once('../inc/countries.inc');
@@ -36,10 +31,7 @@ $user = lookup_user_auth($auth);
 if (!$user) {
     error_page("no such account");
 }
-// CMC here next 2 lines
-$psprefs = project_specific_prefs_parse($user->project_prefs);
-page_head(tra("Finish account setup"), true, $psprefs);
-//page_head(tra("Finish account setup"));
+page_head(tra("Finish account setup"));
 
 echo "
     <form action=account_finish_action.php method=post>

@@ -38,7 +38,6 @@ function mail_report_list($forum, $subject, $body, $must_send=false) {
             ";
         }
         $emails = explode("|", POST_REPORT_EMAILS);
-        $admin = new stdClass();
         foreach ($emails as $email) {
             $admin->email_addr = $email;
             if (!send_email($admin, $subject, $body)) {

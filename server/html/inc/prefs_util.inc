@@ -126,7 +126,6 @@ class PREF_BOOL extends PREF {
         return true;
     }
     function set_default(&$prefs) {
-        if (!$prefs) $prefs = new stdClass();
         $tag = $this->tag;
         $prefs->$tag = $this->default;
     }
@@ -216,7 +215,6 @@ class PREF_NUM extends PREF {
     }
     function set_default(&$prefs) {
         $tag = $this->tag;
-        if (!$prefs) $prefs = new stdClass();
         $prefs->$tag = $this->num_spec->default;
     }
 }

@@ -47,12 +47,8 @@ if (parse_bool($config, "disable_account_creation")) {
     exit();
 }
 
-// CMC check for RAMP
-$isramp = strstr($next_url, "ramp");
-
 $nwac = parse_bool($config, "no_web_account_creation");
-
-if (!$wac && !$isramp && !no_computing()) {
+if (!$nwac && !no_computing()) {
     echo "<p>
         <b>".tra("NOTE: If you use the BOINC Manager, don't use this form. Just run BOINC, select Add Project, and enter an email address and password.")."</b></p>
     ";

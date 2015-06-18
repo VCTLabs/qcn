@@ -142,10 +142,6 @@ function page_head(
 ) {
     global $caching, $cache_control_extra, $did_page_head;
 
- // CMC here
- require_once(BASEPATH . "/boinc/sensor/html/inc/google_translate.inc");
-
-
     $did_page_head = true;
     $stylesheet = URL_BASE.STYLESHEET;
     $rssname = PROJECT . " RSS 2.0";
@@ -176,9 +172,6 @@ function page_head(
     } else {
         echo "<title>".sanitize_tags($title_plain)."</title>\n";
     }
-     // CMC
-      project_wordpress_header();
-
     echo "<link rel=stylesheet type=\"text/css\" href=\"".URL_BASE."main.css\" media=\"all\">
         <link rel=stylesheet type=\"text/css\" href=\"$stylesheet\">
     ";
@@ -194,7 +187,6 @@ function page_head(
     } else {
         echo "<body>";
     }
-    google_translate_new();
     display_cvs_versions();
 
     project_banner($title, $prefix);
@@ -586,39 +578,6 @@ function check_get_args($args) {
     }
 }
 
-// CMC here
-function get_double($name, $optional=false) {
-    $x=null;
-    if (isset($_GET[$name])) $x = $_GET[$name];
-    if (!is_numeric($x)) {
-        if ($optional) {
-            if ($x) {
-                Header("Location: non_num_arg.html");
-                die;
-            }
-            return null;
-        } else {
-            Header("Location: missing_arg_$name.html");
-            die;
-        }
-    }
-    return (double)$x;
-}
-
-// CMC function for post of a double/float
-function post_double($name, $optional=false) {
-    $x = null;
-    if (isset($_POST[$name])) $x = $_POST[$name];
-    if (!is_numeric($x)) {
-        if ($optional) {
-            return null;
-        } else {
-            error_page("missing or bad parameter: $name; supplied: ".htmlspecialchars($x));
-        }
-    }
-    return (double)$x;
-}
-
 function get_int($name, $optional=false) {
     $x=null;
     if (isset($_GET[$name])) $x = $_GET[$name];
@@ -845,7 +804,7 @@ function db_init($try_replica=false) {
 // for various resource types.
 //
 function get_app_types() {
-    $t = new stdClass();
+    $t = null;
     $t->cpu = false;
     $t->cuda = false;
     $t->ati = false;
@@ -924,59 +883,6 @@ function do_download($path,$name="") {
     header('Content-Length: ' . filesize($path));
     flush();
     readfile($path);
-}
-
-if (!function_exists("print_login_form_aux")){
-function print_login_form_aux($next_url, $user, $ramp) {
-    $x = urlencode($next_url);
-    echo "
-        <form name=\"f\" method=\"post\" action=\"" . BASEURL . "/sensor/login_action.php\">
-        <input type=\"hidden\" name=\"next_url\" value=\"$next_url\">
-    ";
-
-    if ($ramp) {
-      $x = "ramp_signup.php";
-      echo "<p><b>Please login below or <a href=\"create_account_form.php?next_url=$x\">create an account</a> to sign up for QCN RAMP.</b><BR>
-         You will be able to use this login information when you join QCN via the
-         BOINC software (i.e. when you are setting up a computer with a sensor to join QCN</p><BR>";
-    }
-
-    start_table();
-    row2("Email address:", '<input name="email_addr" size="40" tabindex="1">');
-    row2("Password:<br><span class=note><a href=get_passwd.php>Forgot password?</a></span>",
-        '<input type="password" name="passwd" size="40" tabindex="2">'
-    );
-    row2("Stay logged in on this computer",
-        '<input type="checkbox" name="stay_logged_in" checked>'
-    );
-    row2("",
-        "<input type=\"submit\" name=\"mode\" value=\"Log in\" tabindex=\"3\"><br><br>or <a href=\"create_account_form.php?next_url=$x\">create an account</a>."
-    );
-    if ($user) {
-        row1("Log out");
-        row2("You are logged in as $user->name",
-            "<a href=\"logout.php?".url_tokens($user->authenticator)."\">Log out</a>"
-        );
-    }
-    end_table();
-    echo "
-        </form>
-        <script type=\"text/javascript\">
-            document.f.email_addr.focus();
-        </script>
-    ";
-}
-}
-
-if (!function_exists("print_login_form")){
-function print_login_form($ramp=false) {
-//    page_head("Please log in");
-    page_top();
-    $next_url = $_SERVER['REQUEST_URI'];
-    print_login_form_aux($next_url, null, $ramp);
-//    page_tail();
-    page_end();
-}
 }
 
 $cvs_version_tracker[]="\$Id$";  //Generated automatically - do not edit

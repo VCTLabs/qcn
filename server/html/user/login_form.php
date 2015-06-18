@@ -32,9 +32,6 @@ if (defined('SECURE_URL_BASE')
 
 }
 
-// CMC check for RAMP
-$isramp = strstr($next_url, "ramp");
-
 $user = get_logged_in_user(false);
 
 page_head(tra("Log in"));
@@ -46,12 +43,6 @@ echo '
     <br>
 ';
 }
-
-// CMC for ramp
-if ($isramp) {
-   echo "Please login or <A HREF=\"create_account_form.php?next_url=ramp_signup.php\">create an acount</A> to associate with your RAMP request<BR><BR>";
-}
-
 
 echo "
     <form name=\"f\" method=\"post\" action=\"".SECURE_URL_BASE."/login_action.php\">

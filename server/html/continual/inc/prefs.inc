@@ -59,9 +59,12 @@
 // Various functions are defined below for converting between these forms,
 // and also to/from HTML form elements
 
+error_reporting(0);
+/*
 error_reporting(E_ALL);
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
+*/
 
 include_once("../inc/prefs_util.inc");
 include_once("../project/project_specific_prefs.inc");
@@ -404,7 +407,6 @@ global $venue_name;
 function get_disk_space_config() {
     global  $config;
     $config = get_config();
-    $dp = new stdClass();
     $dp->disk_max_used_gb = parse_config($config, "<default_disk_max_used_gb>");
     $dp->disk_max_used_pct = parse_config($config, "<default_disk_max_used_pct>");
     $dp->disk_min_free_gb = parse_config($config, "<default_disk_min_free_gb>");

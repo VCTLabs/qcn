@@ -17,8 +17,6 @@
 // along with BOINC.  If not, see <http://www.gnu.org/licenses/>.
 
 // Should not be enabled for public code
-//ini_set('display_errors', 'stdout');
-//error_reporting(E_ALL);
 
 /// represents a connection to a database.
 // Intended to be subclassed (e.g., BoincDb, BossaDb)
@@ -164,7 +162,7 @@ class DbConn {
         $query = "replace into ".$this->db_name.".$table set $clause";
         return $this->do_query($query);
     }
-    function base_escape_string($string) {
+    static function base_escape_string($string) {
         return mysql_real_escape_string($string);
     }
     function base_error() {

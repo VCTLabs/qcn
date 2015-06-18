@@ -268,7 +268,7 @@ show_status($www_host, tra("data-driven web pages"), $web_running);
 
 // Check for httpd.pid file of upload/download server.
 //
-$uldl_running = true; // CMC cheat !  file_exists($uldl_pid);
+$uldl_running = file_exists($uldl_pid);
 if ($uldl_running == 0) $uldl_running = -1;
 show_status($uldl_host, tra("upload/download server"), $uldl_running);
 

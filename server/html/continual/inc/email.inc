@@ -61,72 +61,15 @@ function send_email($user, $subject, $body, $body_html=null) {
         } else {
             return true;
         }
-    } else {  // CMC modded for new Stanford email methods/servers
-        $from = "noreply@stanford.edu";
+    } else {
         $headers ="";
         if (defined('EMAIL_FROM') && defined('EMAIL_FROM_NAME')) {
             $headers = "From: ".EMAIL_FROM_NAME." <".EMAIL_FROM.">";
-            $from = EMAIL_FROM_NAME." <".EMAIL_FROM.">";
         } else if (defined('EMAIL_FROM')) {
             $headers = "From: ". EMAIL_FROM;
-            $from = EMAIL_FROM;
         }
-
-/*
- Stanford using smtps i.e. SSL smtp email server
-   -- sendmail configured on qcn to use this as of 4/25/2010
-  Uses the PEAR Mail package (build PEAR from php i.e. --enable-pear
-  istall via PEAR: 
-     pear install Mail
-     pear install Net_Socket
-     pear install Net_SMTP
-
-  installs to:
-     /usr/local/lib/php
-*/
-
- require_once "/usr/local/lib/php/Mail.php";
-
- $host = "ssl://smtp.stanford.edu";
- $port = "465";
- $to = $user->email_addr;
-
-// Jesse added this if statement so that if an html email is sent, it has the content-type: ...
-if ($body_html) {
- $hdrs = array (
-   'From'    => $from,
-   'To'      => $to,
-   'Subject' => $subject,
-   'Content-Type' => "text/html" );
- $body = $body_html;
-} else {
- $hdrs = array (
-   'From'    => $from,
-   'To'      => $to,
-   'Subject' => $subject );
-}
- $smtp = Mail::factory('smtp',
-     array('host' => $host, 'port' => $port) );
-
-/*  for $smtp auth servers
-     'auth' => true,
-     'username' => $username,
-     'password' => $password));
-*/
-
-//       return mail($user->email_addr, $subject, $body, $headers);
-
-
- $mail = $smtp->send($to, $hdrs, $body);
-
-/*
-//debug:
-print_r($user);
-echo $to . "   " . $mail . "\n";
-echo "[" . PEAR::isError($mail) . "]\n";
-*/
-  return ! PEAR::isError($mail);
-   }
+        return mail($user->email_addr, $subject, $body, $headers);
+    }
 }
 
 // Send an email describing an account to the user.
@@ -159,6 +102,7 @@ $body .= "
 For further information and assistance with ".PROJECT.", visit
 $master_url
 ";
+
     return send_email($user, $subject, $body);
 }
 

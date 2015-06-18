@@ -75,7 +75,6 @@ if ($format=="xml"){
         $user = @get_other_projects($user);
         $community_links =  get_community_links_object($user);
 
-        $data = new stdClass();
         $data->user = $user;
         $data->clo = $community_links;
         set_cached_data(USER_PAGE_TTL, serialize($data), $cache_args);

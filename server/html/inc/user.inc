@@ -25,7 +25,6 @@ require_once("../inc/forum_db.inc");
 require_once("../inc/notify.inc");
 
 function parse_project($f) {
-    $p = new stdClass();
     $p->total_credit = 0.0;
     $p->expavg_credit = 0.0;
     while (!feof($f)) {
@@ -343,7 +342,6 @@ function show_user_summary_public($user) {
 // @param user The user to produce a community links object for
 
 function get_community_links_object($user){
-    $cache_object = new stdClass();
     $cache_object->post_count = total_posts($user);
     $cache_object->user = $user;
     $cache_object->team = lookup_team($user->teamid);
@@ -481,12 +479,7 @@ function make_user(
     $country = BoincDb::escape_string($country);
     $postal_code = sanitize_tags(BoincDb::escape_string($postal_code));
 
- // CMC set defaults for global prefs
-    $uid = BoincUser::insert("(create_time, email_addr, name, authenticator, country, postal_code, total_credit, expavg_credit, expavg_time, project_prefs, teamid,  send_email, show_hosts, cross_project_id, passwd_hash, global_prefs) values($now, '$email_addr', '$name', '$authenticator', '$country', '$postal_code', 0, 0, unix_timestamp(), '$project_prefs', $teamid, 1, 1, '$cross_project_id', '$passwd_hash','" . GLOBAL_PREFS_DEFAULT . "')");
-
-/*
     $uid = BoincUser::insert("(create_time, email_addr, name, authenticator, country, postal_code, total_credit, expavg_credit, expavg_time, project_prefs, teamid,  send_email, show_hosts, cross_project_id, passwd_hash) values($now, '$email_addr', '$name', '$authenticator', '$country', '$postal_code', 0, 0, unix_timestamp(), '$project_prefs', $teamid, 1, 1, '$cross_project_id', '$passwd_hash')");
-*/
 
     if ($uid) {
         return BoincUser::lookup_id($uid);

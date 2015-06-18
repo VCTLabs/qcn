@@ -157,20 +157,13 @@ function cache_need_to_regenerate($path, $max_age){
     return $regenerate;
 }
 
-// Returns cached data or false if nothing was found -- CMC note the addition of $mypath so I can 'hardcode' a cache file to use
-function get_cached_data($max_age, $params="", $mypath=""){
+// Returns cached data or false if nothing was found
+function get_cached_data($max_age, $params=""){
     global $no_cache;
 
     if ($no_cache) return;
 
-    if ($mypath) {
-       get_path($params); // note need this to create dirs
-       $path = $mypath;
-    }
-    else {
-       $path = get_path($params);
-    }
-
+    $path = get_path($params);
     if ($max_age) {
         if (defined('MEMCACHE_SERVERS')) {
             $cache = BoincMemcache::get()->get($path);
@@ -278,24 +271,12 @@ function end_cache($max_age,$params=""){
     }
 }
 
-// CMC modded so we could save our own path
-function set_cache_data($data,$params="",$mypath=""){
-    set_cached_data(86400, $data, $params, $mypath);
-}
-
-// CMC mod
-function set_cached_data($max_age, $data, $params="", $mypath=""){
+function set_cached_data($max_age, $data, $params=""){
     // for the benefit of hackers
     if (strstr($params, "..")) {
         return;
     }
-    if ($mypath) {
-      get_path($params); // note need this to create dirs
-      $path = $mypath;
-    }
-    else {
-      $path = get_path($params);
-    }
+    $path = get_path($params);
     if (defined('MEMCACHE_SERVERS')) {
         $cache = array('content' => $data, 'timestamp' => time());
         BoincMemcache::get()->set($path, $cache, $max_age);
@@ -314,7 +295,7 @@ function clear_cache_entry($phpfile, $params) {
         return;
     }
     $path = get_path($params, $phpfile);
-    unlink($path);
+    @unlink($path);
 }
 
 // Memcached class

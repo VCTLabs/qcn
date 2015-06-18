@@ -53,17 +53,11 @@ if (!$retval) {
 // team may have already been joined in create_account RPC.
 // if so, skip team-finder
 //
-/*
 if ($user->teamid) {
     Header("Location: home.php");
 } else {
     Header("Location: team_search.php");
 }
-*/
-
-// CMC here
-Header("Location: edit_host_info_form.php");
 send_cookie('auth', $auth, true);
 send_cookie('init', "1", true);
-
 ?>

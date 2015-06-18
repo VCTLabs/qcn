@@ -83,7 +83,6 @@ function show_host($host, $user, $ipprivate) {
     row1(tra("Computer information"));
     $anonymous = false;
     if ($user) {
-     row2(tra("Computer Location Page"), "<A HREF=\"edit_host_info_form.php?hostid=" . $host->id . "\">Click Here To Verify or Set Location</A>");
         if ($ipprivate) {
             row2(tra("IP address"), "$host->last_ip_addr<br>".tra("(same the last %1 times)", $host->nsame_ip_addr));
             if ($host->last_ip_addr != $host->external_ip_addr) {
