@@ -22,6 +22,7 @@ require_once("../inc/boinc_db.inc");
 require_once("../inc/util.inc");
 require_once("../inc/result.inc");
 
+error_reporting(0);
 check_get_args(array("hostid", "userid", "offset", "appid", "state", "show_names"));
 
 $config = get_config();

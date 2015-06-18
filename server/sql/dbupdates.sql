@@ -69,6 +69,38 @@ alter table result
      drop column peak_working_set_size,
      drop column peak_swap_size,
      drop column peak_disk_usage;
-
 unlock tables;
+
+alter table user alter 
+   venue set default '';
+alter table user alter 
+   send_email set default 1;
+alter table user alter 
+   show_hosts set default 1;
+alter table user alter 
+   posts set default 1;
+alter table user alter 
+  seti_id set default 0;
+alter table user alter 
+  seti_nresults set default 0;
+alter table user alter 
+  seti_last_result_time set default 0;
+alter table user alter 
+  seti_total_cpu set default 0;
+alter table user alter 
+   has_profile set default 0;
+alter table user alter 
+   cross_project_id set default 0;
+alter table user alter 
+   email_validated set default 0;
+alter table user alter 
+   donated set default 0;
+
+alter table forum_preferences alter last_post set default 0;
+alter table forum_preferences alter forum_sorting set default 0;
+alter table forum_preferences alter rated_posts  set default 0;
+alter table forum_preferences alter ignorelist set default 0;
+
+
+
 

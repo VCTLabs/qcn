@@ -220,7 +220,7 @@ create table qcn_host_ipaddr
 id int(11) not null primary key auto_increment,
 hostid int(11) not null,
 ipaddr varchar(32) not null default '',
-location varchar(32) not null default '',
+location varchar(128) not null default '',
 latitude double,
 longitude double,
 levelvalue float,
