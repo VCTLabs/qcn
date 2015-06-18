@@ -79,7 +79,9 @@ bool batch = false;
 bool mark_jobs_done = false;
 bool all_apps_use_hr;
 // CMC here -- createthe trigmem db connection
-DB_CONN trigmem_db;
+#ifdef _USING_TRIGMEM
+  DB_CONN trigmem_db;
+#endif
 // end CMC
 
 static void usage(char* p) {
@@ -186,7 +188,9 @@ int open_database() {
     if (db_opened) {
         retval = boinc_db.ping();
 // CMC here -- test our trigmem ping
+#ifdef _USING_TRIGMEM
         if (!retval) retval = trigmem_db.ping();
+#endif
 // end CMC
         if (retval) {
             log_messages.printf(MSG_CRITICAL,
@@ -210,6 +214,7 @@ int open_database() {
     }
 
 // CMC here -- create the trigmem db connection
+#ifdef _USING_TRIGMEM
     retval = trigmem_db.open(
         config.trigmem_db_name, config.trigmem_db_host, config.trigmem_db_user, config.trigmem_db_passwd
     );
@@ -217,6 +222,7 @@ int open_database() {
         log_messages.printf(MSG_CRITICAL, "can't open trigmem database\n");
         return retval;
     }
+#endif
 // end CMC
 
     db_opened = true;
@@ -231,7 +237,9 @@ void sigterm_handler(int /*signo*/) {
     if (db_opened) {
         boinc_db.close();
 //CMC here
+#ifdef _USING_TRIGMEM
         trigmem_db.close();
+#endif 
 // end CMC
     }
     log_messages.printf(MSG_CRITICAL,
@@ -691,7 +699,9 @@ done:
     if (db_opened) {
         boinc_db.close();
 //CMC here
+#ifdef _USING_TRIGMEM
         trigmem_db.close();
+#endif
 // end CMC
     }
 }

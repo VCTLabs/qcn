@@ -128,11 +128,13 @@ int SCHED_CONFIG::parse(FILE* f) {
         if (xp.parse_str("db_passwd", db_passwd, sizeof(db_passwd))) continue;
         if (xp.parse_str("db_host", db_host, sizeof(db_host))) continue;
 // CMC HERE -- add in fields for trigmem
+#ifdef _USING_TRIGMEM
         if (xp.parse_str("trigmem_db_name", trigmem_db_name, sizeof(trigmem_db_name))) continue;
         if (xp.parse_str("trigmem_db_user", trigmem_db_user, sizeof(trigmem_db_user))) continue;
         if (xp.parse_str("trigmem_db_passwd", trigmem_db_passwd, sizeof(trigmem_db_passwd))) continue;
         if (xp.parse_str("trigmem_db_host", trigmem_db_host, sizeof(trigmem_db_host))) continue;
         if (xp.parse_int("trigmem_db_port", trigmem_db_port)) continue;
+#endif
 // end CMC
         if (xp.parse_str("replica_db_name", replica_db_name, sizeof(replica_db_name))) continue;
         if (xp.parse_str("replica_db_user", replica_db_user, sizeof(replica_db_user))) continue;
