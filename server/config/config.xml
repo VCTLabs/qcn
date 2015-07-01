@@ -10,7 +10,7 @@
     <cgi_url>http://qcn.stanford.edu/sensor_cgi/</cgi_url>
     <msg_to_host/>
     <sched_debug_level>
-      2
+      1
     </sched_debug_level>
    <min_sendwork_interval>7200</min_sendwork_interval>
     <send_result_abort/>

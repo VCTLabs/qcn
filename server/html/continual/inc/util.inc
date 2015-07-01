@@ -578,6 +578,24 @@ function check_get_args($args) {
     }
 }
 
+function get_double($name, $optional=false) {
+    $x=null;
+    if (isset($_GET[$name])) $x = $_GET[$name];
+    if (!is_numeric($x)) {
+        if ($optional) {
+            if ($x) {
+                Header("Location: non_num_arg.html");
+                die;
+            }
+            return null;
+        } else {
+            Header("Location: missing_arg_$name.html");
+            die;
+        }
+    }
+    return (double)$x;
+}
+
 function get_int($name, $optional=false) {
     $x=null;
     if (isset($_GET[$name])) $x = $_GET[$name];

@@ -342,6 +342,7 @@ function show_user_summary_public($user) {
 // @param user The user to produce a community links object for
 
 function get_community_links_object($user){
+    $cache_object = stdClass();
     $cache_object->post_count = total_posts($user);
     $cache_object->user = $user;
     $cache_object->team = lookup_team($user->teamid);
