@@ -39,8 +39,8 @@ if ($hostid>0) {
 $title = "";
 
     $mapimg = MAP_TRIGGER;
-    $cachedatafile = CACHE_PATH_MAPTRIG;
-    $cachedatafileContinual = CACHE_PATH_MAPTRIG_CONTINUAL;
+    $cachedatafile = CACHE_PATH_MAPTRIG_H;
+    $cachedatafileContinual = CACHE_PATH_MAPTRIG_CONTINUAL_H;
     $legendbase = "<p align=\"left\"><font size=\"+1\"><b>Legend:</b></font><table><tr><td valign=\"center\"><IMG SRC=\"img/qcn_32_laptop.png\" height=\"24\"> = Laptop Sensor</td><td valign=\"middle\"><IMG SRC=\"img/qcn_32_usb.png\" height=\"24\"> = USB sensor</td><td valign=\"middle\"> <IMG SRC=\"img/qcn_32_quake.png\" height=\"24\"> = USGS-earthquake, magnitude >";
     switch($timeint) {
        case "D":
@@ -66,8 +66,8 @@ $title = "";
           break;
        default:
           $mapimg = MAP_TRIGGER;
-          $cachedatafile = CACHE_PATH_MAPTRIG;
-          $cachedatafileContinual = CACHE_PATH_MAPTRIG_CONTINUAL;
+          $cachedatafile = CACHE_PATH_MAPTRIG_H;
+          $cachedatafileContinual = CACHE_PATH_MAPTRIG_CONTINUAL_H;
           $title = "Map for the Last 4 Hours";
           $legend = $legendbase . MIN_MAGNITUDE;
           break;
@@ -123,7 +123,8 @@ $data = array();
 $bUseContinual = false;
 
 if (file_exists($cachedatafile)) {
-  $cacheddata=get_cached_data(MAPTRIG_TTL, "maptrig", $cachedatafile);  // regenerate every 15 minutes
+print $cachedatafile . "<BR><BR>";
+  $cacheddata=get_cached_data(MAPTRIG_TTL, $cachedatafile, $cachedatafile);  // regenerate every 15 minutes
   if ($cacheddata){
           $data = unserialize($cacheddata); // use the cached data
   } 
@@ -131,7 +132,7 @@ if (file_exists($cachedatafile)) {
 
 // continual data
 if (file_exists($cachedatafileContinual)) {
-  $cacheddataContinual=get_cached_data(MAPTRIG_TTL, "maptrig", $cachedatafileContinual);  // regenerate every 15 minutes
+  $cacheddataContinual=get_cached_data(MAPTRIG_TTL, $cachedatafile, $cachedatafile);  // regenerate every 15 minutes
   if ($cacheddataContinual){
           $bUseContinual = true;
           $dataContinual = unserialize($cacheddataContinual); // use the cached data

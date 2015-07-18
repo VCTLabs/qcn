@@ -10,8 +10,8 @@ function qcn_generate_world_map(&$data, $timeint)
     $trigtime = 3600*4;
     $minmag = MIN_MAGNITUDE;
     $mapimg = MAP_TRIGGER;
-    $cachedata = CACHE_PATH_MAPTRIG;
-    $cachedataContinual = CACHE_PATH_MAPTRIG_CONTINUAL;
+    $cachedata = CACHE_PATH_MAPTRIG_H;
+    $cachedataContinual = CACHE_PATH_MAPTRIG_CONTINUAL_H;
     switch($timeint) {
        case "D":
           $trigtime = 3600*24;
@@ -38,8 +38,8 @@ function qcn_generate_world_map(&$data, $timeint)
           $minmag = MIN_MAGNITUDE;
           $trigtime = 3600*4;
           $mapimg = MAP_TRIGGER;
-          $cachedata = CACHE_PATH_MAPTRIG;
-          $cachedataContinual = CACHE_PATH_MAPTRIG_CONTINUAL;
+          $cachedata = CACHE_PATH_MAPTRIG_H;
+          $cachedataContinual = CACHE_PATH_MAPTRIG_CONTINUAL_H;
           break;
     }
 
@@ -102,7 +102,7 @@ function qcn_generate_world_map(&$data, $timeint)
     }
 
     // save the $data to the cache
-    set_cache_data(serialize($data), "maptrig", $cachedata);
+    set_cache_data(serialize($data), "", $cachedata);
 
   // First we load the background/base map. We assume it's located in same dir as the script.
   // This can be any format but we are using JPG in this example
@@ -285,7 +285,7 @@ function project_specific_host_latlng_prefs($hostid) {
     if ($hostid < 1) return $hll; // invalid hostid (or sql injection attack?)
     $db = BoincDb::get();
     $sql = "select geoipaddrid,ipaddr,location,latitude,longitude,levelvalue,levelid,alignid from qcn_host_ipaddr "
-           . "where hostid=$hostid order by ipaddr, id";
+           . "where hostid=$hostid order by geoipaddrid,ipaddr,id";
     $result=$db->do_query($sql);
     if ($result && mysql_num_rows($result)>0) {  // we found some records
        while($row=mysql_fetch_array($result)) {
