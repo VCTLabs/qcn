@@ -36,7 +36,7 @@ if (isset($USE_PHPMAILER)) {
 
 // send an email, using PHPMailer or not.
 //
-function send_email($user, $subject, $body, $body_html=null) {
+function send_email($user, $subject, $body, $body_html=null, $emailTo=null) {
     global $USE_PHPMAILER;
     global $PHPMAILER_HOST;
     global $PHPMAILER_MAILER;
@@ -68,7 +68,12 @@ function send_email($user, $subject, $body, $body_html=null) {
         } else if (defined('EMAIL_FROM')) {
             $headers = "From: ". EMAIL_FROM;
         }
-        return mail($user->email_addr, $subject, $body, $headers);
+        $retVal = false;
+        if ($emailTo)
+            $retVal = mail($emailTo, $subject, $body, $headers);
+        else
+            $retVal = mail($user->email_addr, $subject, $body, $headers);
+        return $retVal;
     }
 }
 
