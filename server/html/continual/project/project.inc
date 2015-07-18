@@ -9,7 +9,7 @@ $master_url = parse_config(get_config(), "<master_url>");
 $is_continual = (parse_config(get_config(), "<db_name>") == "continual");
 define ("IS_CONTINUAL", $is_continual ? true : false);
 define("PROJECT", "Quake-Catcher Network Continual Monitoring");
-define("URL_BASE", "http://qcn.stanford.edu/continual/");
+define("URL_BASE", "http://qcn.caltech.edu/continual/");
 define("MAXMIND_URL", "https://geoip.maxmind.com/b?l=ILFoClxbJcfk");
 define("GOOGLE_MAPS_KEY", "AIzaSyDVxlyCoT9_i3eRxVF31dLKLPVTk22ZSS4");
 define("IMAGE_PATH", "../user_profile/images/");
@@ -18,11 +18,11 @@ define("PROFILE_PATH", "../user_profile/");
 define("PROFILE_URL", "user_profile/");
 define("LANGUAGE_FILE", "languages.txt");
 define("STYLESHEET", "qcn.css");
-define("COPYRIGHT_HOLDER", "Stanford University");
-define("SYS_ADMIN_EMAIL", "carlgt1@yahoo.com");
-define("UOTD_ADMIN_EMAIL", "carlgt1@yahoo.com"); # who gets user of the day pool running low e-mails?
+define("COPYRIGHT_HOLDER", "CalTech");
+define("SYS_ADMIN_EMAIL", "carlgt1@hotmail.com");
+define("UOTD_ADMIN_EMAIL", "carlgt1@hotmail.com"); # who gets user of the day pool running low e-mails?
 define("EMAIL_FROM_NAME", "Quake-Catcher Network  (Do Not Reply)");
-define("EMAIL_FROM", "noreply@qcn.stanford.edu");
+define("EMAIL_FROM", "noreply@qcn.caltech.edu");
 define("TITLE_COLOR", "");
 define("TITLE_FONT", "");
 define("BODY_COLOR", "");
@@ -402,7 +402,7 @@ function project_forum_post_rules() {
 }
 
 function printGoogleMapsHeader()
-{ // note the key was registered on http://www.google.com/maps/api for qcn.stanford.edu
+{ // note the key was registered on http://www.google.com/maps/api for qcn.caltech.edu
 //echo "<script src=\"http://maps.google.com/maps?file=api&v=1&key=ABQIAAAA7FMxjQepz_hQElGJ5tGPvhR_-dF_tBKZEzXEmb5veXIjh7ji-BSpO1s_bzlk2XSTyJa-06G_6sf7rw\""; 
   echo "\n<script type=\"text/javascript\" "
      . "src=\"//maps.googleapis.com/maps/api/js?key=" . GOOGLE_MAPS_KEY 
