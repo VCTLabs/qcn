@@ -123,7 +123,6 @@ $data = array();
 $bUseContinual = false;
 
 if (file_exists($cachedatafile)) {
-print $cachedatafile . "<BR><BR>";
   $cacheddata=get_cached_data(MAPTRIG_TTL, $cachedatafile, $cachedatafile);  // regenerate every 15 minutes
   if ($cacheddata){
           $data = unserialize($cacheddata); // use the cached data
