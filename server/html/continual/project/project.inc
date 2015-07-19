@@ -67,7 +67,7 @@ define("GLOBAL_PREFS_DEFAULT", "<global_preferences>\n"
 
 // Email addresses separated by pipe ( | ) that will receive user reported 
 // offensive forum posts.
-define("POST_REPORT_EMAILS", "carlgt1@yahoo.com|");
+define("POST_REPORT_EMAILS", "carlgt1@hotmail.com|");
 
 define("MAP_ICON_0", "http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png");
 define("MAP_ICON_1", "http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png");
