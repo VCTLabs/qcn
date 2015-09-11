@@ -18,7 +18,6 @@
     <download_dir>
       /var/www/boinc/continual/download
     </download_dir>
-    <min_sendwork_interval>7200</min_sendwork_interval>
     <uldl_dir_fanout>
       1024
     </uldl_dir_fanout>
@@ -82,9 +81,6 @@
     <upload_url>
       http://qcn.caltech.edu/continual_cgi/file_upload_handler
     </upload_url>
-    <min_sendwork_interval>
-      6
-    </min_sendwork_interval>
     <non_cpu_intensive>
        1
     </non_cpu_intensive>

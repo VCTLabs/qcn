@@ -10,9 +10,8 @@
     <cgi_url>http://qcn.caltech.edu/sensor_cgi/</cgi_url>
     <msg_to_host/>
     <sched_debug_level>
-      1
+      2
     </sched_debug_level>
-   <min_sendwork_interval>7200</min_sendwork_interval>
     <send_result_abort/>
     <uldl_dir_fanout>
       1024
@@ -83,7 +82,7 @@
       1
     </ignore_delay_bound>
     <max_wus_to_send>
-      1
+      3
     </max_wus_to_send>
     <prefer_primary_platform>1</prefer_primary_platform>
     <recaptcha_public_key>6LffX94SAAAAAGTWCdQqt1d2Dc7yOy3DZhqQ2uKi</recaptcha_public_key>
@@ -102,7 +101,6 @@
       </period>
     </task>
     <task>
-      <disabled>1</disabled>
       <output>
         weekly-host.out
       </output>
