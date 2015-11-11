@@ -43,6 +43,7 @@ cat ../config/continual_config.xml | grep -v 'NQu' > cc.txt
 mv cc.txt ../config/continual_config.xml
 scp carlgt1@qcn-web:/var/www/boinc/sensor/html/user/tw_continual_rep.php user/
 scp carlgt1@qcn-web:/var/www/boinc/sensor/html/user/tw_sensor_rep.php user/
+scp carlgt1@qcn-web:/var/www/boinc/sensor/html/user/create_profile.php user/
 scp carlgt1@qcn-web:/var/www/boinc/sensor/html/user/fr_continual_rep.php user/
 scp carlgt1@qcn-web:/var/www/boinc/sensor/html/user/fr_sensor_rep.php user/
 scp carlgt1@qcn-web:/var/www/boinc/sensor/html/user/mx_continual_rep.php user/
