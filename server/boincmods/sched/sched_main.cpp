@@ -209,6 +209,7 @@ int open_database() {
         }
 // CMC end bypass reutrn
 */
+   }  // end CMC
     retval = boinc_db.open(
         config.db_name, config.db_host, config.db_user, config.db_passwd
     );
