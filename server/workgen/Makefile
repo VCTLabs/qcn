@@ -10,7 +10,7 @@ SSL_CFLAGS = -I/usr/local/ssl/include
 SSL_CXXFLAGS = -I/usr/local/ssl/include
 SSL_LIBS = -L/usr/local/ssl/lib -lssl -lcrypto -ldl -lz
 
-ifeq ($(shell hostname),qcn-web.stanford.edu)
+ifeq ($(shell hostname),qcn-web.caltech.edu)
   QCNDIR = /var/www/boinc/sensor
   CONTDIR = /var/www/boinc/continual
 else
@@ -18,15 +18,17 @@ else
   CONTDIR = /home/boinc/web/boinc/continual
 endif
 
-LIBS = -L$(BOINCDIR)/lib -lboinc -lboinc_crypt -L$(BOINCDIR)/sched -lsched $(MYSQL_LIBS) $(SSL_LIBS)
+LIBS = -L$(BOINCDIR)/lib -lboinc -lboinc_crypt $(SSL_LIBS) -L$(BOINCDIR)/sched -lsched $(MYSQL_LIBS) $(SSL_LIBS)
 
 INCLUDES = -I$(BOINCDIR) -I$(BOINCDIR)/lib -I$(BOINCDIR)/tools -I$(BOINCDIR)/db \
            -I$(MYSQLDIR)/include -I$(BOINCDIR)/sched
 
+#$(BOINCDIR)/sched/sched_msgs.cpp \
+
 SRCS = $(BOINCDIR)/db/db_base.cpp \
   $(BOINCDIR)/db/boinc_db.cpp \
+  $(BOINCDIR)/lib/md5_file.cpp \
   $(BOINCDIR)/sched/sched_config.cpp \
-  $(BOINCDIR)/sched/sched_msgs.cpp \
   $(BOINCDIR)/sched/sched_util.cpp \
   $(BOINCDIR)/tools/backend_lib.cpp \
   $(BOINCDIR)/tools/process_result_template.cpp
