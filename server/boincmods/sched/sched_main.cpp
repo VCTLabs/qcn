@@ -15,8 +15,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with BOINC.  If not, see <http://www.gnu.org/licenses/>.
 
-// The BOINC scheduling server.
+// The BOINC scheduler.
+// Normally runs as a CGI or fast CGI program.
+// You can also run it:
+// - manually for debugging, with a single request
+// - for simulation or performance testing, with a stream of requests
+//   (using --batch)
 
+// TODO: what does the following mean?
 // Also, You can call debug_sched() for whatever situation is of
 // interest to you.  It won't do anything unless you create
 // (touch) the file 'debug_sched' in the project root directory.
@@ -114,7 +120,7 @@ void debug_sched(const char *trigger) {
     }
 
     sprintf(tmpfilename,
-        "sched_reply_%06d_%06d", g_request->hostid, g_request->rpc_seqno
+        "sched_reply_%06ld_%06d", g_request->hostid, g_request->rpc_seqno
     );
     // use _XXXXXX if you want random filenames rather than
     // deterministic mkstemp(tmpfilename);
@@ -142,7 +148,7 @@ void debug_sched(const char *trigger) {
     fclose(fp);
 
     sprintf(tmpfilename,
-        "sched_request_%06d_%06d", g_request->hostid, g_request->rpc_seqno
+        "sched_request_%06ld_%06d", g_request->hostid, g_request->rpc_seqno
     );
 #ifndef _USING_FCGI_
     fp=fopen(tmpfilename, "w");
@@ -196,15 +202,13 @@ int open_database() {
             log_messages.printf(MSG_CRITICAL,
                 "lost connection to database - trying to reconnect\n"
             );
-         }
+        }
 /* CMC here
          else {
             return 0;
         }
 // CMC end bypass reutrn
 */
-    }
-
     retval = boinc_db.open(
         config.db_name, config.db_host, config.db_user, config.db_passwd
     );
@@ -212,7 +216,6 @@ int open_database() {
         log_messages.printf(MSG_CRITICAL, "can't open database\n");
         return retval;
     }
-
 // CMC here -- create the trigmem db connection
 #ifdef _USING_TRIGMEM
     retval = trigmem_db.open(
@@ -224,7 +227,6 @@ int open_database() {
     }
 #endif
 // end CMC
-
     db_opened = true;
     return 0;
 }
@@ -239,7 +241,7 @@ void sigterm_handler(int /*signo*/) {
 //CMC here
 #ifdef _USING_TRIGMEM
         trigmem_db.close();
-#endif 
+#endif
 // end CMC
     }
     log_messages.printf(MSG_CRITICAL,
@@ -338,7 +340,7 @@ void attach_to_feeder_shmem() {
             getuid(), geteuid(), getgid(), getegid()
         );
         send_message(
-            "Server error: feeder not running", 3600
+            "Server error: feeder not running", config.maintenance_delay
         );
         exit(0);
     } else {
@@ -348,7 +350,7 @@ void attach_to_feeder_shmem() {
             log_messages.printf(MSG_CRITICAL,
                 "shmem has wrong struct sizes - recompile\n"
             );
-            send_message("Server error: recompile needed", 3600);
+            send_message("Server error: recompile needed", config.maintenance_delay);
             exit(0);
         }
 
@@ -364,7 +366,7 @@ void attach_to_feeder_shmem() {
                 "feeder doesn't seem to be running\n"
             );
             send_message(
-                "Server error: feeder not running", 3600
+                "Server error: feeder not running", config.maintenance_delay
             );
             exit(0);
         }
@@ -457,13 +459,15 @@ int main(int argc, char** argv) {
         }
     } else {
         char *stderr_buffer;
-        get_log_path(path, "scheduler.log");
+        if (get_log_path(path, "scheduler.log") == ERR_MKDIR) {
+            fprintf(stderr, "Can't create log directory '%s'  (errno: %d)\n", path, errno);
+        }
 #ifndef _USING_FCGI_
         char buf[256];
         if (!freopen(path, "a", stderr)) {
             fprintf(stderr, "Can't redirect stderr\n");
             sprintf(buf, "Server can't open log file (%s)", path);
-            send_message(buf, 3600);
+            send_message(buf, config.maintenance_delay);
             exit(1);
         }
 #else
@@ -474,7 +478,7 @@ int main(int argc, char** argv) {
             char buf[256];
             fprintf(stderr, "Can't redirect FCGI log messages\n");
             sprintf(buf, "Server can't open log file for FCGI (%s)", path);
-            send_message(buf, 3600);
+            send_message(buf, config.maintenance_delay);
             exit(1);
         }
 #endif
@@ -520,7 +524,7 @@ int main(int argc, char** argv) {
         log_messages.printf(MSG_CRITICAL,
             "Can't parse config.xml: %s\n", boincerror(retval)
         );
-        send_message("Server can't parse configuration file", 3600);
+        send_message("Server can't parse configuration file", config.maintenance_delay);
         exit(0);
     }
 
@@ -537,7 +541,7 @@ int main(int argc, char** argv) {
         log_messages.printf(MSG_CRITICAL,
             "Can't read code sign key file (%s)\n", path
         );
-        send_message("Server can't find key file", 3600);
+        send_message("Server can't find key file", config.maintenance_delay);
         exit(0);
     }
     strip_whitespace(code_sign_key);
@@ -555,7 +559,10 @@ int main(int argc, char** argv) {
     }
 
     if (!debug_log && check_stop_sched()) {
-        send_message("Project is temporarily shut down for maintenance", 3600);
+        send_message(
+            "Project is temporarily shut down for maintenance",
+            config.maintenance_delay
+        );
         goto done;
     }
 
@@ -563,7 +570,7 @@ int main(int argc, char** argv) {
         attach_to_feeder_shmem();
     }
     if (!ssp) {
-        send_message("Server error: can't attach shared memory", 3600);
+        send_message("Server error: can't attach shared memory", config.maintenance_delay);
         goto done;
     }
 
@@ -581,7 +588,7 @@ int main(int argc, char** argv) {
         sprintf(reply_path, "%s/%d_%u_sched_reply.xml", config.debug_req_reply_dir, g_pid, counter);
 
         // keep an own 'log' per PID in case general logging fails
-        // this allows to associate at leas the scheduler request with the client
+        // this allows to associate at least the scheduler request with the client
         // IP address (as shown in httpd error log) in case of a crash
         sprintf(log_path, "%s/%d_%u_sched.log", config.debug_req_reply_dir, g_pid, counter);
 #ifndef _USING_FCGI_
@@ -589,6 +596,12 @@ int main(int argc, char** argv) {
 #else
         fout = FCGI::fopen(log_path,"a");
 #endif
+        if (!fout) {
+            log_messages.printf(MSG_CRITICAL,
+                "can't write client log file %s\n", log_path
+            );
+            exit(1);
+        }
         fprintf(fout, "PID: %d Client IP: %s\n", g_pid, get_remote_addr());
         fclose(fout);
 
@@ -684,8 +697,8 @@ done:
             log_messages.printf(MSG_NORMAL,
                 "FCGI: counter: %d\n", counter
             );
-            log_messages.flush();
         }
+        log_messages.flush();
     }   // do()
     if (counter == MAX_FCGI_COUNT) {
         fprintf(stderr, "FCGI: counter passed MAX_FCGI_COUNT - exiting..\n");
@@ -720,8 +733,8 @@ void RSC_JOB_LIMIT::print_log(const char* rsc_name) {
 
 void JOB_LIMIT::print_log() {
     if (total.any_limit()) total.print_log("total");
-    if (cpu.any_limit()) cpu.print_log("CPU");
-    if (gpu.any_limit()) gpu.print_log("GPU");
+    if (proc_type_limits[0].any_limit()) proc_type_limits[0].print_log("CPU");
+    if (proc_type_limits[1].any_limit()) proc_type_limits[1].print_log("GPU");
 }
 
 void JOB_LIMITS::print_log() {

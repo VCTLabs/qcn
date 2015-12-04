@@ -38,14 +38,14 @@
 #include <errno.h>
 #include <sys/stat.h>
 
-#include "boinc_db.h"
 #include "backend_lib.h"
+#include "boinc_db.h"
 #include "error_numbers.h"
-#include "parse.h"
-#include "str_util.h"
-#include "str_replace.h"
-#include "util.h"
 #include "filesys.h"
+#include "parse.h"
+#include "str_replace.h"
+#include "str_util.h"
+#include "util.h"
 
 #include "sched_vda.h"
 
@@ -86,17 +86,17 @@ static bool find_host_by_other(DB_USER& user, HOST req_host, DB_HOST& host) {
     // Only check if all the fields are populated
     //
     if (strlen(req_host.domain_name) && strlen(req_host.last_ip_addr) && strlen(req_host.os_name) && strlen(req_host.p_model)) {
-        strcpy(dn, req_host.domain_name);
-        escape_string(dn, 512);
-        strcpy(ip, req_host.last_ip_addr);
-        escape_string(ip, 512);
-        strcpy(os, req_host.os_name);
-        escape_string(os, 512);
-        strcpy(pm, req_host.p_model);
-        escape_string(pm, 512);
+        safe_strcpy(dn, req_host.domain_name);
+        escape_string(dn, sizeof(dn));
+        safe_strcpy(ip, req_host.last_ip_addr);
+        escape_string(ip, sizeof(ip));
+        safe_strcpy(os, req_host.os_name);
+        escape_string(os, sizeof(os));
+        safe_strcpy(pm, req_host.p_model);
+        escape_string(pm, sizeof(pm));
 
         sprintf(buf,
-            "where userid=%d and id>%d and domain_name='%s' and last_ip_addr = '%s' and os_name = '%s' and p_model = '%s'"
+            "where userid=%lu and id>%lu and domain_name='%s' and last_ip_addr = '%s' and os_name = '%s' and p_model = '%s'"
                " and m_nbytes = %lf order by id desc", user.id, req_host.id, dn, ip, os, pm, req_host.m_nbytes
         );
         if (!host.enumerate(buf)) {
@@ -129,7 +129,7 @@ int lock_sched() {
 
     g_reply->lockfile_fd=-1;
 
-    sprintf(filename, "%s/CGI_%07d",
+    sprintf(filename, "%s/CGI_%07lu",
         config.sched_lockfile_dir, g_reply->host.id
     );
 
@@ -166,7 +166,7 @@ void unlock_sched() {
     char filename[256];
 
     if (g_reply->lockfile_fd < 0) return;
-    sprintf(filename, "%s/CGI_%07d", config.sched_lockfile_dir, g_reply->host.id);
+    sprintf(filename, "%s/CGI_%07lu", config.sched_lockfile_dir, g_reply->host.id);
     unlink(filename);
     close(g_reply->lockfile_fd);
 }
@@ -175,12 +175,12 @@ void unlock_sched() {
 // find the user's most recently-created host with given host CPID
 //
 static bool find_host_by_cpid(DB_USER& user, char* host_cpid, DB_HOST& host) {
-    char buf[256], buf2[256];
+    char buf[1024], buf2[256];
     sprintf(buf, "%s%s", host_cpid, user.email_addr);
     md5_block((const unsigned char*)buf, strlen(buf), buf2);
 
     sprintf(buf,
-        "where userid=%d and host_cpid='%s' order by id desc", user.id, buf2
+        "where userid=%lu and host_cpid='%s' order by id desc", user.id, buf2
     );
     if (!host.enumerate(buf)) {
         host.end_enumerate();
@@ -200,7 +200,7 @@ static bool find_host_by_cpid(DB_USER& user, char* host_cpid, DB_HOST& host) {
 static void mark_results_over(DB_HOST& host) {
     char buf[256], buf2[256];
     DB_RESULT result;
-    sprintf(buf, "where hostid=%d and server_state=%d",
+    sprintf(buf, "where hostid=%lu and server_state=%d",
         host.id,
         RESULT_SERVER_STATE_IN_PROGRESS
     );
@@ -221,7 +221,7 @@ static void mark_results_over(DB_HOST& host) {
         wu.update_field(buf2);
 
         log_messages.printf(MSG_CRITICAL,
-            "[HOST#%d] [RESULT#%d] [WU#%d] changed CPID: marking in-progress result %s as client error!\n",
+            "[HOST#%lu] [RESULT#%lu] [WU#%lu] changed CPID: marking in-progress result %s as client error!\n",
             host.id, result.id, result.workunitid, result.name
         );
     }
@@ -244,7 +244,7 @@ static void mark_results_over(DB_HOST& host) {
 //
 int authenticate_user() {
     int retval;
-    char buf[256];
+    char buf[1024];
     DB_HOST host;
     DB_USER user;
     DB_TEAM team;
@@ -258,7 +258,7 @@ int authenticate_user() {
             if (!retval) {
                 g_reply->hostid = host.id;
                 log_messages.printf(MSG_NORMAL,
-                    "[HOST#%d] forwarding to new host ID %d\n",
+                    "[HOST#%lu] forwarding to new host ID %lu\n",
                     g_request->hostid, host.id
                 );
             }
@@ -266,7 +266,7 @@ int authenticate_user() {
         if (retval) {
             g_reply->insert_message("Can't find host record", "low");
             log_messages.printf(MSG_NORMAL,
-                "[HOST#%d?] can't find host\n",
+                "[HOST#%lu?] can't find host\n",
                 g_request->hostid
             );
             g_request->hostid = 0;
@@ -279,7 +279,7 @@ int authenticate_user() {
         // and see if the authenticator matches (regular or weak)
         //
         g_request->using_weak_auth = false;
-        sprintf(buf, "where id=%d", host.userid);
+        sprintf(buf, "where id=%lu", host.userid);
         retval = user.lookup(buf);
         if (!retval && !strcmp(user.authenticator, g_request->authenticator)) {
             // req auth matches user auth - go on
@@ -291,7 +291,7 @@ int authenticate_user() {
                 if (!strcmp(buf, g_request->authenticator)) {
                     g_request->using_weak_auth = true;
                     log_messages.printf(MSG_DEBUG,
-                        "[HOST#%d] accepting weak authenticator\n",
+                        "[HOST#%lu] accepting weak authenticator\n",
                         host.id
                     );
                 }
@@ -302,6 +302,7 @@ int authenticate_user() {
                 strlcpy(
                     user.authenticator, g_request->authenticator, sizeof(user.authenticator)
                 );
+                escape_string(user.authenticator, sizeof(user.authenticator));
                 sprintf(buf, "where authenticator='%s'", user.authenticator);
                 retval = user.lookup(buf);
                 if (retval) {
@@ -312,7 +313,7 @@ int authenticate_user() {
                     g_reply->set_delay(DELAY_MISSING_KEY);
                     g_reply->nucleus_only = true;
                     log_messages.printf(MSG_CRITICAL,
-                        "[HOST#%d] [USER#%d] Bad authenticator '%s'\n",
+                        "[HOST#%lu] [USER#%lu] Bad authenticator '%s'\n",
                         host.id, user.id, g_request->authenticator
                     );
                     return ERR_AUTHENTICATOR;
@@ -327,7 +328,7 @@ int authenticate_user() {
             // create a new host record.
             //
             log_messages.printf(MSG_NORMAL,
-                "[HOST#%d] [USER#%d] inconsistent host ID; creating new host\n",
+                "[HOST#%lu] [USER#%lu] inconsistent host ID; creating new host\n",
                 host.id, user.id
             );
             goto make_new_host;
@@ -341,7 +342,7 @@ int authenticate_user() {
         if (!batch && g_request->rpc_seqno < g_reply->host.rpc_seqno) {
             g_request->hostid = 0;
             log_messages.printf(MSG_NORMAL,
-                "[HOST#%d] [USER#%d] RPC seqno %d less than expected %d; creating new host\n",
+                "[HOST#%lu] [USER#%lu] RPC seqno %d less than expected %d; creating new host\n",
                 g_reply->host.id, user.id, g_request->rpc_seqno, g_reply->host.rpc_seqno
             );
             goto make_new_host;
@@ -368,6 +369,7 @@ lookup_user_and_make_new_host:
                 user.authenticator, g_request->authenticator,
                 sizeof(user.authenticator)
             );
+            escape_string(user.authenticator, sizeof(user.authenticator));
             sprintf(buf, "where authenticator='%s'", user.authenticator);
             retval = user.lookup(buf);
         }
@@ -394,8 +396,8 @@ lookup_user_and_make_new_host:
         //
         if (strlen(g_request->host.host_cpid)) {
             if (find_host_by_cpid(user, g_request->host.host_cpid, host)) {
-                log_messages.printf(MSG_CRITICAL,
-                    "[HOST#%d] [USER#%d] User has another host with same CPID.\n",
+                log_messages.printf(MSG_NORMAL,
+                    "[HOST#%lu] [USER#%lu] No host ID in request, but host with matching CPID found.\n",
                     host.id, host.userid
                 );
                 if ((g_request->allow_multiple_clients != 1)
@@ -421,10 +423,15 @@ make_new_host:
             && find_host_by_other(user, g_request->host, host)
         ) {
             log_messages.printf(MSG_NORMAL,
-                "[HOST#%d] [USER#%d] Found similar existing host for this user - assigned.\n",
+                "[HOST#%lu] [USER#%lu] Found similar existing host for this user - assigned.\n",
                 host.id, host.userid
             );
-            mark_results_over(host);
+            if (g_request->other_results.size() == 0) {
+                // mark host's jobs as abandoned
+                // if client has no jobs in progress
+                //
+                mark_results_over(host);
+            }
             goto got_host;
         }
         // either of the above cases,
@@ -440,7 +447,7 @@ make_new_host:
         host.userid = g_reply->user.id;
         host.rpc_seqno = 0;
         host.expavg_time = time(0);
-        strcpy(host.venue, g_reply->user.venue);
+        safe_strcpy(host.venue, g_reply->user.venue);
         host.fix_nans();
         retval = host.insert();
         if (retval) {
@@ -494,18 +501,34 @@ got_host:
     return 0;
 }
 
+inline static const char* get_remote_addr() {
+    // Server is behind a load balancer or proxy
+    const char* p = getenv("HTTP_X_FORWARDED_FOR");
+    if (p) {
+        return p;
+    }
+
+    const char * r = getenv("REMOTE_ADDR");
+    return r ? r : "?.?.?.?";
+}
+
 // modify host struct based on request.
 // Copy all fields that are determined by the client.
 //
 static int modify_host_struct(HOST& host) {
     host.timezone = g_request->host.timezone;
     strncpy(host.domain_name, g_request->host.domain_name, sizeof(host.domain_name));
-    char buf[256], buf2[256];
-    sprintf(buf, "[BOINC|%d.%d.%d]",
+    char buf[1024], buf2[1024];
+    sprintf(buf, "[BOINC|%d.%d.%d",
         g_request->core_client_major_version,
         g_request->core_client_minor_version,
         g_request->core_client_release
     );
+    if (strlen(g_request->client_brand)) {
+        strcat(buf, "|");
+        strcat(buf, g_request->client_brand);
+    }
+    strcat(buf, "]");
     g_request->coprocs.summary_string(buf2, sizeof(buf2));
     strlcpy(host.serialnum, buf, sizeof(host.serialnum));
     strlcat(host.serialnum, buf2, sizeof(host.serialnum));
@@ -549,8 +572,9 @@ static int modify_host_struct(HOST& host) {
     host.n_bwup = g_request->host.n_bwup;
     host.n_bwdown = g_request->host.n_bwdown;
     if (strlen(g_request->host.host_cpid)) {
-        strcpy(host.host_cpid, g_request->host.host_cpid);
+        safe_strcpy(host.host_cpid, g_request->host.host_cpid);
     }
+    strncpy(host.product_name, g_request->host.product_name, sizeof(host.product_name));
     host.fix_nans();
 
     return 0;
@@ -575,7 +599,7 @@ static int update_host_record(HOST& initial_host, HOST& xhost, USER& user) {
         md5_block((const unsigned char*)buf, strlen(buf), host.host_cpid);
     }
 
-    char* p = getenv("REMOTE_ADDR");
+    const char* p = get_remote_addr();
     if (p) {
         strlcpy(host.external_ip_addr, p, sizeof(host.external_ip_addr));
     }
@@ -623,8 +647,8 @@ int send_result_abort() {
         if (i > 0) result_names.append(", ");
         result_names.append("'");
         char buf[1024];
-        strcpy(buf, orp.name);
-        escape_string(buf, 1024);
+        safe_strcpy(buf, orp.name);
+        escape_string(buf, sizeof(buf));
         result_names.append(buf);
         result_names.append("'");
     }
@@ -679,7 +703,7 @@ int send_result_abort() {
         if (orp.abort) {
             g_reply->result_aborts.push_back(orp.name);
             log_messages.printf(MSG_NORMAL,
-                "[HOST#%d]: Send result_abort for result %s; reason: %s\n",
+                "[HOST#%lu]: Send result_abort for result %s; reason: %s\n",
                 g_reply->host.id, orp.name, reason_str(orp.reason)
             );
             // send user message
@@ -689,7 +713,7 @@ int send_result_abort() {
         } else if (orp.abort_if_not_started) {
             g_reply->result_abort_if_not_starteds.push_back(orp.name);
             log_messages.printf(MSG_NORMAL,
-                "[HOST#%d]: Send result_abort_if_unstarted for result %s; reason %d\n",
+                "[HOST#%lu]: Send result_abort_if_unstarted for result %s; reason %d\n",
                 g_reply->host.id, orp.name, orp.reason
             );
         }
@@ -707,7 +731,7 @@ int send_result_abort() {
 // 2) send global prefs in reply msg if needed
 //
 int handle_global_prefs() {
-    char buf[BLOB_SIZE];
+    char buf[BLOB_SIZE+256];
     g_reply->send_global_prefs = false;
     bool have_working_prefs = (strlen(g_request->working_global_prefs_xml)>0);
     bool have_master_prefs = (strlen(g_request->global_prefs_xml)>0);
@@ -792,7 +816,7 @@ int handle_global_prefs() {
             if (config.debug_prefs) {
                 log_messages.printf(MSG_NORMAL, "[prefs] updating db prefs\n");
             }
-            strcpy(g_reply->user.global_prefs, g_request->global_prefs_xml);
+            safe_strcpy(g_reply->user.global_prefs, g_request->global_prefs_xml);
             DB_USER user;
             user.id = g_reply->user.id;
             escape_string(g_request->global_prefs_xml, sizeof(g_request->global_prefs_xml));
@@ -828,51 +852,88 @@ int handle_global_prefs() {
 
 // if the client has an old code sign public key,
 // send it the new one, with a signature based on the old one.
-// If they don't have a code sign key, send them one
+// If they don't have a code sign key, send them one.
+// Return false if they have a key we don't recognize
+// (in which case we won't send them work).
 //
 bool send_code_sign_key(char* code_sign_key) {
     char* oldkey, *signature;
     int i, retval;
     char path[MAXPATHLEN];
 
-    if (strlen(g_request->code_sign_key)) {
-        if (strcmp(g_request->code_sign_key, code_sign_key)) {
-            log_messages.printf(MSG_NORMAL, "received old code sign key\n");
+    if (!strlen(g_request->code_sign_key)) {
+        safe_strcpy(g_reply->code_sign_key, code_sign_key);
+        return true;
+    }
+    if (!strcmp(g_request->code_sign_key, code_sign_key)) {
+        return true;
+    }
 
-            // look for a signature file
+    log_messages.printf(MSG_NORMAL, "received old code sign key\n");
+
+    // look for a signature file for the client's key.
+    // These are in pairs of files (N = 0, 1, ...)
+    // old_key_N: contains an old key
+    // signature_N: contains a signature for new key,
+    // based on the old key
+    // signature_stripped_N: signature for new key w/ trailing \n removed
+    // (needed for 7.0+ clients, which strip trailing whitespace)
+    //
+    // A project can have several of these if it wants,
+    // e.g. if it changes keys a lot.
+    //
+    for (i=0; ; i++) {
+        sprintf(path, "%s/old_key_%d", config.key_dir, i);
+        retval = read_file_malloc(path, oldkey);
+        if (retval) {
+            // we've scanned all the signature files and
+            // didn't find one that worked.
+            // User must reattach.
             //
-            for (i=0; ; i++) {
-                sprintf(path, "%s/old_key_%d", config.key_dir, i);
-                retval = read_file_malloc(path, oldkey);
-                if (retval) {
-                    g_reply->insert_message(
-                       _("Invalid code signing key.  To fix, remove and add this project."),
-                       "notice"
-                    );
-                    return false;
-                }
-                if (!strcmp(oldkey, g_request->code_sign_key)) {
-                    sprintf(path, "%s/signature_%d", config.key_dir, i);
-                    retval = read_file_malloc(path, signature);
-                    if (retval) {
-                        g_reply->insert_message(
-                           _("The project has changed its security key.  Please remove and add this project."),
-                           "notice"
-                        );
-                    } else {
-                        safe_strcpy(g_reply->code_sign_key, code_sign_key);
-                        safe_strcpy(g_reply->code_sign_key_signature, signature);
-                        free(signature);
-                    }
-                }
+            log_messages.printf(MSG_CRITICAL,
+                "scanned old_key_i files, can find client's key\n"
+            );
+            break;
+        }
+        strip_whitespace(oldkey);
+        if (!strcmp(oldkey, g_request->code_sign_key)) {
+            // We've found the client's key.
+            // Get the signature for the new key.
+            //
+            if (g_request->core_client_major_version < 7) {
+                sprintf(path, "%s/signature_%d", config.key_dir, i);
+            } else {
+                sprintf(path, "%s/signature_stripped_%d", config.key_dir, i);
+            }
+            retval = read_file_malloc(path, signature);
+            if (retval) {
+                // project is missing the signature file.
+                // Tell the user to reattach.
+                //
+                log_messages.printf(MSG_CRITICAL,
+                    "Missing signature file for old key %d\n", i
+                );
                 free(oldkey);
-                return false;
+                break;
+            } else {
+                log_messages.printf(MSG_NORMAL,
+                    "sending new code sign key and signature\n"
+                );
+                safe_strcpy(g_reply->code_sign_key, code_sign_key);
+                safe_strcpy(g_reply->code_sign_key_signature, signature);
+                free(signature);
+                free(oldkey);
+                return true;
             }
         }
-    } else {
-        safe_strcpy(g_reply->code_sign_key, code_sign_key);
+        free(oldkey);
     }
-    return true;
+
+    g_reply->insert_message(
+       _("The project has changed its security key.  Please remove and add this project."),
+       "notice"
+    );
+    return false;
 }
 
 // If <min_core_client_version_announced> is set,
@@ -887,7 +948,7 @@ void warn_user_if_core_client_upgrade_scheduled() {
         int remaining = config.min_core_client_upgrade_deadline-time(0);
         remaining /= 3600;
 
-        if (0 < remaining) {
+        if (remaining > 0) {
 
             char msg[512];
             int days  = remaining / 24;
@@ -931,9 +992,9 @@ bool unacceptable_os() {
 
     for (i=0; i<config.ban_os->size(); i++) {
         regex_t& re = (*config.ban_os)[i];
-        strcpy(buf, g_request->host.os_name);
-        strcat(buf, "\t");
-        strcat(buf, g_request->host.os_version);
+        safe_strcpy(buf, g_request->host.os_name);
+        safe_strcat(buf, "\t");
+        safe_strcat(buf, g_request->host.os_version);
         if (!regexec(&re, buf, 0, NULL, 0)) {
             log_messages.printf(MSG_NORMAL,
                 "Unacceptable OS %s %s\n",
@@ -957,9 +1018,9 @@ bool unacceptable_cpu() {
 
     for (i=0; i<config.ban_cpu->size(); i++) {
         regex_t& re = (*config.ban_cpu)[i];
-        strcpy(buf, g_request->host.p_vendor);
-        strcat(buf, "\t");
-        strcat(buf, g_request->host.p_model);
+        safe_strcpy(buf, g_request->host.p_vendor);
+        safe_strcat(buf, "\t");
+        safe_strcat(buf, g_request->host.p_model);
         if (!regexec(&re, buf, 0, NULL, 0)) {
             log_messages.printf(MSG_NORMAL,
                 "Unacceptable CPU %s %s\n",
@@ -985,7 +1046,7 @@ bool wrong_core_client_version() {
         return false;
     }
     log_messages.printf(MSG_NORMAL,
-        "[HOST#%d] Wrong client version from user: wanted %d, got %d\n",
+        "[HOST#%lu] Wrong client version from user: wanted %d, got %d\n",
         g_request->hostid,
         config.min_core_client_version, g_request->core_client_minor_version
     );
@@ -995,11 +1056,6 @@ bool wrong_core_client_version() {
     );
     g_reply->set_delay(DELAY_BAD_CLIENT_VERSION);
     return true;
-}
-
-inline static const char* get_remote_addr() {
-    const char * r = getenv("REMOTE_ADDR");
-    return r ? r : "?.?.?.?";
 }
 
 void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
@@ -1044,11 +1100,9 @@ void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
         }
 //        retval = mfh.insert();
 // CMC here - end block for mfh insert
-
-
         if (retval) {
             log_messages.printf(MSG_CRITICAL,
-                "[HOST#%d] message insert failed: %s\n",
+                "[HOST#%lu] message insert failed: %s\n",
                 g_reply->host.id, boincerror(retval)
             );
             g_reply->send_msg_ack = false;
@@ -1063,7 +1117,7 @@ void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
 void handle_msgs_to_host() {
     DB_MSG_TO_HOST mth;
     char buf[256];
-    sprintf(buf, "where hostid = %d and handled = %d", g_reply->host.id, 0);
+    sprintf(buf, "where hostid = %lu and handled = %d", g_reply->host.id, 0);
     while (!mth.enumerate(buf)) {
         g_reply->msgs_to_host.push_back(mth);
         mth.handled = true;
@@ -1073,7 +1127,7 @@ void handle_msgs_to_host() {
 
 static void log_request() {
     log_messages.printf(MSG_NORMAL,
-        "Request: [USER#%d] [HOST#%d] [IP %s] client %d.%d.%d\n",
+        "Request: [USER#%lu] [HOST#%lu] [IP %s] client %d.%d.%d\n",
         g_reply->user.id, g_reply->host.id, get_remote_addr(),
         g_request->core_client_major_version,
         g_request->core_client_minor_version,
@@ -1108,10 +1162,13 @@ bool bad_install_type() {
 }
 
 static inline bool requesting_work() {
+    if (g_request->dont_send_work) return false;
     if (g_request->work_req_seconds > 0) return true;
     if (g_request->cpu_req_secs > 0) return true;
-    if (g_request->coprocs.nvidia.count && g_request->coprocs.nvidia.req_secs) return true;
-    if (g_request->coprocs.ati.count && g_request->coprocs.ati.req_secs) return true;
+    for (int i=1; i<NPROC_TYPES; i++) {
+        COPROC* cp = g_request->coprocs.proc_type_to_coproc(i);
+        if (cp && cp->count && cp->req_secs) return true;
+    }
     if (ssp->have_nci_app) return true;
     return false;
 }
@@ -1123,7 +1180,6 @@ void process_request(
 //    SCHEDULER_REQUEST& sreq, SCHEDULER_REPLY& reply, char* code_sign_key, bool bTrigger
 // void process_request(char* code_sign_key) {
 // CMC end new declaration of process_request
-
     PLATFORM* platform;
     int retval;
     double last_rpc_time, x;
@@ -1158,6 +1214,7 @@ void process_request(
 
     warn_user_if_core_client_upgrade_scheduled();
 
+    g_wreq->no_jobs_available = false;
     if (requesting_work()) {
         if (config.locality_scheduling || config.locality_scheduler_fraction || config.enable_assignment) {
             have_no_work = false;
@@ -1201,7 +1258,7 @@ void process_request(
 
     retval = open_database();
     if (retval) {
-        send_error_message("Server can't open database", 3600);
+        send_error_message("Server can't open database", config.maintenance_delay);
         g_reply->project_is_down = true;
         goto leave;
     }
@@ -1218,6 +1275,17 @@ void process_request(
 
     log_request();
 
+#if 0
+    // if you need to debug a problem w/ a particular host or user,
+    // edit the following
+    //
+    if (g_reply->user.id == XX || g_reply.host.id == YY) {
+        config.sched_debug_level = 3;
+        config.debug_send = true;
+        ...
+    }
+#endif
+
     // is host blacklisted?
     //
     if (g_reply->host._max_results_day == -1) {
@@ -1229,12 +1297,12 @@ void process_request(
         int pid_with_lock = lock_sched();
         if (pid_with_lock > 0) {
             log_messages.printf(MSG_CRITICAL,
-                "Another scheduler instance [PID=%d] is running for this host\n",
-                pid_with_lock
+                "Another scheduler instance [PID=%d] is running for [HOST#%lu]\n",
+                pid_with_lock, g_reply->host.id
             );
         } else if (pid_with_lock) {
             log_messages.printf(MSG_CRITICAL,
-                "Error acquiring lock for [HOST#%d]\n", g_reply->host.id
+                "Error acquiring lock for [HOST#%lu]\n", g_reply->host.id
             );
         }
         if (pid_with_lock) {
@@ -1292,7 +1360,7 @@ void process_request(
         );
         g_reply->insert_message(buf, "notice");
         log_messages.printf(MSG_CRITICAL,
-            "[HOST#%d] platform '%s' not found\n",
+            "[HOST#%lu] platform '%s' not found\n",
             g_reply->host.id, g_request->platform.name
         );
         g_reply->set_delay(DELAY_PLATFORM_UNSUPPORTED);
@@ -1326,6 +1394,11 @@ void process_request(
             && !g_request->results_truncated
         ) {
             if (resend_lost_work()) {
+                if (config.debug_send) {
+                    log_messages.printf(MSG_NORMAL,
+                        "[send] Resent lost jobs, don't send more\n"
+                    );
+                }
                 ok_to_send_work = false;
             }
         }
@@ -1414,7 +1487,7 @@ static void log_user_messages() {
     for (unsigned int i=0; i<g_reply->messages.size(); i++) {
         USER_MESSAGE um = g_reply->messages[i];
         log_messages.printf(MSG_NORMAL,
-            "[user_messages] [HOST#%d] MSG(%s) %s\n",
+            "[user_messages] [HOST#%lu] MSG(%s) %s\n",
             g_reply->host.id, um.priority.c_str(), um.message.c_str()
         );
     }
@@ -1484,7 +1557,6 @@ void handle_request(FILE* fin, FILE* fout, char* code_sign_key) {
     if (config.debug_user_messages) {
         log_user_messages();
     }
-
 
   // CMC here -- next line to send a new param to SCHEDULER_REPLY::write e.g. to bypass quake list for project prefs etc
      sreply.write(fout, sreq, bTrigger, qhip);

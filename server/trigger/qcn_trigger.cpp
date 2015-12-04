@@ -568,6 +568,9 @@ int lookupGeoIPWebService(
 
                  switch(iRetGeo) {
                     case ERR_DB_NOT_FOUND:  // no record, need to do a maxmind/geoip web service lookup!
+#ifndef _USE_MAXMIND
+                       break;
+#endif
                        strURL   = new char[BYTESIZE_URL];
                        strReply = new char[BYTESIZE_CURL];
                        memset(strURL, 0x00, sizeof(char) * BYTESIZE_URL);

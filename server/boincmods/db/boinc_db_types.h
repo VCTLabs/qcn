@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "average.h"
+#include "opencl_boinc.h"
 #include "parse.h"
 
 // Sizes of text buffers in memory, corresponding to database BLOBs.
@@ -37,11 +38,16 @@
 
 struct BEST_APP_VERSION;
 
+typedef long DB_ID_TYPE;
+    // in principle should be unsigned long,
+    // but we put negative values in app_version_id to represent
+    // anonymous platform versions
+
 // A compilation target, i.e. a architecture/OS combination.
 // Client will be sent applications only for platforms they support.
 //
 struct PLATFORM {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
     char name[256];                 // i.e. "sparc-sun-solaris"
     char user_friendly_name[256];   // i.e. "SPARC Solaris 2.8"
@@ -52,10 +58,12 @@ struct PLATFORM {
 #define LOCALITY_SCHED_NONE     0
 #define LOCALITY_SCHED_LITE     1
 
+#define MAX_SIZE_CLASSES    10
+
 // An application.
 //
 struct APP {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
     char name[256];         // application name, preferably short
     int min_version;        // don't use app versions before this
@@ -77,22 +85,27 @@ struct APP {
     bool non_cpu_intensive;
     int locality_scheduling;
         // type of locality scheduling used by this app (see above)
+    int n_size_classes;
+        // for multi-size apps, number of size classes
+    bool fraction_done_exact;
+        // fraction done reported by app is accurate
 
     int write(FILE*);
     void clear();
 
     // not in DB:
     bool have_job;
+    double size_class_quantiles[MAX_SIZE_CLASSES];
 };
 
 // A version of an application.
 //
 struct APP_VERSION {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int appid;
+    DB_ID_TYPE appid;
     int version_num;
-    int platformid;
+    DB_ID_TYPE platformid;
     char xml_doc[APP_VERSION_XML_BLOB_SIZE];
     // describes app files. format:
     // <file_info>...</file_info>
@@ -118,24 +131,23 @@ struct APP_VERSION {
     char plan_class[256];
     AVERAGE pfc;
         // the stats of (claimed PFC)/wu.rsc_fpops_est
-        // If wu.rsc_fpops_est is accurate,
-        // this is the reciprocal of efficiency
+        // What does this mean?
+        // Suppose X is the error in rsc_fpops_est
+        // (i.e. actual FPOPS = X*rsc_fpops_est)
+        // and Y is average efficiency
+        // (actual FLOPS = Y*peak FLOPS)
+        // Then this is X/Y.
     double pfc_scale;
         // PFC scaling factor for this app (or 0 if not enough data)
         // The reciprocal of this version's efficiency, averaged over all jobs,
         // relative to that of the most efficient version
     double expavg_credit;
     double expavg_time;
+    bool beta;
 
     // the following used by scheduler, not in DB
     //
     BEST_APP_VERSION* bavp;
-
-    // used by validator, not in DB
-    //
-    std::vector<double>pfc_samples;
-    std::vector<double>credit_samples;
-    std::vector<double>credit_times;
 
     int write(FILE*);
     void clear();
@@ -146,7 +158,7 @@ struct APP_VERSION {
 };
 
 struct USER {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
     char email_addr[256];
     char name[256];
@@ -159,6 +171,7 @@ struct USER {
     char global_prefs[BLOB_SIZE];
         // global preferences, within <global_preferences> tag
     char project_prefs[APP_VERSION_XML_BLOB_SIZE];  // CMC here
+    //char project_prefs[BLOB_SIZE];
         // project preferences; format:
         // <project_preferences>
         //    <resource_share>X</resource_share>
@@ -173,7 +186,7 @@ struct USER {
         //    </venue>
         //    ...
         // </project_preferences>
-    int teamid;                     // team ID if any
+    DB_ID_TYPE teamid;                     // team ID if any
     char venue[256];                // home/work/school (default)
     char url[256];                  // user's web page if any
     bool send_email;
@@ -190,8 +203,13 @@ struct USER {
     double seti_total_cpu;          // number of CPU seconds
     char signature[256];
         // deprecated as of 9/2004 - may be used as temp
+        // currently used to store a nonce ID while email address
+        // is being verified.
     bool has_profile;
     char cross_project_id[256];
+        // the "internal" cross-project ID;
+        // the "external CPID" that  gets exported to stats sites
+        // is MD5(cpid, email)
     char passwd_hash[256];
     bool email_validated;           // deprecated
     int donated;
@@ -210,9 +228,9 @@ struct USER {
 // a team has > 0 members
 
 struct TEAM {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int userid;             // User ID of team founder
+    DB_ID_TYPE userid;             // User ID of team founder
     char name[256];
     char name_lc[256];      // Team name in lowercase (used for searching)
     char url[256];
@@ -235,9 +253,9 @@ struct TEAM {
 };
 
 struct HOST {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int userid;             // ID of user running this host
+    DB_ID_TYPE userid;             // ID of user running this host
         // If the host is "zombied" during merging of duplicate hosts,
         // this field is set to zero and rpc_seqno is used to
         // store the ID of the new host (kludge, but what the heck)
@@ -328,13 +346,21 @@ struct HOST {
         // dynamic estimate of fraction of results
         // that fail validation
         // DEPRECATED
+    char product_name[256];
+    double gpu_active_frac;
 
-    // the following not in DB
+    // the following items are passed in scheduler requests,
+    // and used in the scheduler,
+    // but not stored in the DB
+    // TODO: move this stuff to a derived class HOST_SCHED
+    //
     char p_features[1024];
     char virtualbox_version[256];
     bool p_vm_extensions_disabled;
+    int num_opencl_cpu_platforms;
+    OPENCL_CPU_PROP opencl_cpu_prop[MAX_OPENCL_CPU_PLATFORMS];
+
     // stuff from time_stats
-    double gpu_active_frac;
     double cpu_and_network_available_frac;
     double client_start_time;
     double previous_uptime;
@@ -347,9 +373,11 @@ struct HOST {
 
     void fix_nans();
     void clear();
+    bool get_opencl_cpu_prop(const char* platform, OPENCL_CPU_PROP&);
 };
 
 // values for file_delete state
+// see html/inc/common_defs.inc
 #define FILE_DELETE_INIT        0
 #define FILE_DELETE_READY       1
     // set to this value only when we believe all files are uploaded
@@ -367,7 +395,8 @@ struct HOST {
 // There's just a bunch of independent substates
 // (file delete, assimilate, and states of results, error flags)
 
-// bit fields of error_mask
+// bit fields of workunit.error_mask
+// see html/inc/common_defs.inc
 //
 #define WU_ERROR_COULDNT_SEND_RESULT            1
 #define WU_ERROR_TOO_MANY_ERROR_RESULTS         2
@@ -384,9 +413,9 @@ struct HOST {
     // transition, but don't create results; used for targeted jobs
 
 struct WORKUNIT {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int appid;                  // associated app
+    DB_ID_TYPE appid;                  // associated app
     char name[256];
     char xml_doc[BLOB_SIZE];
     int batch;
@@ -411,7 +440,7 @@ struct WORKUNIT {
         // 2) abort task if it uses more than this disk
     bool need_validate;         // this WU has at least 1 successful result in
                                 // validate state = INIT
-    int canonical_resultid;     // ID of canonical result, or zero
+    DB_ID_TYPE canonical_resultid;     // ID of canonical result, or zero
     double canonical_credit;    // credit that all correct results get
         // TODO: deprecate and remove code
     int transition_time;        // when should transition_handler
@@ -428,7 +457,8 @@ struct WORKUNIT {
     double opaque;              // project-specific; usually external ID
     int min_quorum;             // minimum quorum size
     int target_nresults;
-        // try to get this many successful results
+        // try to get this many "viable" results,
+        // i.e. candidate for canonical result.
         // may be > min_quorum to get consensus quicker or reflect loss rate
     int max_error_results;      // WU error if < #error results
     int max_total_results;      // WU error if < #total results
@@ -440,21 +470,25 @@ struct WORKUNIT {
     char mod_time[16];
     double rsc_bandwidth_bound;
         // send only to hosts with at least this much download bandwidth
-    int fileset_id;
-    int app_version_id;
+    DB_ID_TYPE fileset_id;
+    DB_ID_TYPE app_version_id;
         // if app uses homogeneous_app_version,
         // which version this job is committed to (0 if none)
     int transitioner_flags;
         // bitmask; see values above
+    int size_class;
+        // -1 means none; encode this here so that transitioner
+        // doesn't have to look up app
 
     // the following not used in the DB
     char app_name[256];
     void clear();
+    WORKUNIT(){clear();}
 };
 
 struct CREDITED_JOB {
-    int userid;
-    double workunitid;
+    DB_ID_TYPE userid;
+    DB_ID_TYPE workunitid;
 
     // the following not used in the DB
     void clear();
@@ -465,8 +499,9 @@ struct CREDITED_JOB {
 // the database will become inconsistent
 
 // values of result.server_state
+// see html/inc/common_defs.inc
 //
-//#define RESULT_SERVER_STATE_INACTIVE       1
+#define RESULT_SERVER_STATE_INACTIVE       1
 #define RESULT_SERVER_STATE_UNSENT         2
 #define RESULT_SERVER_STATE_IN_PROGRESS    4
 #define RESULT_SERVER_STATE_OVER           5
@@ -474,6 +509,7 @@ struct CREDITED_JOB {
     // Note: we could get a reply even after timing out.
 
 // values of result.outcome
+// see html/inc/common_defs.inc
 //
 #define RESULT_OUTCOME_INIT             0
 #define RESULT_OUTCOME_SUCCESS          1
@@ -493,6 +529,7 @@ struct CREDITED_JOB {
     // we believe that the client detached
 
 // values of result.validate_state
+// see html/inc/common_defs.inc
 //
 #define VALIDATE_STATE_INIT         0
 #define VALIDATE_STATE_VALID        1
@@ -516,6 +553,7 @@ struct CREDITED_JOB {
 #define ASSIGN_TEAM     3
 
 // values for RESULT.app_version_id for anonymous platform
+// see html/inc/common_defs.inc
 #define ANON_PLATFORM_UNKNOWN -1    // relic of old scheduler
 #define ANON_PLATFORM_CPU     -2
 #define ANON_PLATFORM_NVIDIA  -3
@@ -523,9 +561,9 @@ struct CREDITED_JOB {
 #define ANON_PLATFORM_INTEL   -5
 
 struct RESULT {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int workunitid;
+    DB_ID_TYPE workunitid;
     int server_state;               // see above
     int outcome;                    // see above; defined if server state OVER
     int client_state;               // phase that client contacted us in.
@@ -533,8 +571,8 @@ struct RESULT {
                                     // error details are in stderr_out.
                                     // The values for this field are defined
                                     // in lib/result_state.h
-    int hostid;                     // host processing this result
-    int userid;                     // user processing this result
+    DB_ID_TYPE hostid;                     // host processing this result
+    DB_ID_TYPE userid;                     // user processing this result
     int report_deadline;            // deadline for receiving result
     int sent_time;                  // when result was sent to host
     int received_time;              // when result was received from host
@@ -552,16 +590,16 @@ struct RESULT {
     int random;                     // determines send order
     int app_version_num;            // version# of app
         // DEPRECATED - THIS DOESN'T DETERMINE VERSION ANY MORE
-    int appid;                      // copy of WU's appid
+    DB_ID_TYPE appid;                      // copy of WU's appid
     int exit_status;                // application exit status, if any
-    int teamid;
+    DB_ID_TYPE teamid;
     int priority;
     char mod_time[16];
     double elapsed_time;
         // AKA runtime; returned by 6.10+ clients
     double flops_estimate;
         // misnomer: actually the peak device FLOPS, returned by app_plan().
-    int app_version_id;
+    DB_ID_TYPE app_version_id;
         // ID of app version used to compute this
         // 0 if unknown (relic of old scheduler)
         // -1 anon platform, unknown resource type (relic)
@@ -569,13 +607,21 @@ struct RESULT {
     bool runtime_outlier;
         // the validator tagged this as having an unusual elapsed time;
         // don't include it in PFC or elapsed time statistics.
+    int size_class;
+        // -1 means none
+
+    // the following reported by 7.3.16+ clients
+    double peak_working_set_size;
+    double peak_swap_size;
+    double peak_disk_usage;
 
     void clear();
+    RESULT() {clear();}
 };
 
 struct BATCH {
-    int id;
-    int user_id;
+    DB_ID_TYPE id;
+    DB_ID_TYPE user_id;
         // submitter
     int create_time;
     double logical_start_time;
@@ -600,29 +646,20 @@ struct BATCH {
         // the sum of credits of all results
     char name[256];
         // user-assigned name; need not be unique
-    int app_id;
+    DB_ID_TYPE app_id;
     int project_state;
         // project-assigned
     char description[256];
         // project-assigned
+    double expire_time;
+        // if nonzero, retire the batch after this time
+        // Condor calls this the batch's "lease".
 };
-
-// values of batch.state
-//
-#define BATCH_STATE_INIT            0
-#define BATCH_STATE_IN_PROGRESS     1
-#define BATCH_STATE_COMPLETE        2
-    // "complete" means all workunits have either
-    // a canonical result or an error
-#define BATCH_STATE_ABORTED         3
-#define BATCH_STATE_RETIRED         4
-    // input/output files can be deleted,
-    // result and workunit records can be purged.
 
 // info for users who can submit jobs
 //
 struct USER_SUBMIT {
-    int user_id;
+    DB_ID_TYPE user_id;
     double quota;
     double logical_start_time;
     bool submit_all;
@@ -631,9 +668,9 @@ struct USER_SUBMIT {
 };
 
 struct MSG_FROM_HOST {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int hostid;
+    DB_ID_TYPE hostid;
     char variety[256];              // project-defined; what kind of msg
     bool handled;                   // message handler has processed this
     char xml[MSG_FROM_HOST_BLOB_SIZE];
@@ -641,9 +678,9 @@ struct MSG_FROM_HOST {
 };
 
 struct MSG_TO_HOST {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int hostid;
+    DB_ID_TYPE hostid;
     char variety[256];              // project-defined; what kind of msg
     bool handled;                   // scheduler has sent this
     char xml[MSG_TO_HOST_BLOB_SIZE];      // text to include in sched reply
@@ -651,20 +688,20 @@ struct MSG_TO_HOST {
 };
 
 struct ASSIGNMENT {
-    int id;
+    DB_ID_TYPE id;
     int create_time;
-    int target_id;              // ID of target host, user, or team
+    DB_ID_TYPE target_id;              // ID of target host, user, or team
     int target_type;            // none/host/user/team
     int multi;                  // 0 = single host, 1 = all hosts in set
-    int workunitid;
-    int _resultid;              // if not multi, the result ID
+    DB_ID_TYPE workunitid;
+    DB_ID_TYPE _resultid;              // if not multi, the result ID
         // deprecated
     void clear();
 };
 
 struct HOST_APP_VERSION {
-    int host_id;
-    int app_version_id;
+    DB_ID_TYPE host_id;
+    DB_ID_TYPE app_version_id;
         // or for anon platform:
         // 1000000*appid + 2 (CPU)
         // 1000000*appid + 3 (NVIDIA)
@@ -701,7 +738,7 @@ struct HOST_APP_VERSION {
 };
 
 struct VDA_FILE {
-    int id;
+    DB_ID_TYPE id;
     double create_time;
     char dir[256];
     char file_name[256];
@@ -716,8 +753,8 @@ struct VDA_FILE {
 
 struct VDA_CHUNK_HOST {
     double create_time;
-    int vda_file_id;
-    int host_id;
+    DB_ID_TYPE vda_file_id;
+    DB_ID_TYPE host_id;
     char physical_file_name[256];     // e.g. vda_467_0_file.ext
     bool present_on_host;
     bool transfer_in_progress;
@@ -736,6 +773,59 @@ struct VDA_CHUNK_HOST {
         return (transfer_in_progress && !present_on_host);
     }
     void print_status(int level);
+};
+
+struct BADGE {
+    DB_ID_TYPE id;
+    double create_time;
+    int type;
+    char name[256];
+    char title[256];
+    char description[256];
+    char image_url[256];
+    char level[256];
+    char tags[256];
+    char sql_rule[256];
+    void clear();
+};
+
+struct BADGE_USER {
+    DB_ID_TYPE badge_id;
+    DB_ID_TYPE user_id;
+    double create_time;
+    double reassign_time;
+    void clear();
+};
+
+struct BADGE_TEAM {
+    DB_ID_TYPE badge_id;
+    DB_ID_TYPE team_id;
+    double create_time;
+    double reassign_time;
+    void clear();
+};
+
+struct CREDIT_USER {
+    DB_ID_TYPE userid;
+    DB_ID_TYPE appid;
+        // need not be an app ID
+    int njobs;
+    double total;
+    double expavg;
+    double expavg_time;
+    int credit_type;
+    void clear();
+};
+
+struct CREDIT_TEAM {
+    DB_ID_TYPE teamid;
+    DB_ID_TYPE appid;
+    int njobs;
+    double total;
+    double expavg;
+    double expavg_time;
+    int credit_type;
+    void clear();
 };
 
 #endif
