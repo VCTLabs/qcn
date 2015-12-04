@@ -22,12 +22,9 @@
       1024
     </uldl_dir_fanout>
     <sched_debug_level>
-      2
+      1
     </sched_debug_level>
     <send_result_abort/>
-    <disable_account_creation>
-      0
-    </disable_account_creation>
     <uldl_dir_fanout>
       1024
     </uldl_dir_fanout>
@@ -166,6 +163,7 @@
       </output>
     </task>
     <task>
+      <disabled>1</disabled>
       <cmd>
         do_stats.py
       </cmd>
@@ -251,4 +249,3 @@
     </daemon>
   </daemons>
 </boinc>
-

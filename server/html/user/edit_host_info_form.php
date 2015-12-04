@@ -1,6 +1,4 @@
 <?php
-
-ini_set('display_errors', 0);
 require_once("../project/project.inc");
 require_once("../inc/prefs.inc");
 require_once("../inc/db.inc");
@@ -9,6 +7,8 @@ require_once("../inc/utils.inc");
 
 
 db_init();
+
+error_reporting(E_ALL ^ E_WARNING);
 
 $user = get_logged_in_user();
 $psprefs = project_specific_prefs_parse($user->project_prefs);

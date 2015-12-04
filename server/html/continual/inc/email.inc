@@ -22,27 +22,12 @@
 require_once("../inc/util.inc");
 require_once("../project/project.inc");
 
-$config = get_config();
-$master_url = parse_config($config, "<master_url>");
-
-// Determine if phpmailer is installed and to be used (defined in project.inc)
-if (isset($USE_PHPMAILER)) {
-    if ($USE_PHPMAILER) {
-        require_once("../inc/phpmailer/class.phpmailer.php");
-    }
-} else {
-    $USE_PHPMAILER = false;
-}
-
 // send an email, using PHPMailer or not.
 //
-function send_email($user, $subject, $body, $body_html=null, $emailTo=null) {
-    global $USE_PHPMAILER;
-    global $PHPMAILER_HOST;
-    global $PHPMAILER_MAILER;
-
-    if ($USE_PHPMAILER) {
-        $mail = new PHPMailer();
+function send_email($user, $subject, $body, $body_html=null) {
+    if (function_exists("make_php_mailer")) {
+        require_once("../inc/phpmailer/class.phpmailer.php");
+        $mail = make_php_mailer();
         $mail->AddAddress($user->email_addr, $user->name);
         $mail->Subject = $subject;
         if ($body_html) {
@@ -51,10 +36,6 @@ function send_email($user, $subject, $body, $body_html=null, $emailTo=null) {
         } else {
             $mail->Body = $body;
         }
-        $mail->From = EMAIL_FROM;
-        $mail->FromName = EMAIL_FROM_NAME;
-        $mail->Host = $PHPMAILER_HOST;
-        $mail->Mailer = $PHPMAILER_MAILER;
         if (!$mail->Send()) {
             echo $mail->ErrorInfo;
             return false;
@@ -68,12 +49,7 @@ function send_email($user, $subject, $body, $body_html=null, $emailTo=null) {
         } else if (defined('EMAIL_FROM')) {
             $headers = "From: ". EMAIL_FROM;
         }
-        $retVal = false;
-        if ($emailTo)
-            $retVal = mail($emailTo, $subject, $body, $headers);
-        else
-            $retVal = mail($user->email_addr, $subject, $body, $headers);
-        return $retVal;
+        return mail($user->email_addr, $subject, $body, $headers);
     }
 }
 
@@ -88,7 +64,6 @@ function send_email($user, $subject, $body, $body_html=null, $emailTo=null) {
 // 3) the user requested account key for existing account
 //
 function send_auth_email($user) {
-    global $master_url;
     $body = "";
 
     $now = time();
@@ -98,14 +73,14 @@ function send_auth_email($user) {
     $body = "This email was sent in response to a request on the ".PROJECT." web site.
 
 To log in to your ".PROJECT." account, visit:
-".$master_url."login_action.php?id=$user->id&t=$now&h=$x
+".secure_url_base()."login_action.php?id=$user->id&t=$now&h=$x
 (This link is valid for 1 day).
 After logging in, you can change your account's password or email address.
 ";
 
 $body .= "
 For further information and assistance with ".PROJECT.", visit
-$master_url
+".secure_url_base()."
 ";
 
     return send_email($user, $subject, $body);
@@ -117,6 +92,13 @@ $master_url
 // and C doesn't contain @ and is at least 2 chars
 //
 function is_valid_email_addr($addr) {
+    if (defined("USE_STOPFORUMSPAM") && USE_STOPFORUMSPAM) {
+        $ip_addr = $_SERVER['REMOTE_ADDR'];
+        $x = @file_get_contents("http://www.stopforumspam.com/api?ip=".$ip_addr."&email=".$addr);
+        if (substr_count($x, '<appears>yes</appears>')) {
+            return false;
+        }
+    }
     $pattern = '/^([^@]+)@([^@\.]+)\.([^@]{2,})$/';
     $match = preg_match($pattern, $addr);
     return (bool) $match;
@@ -127,6 +109,6 @@ function salted_key($key) {
 }
 
 function opt_out_url($user) {
-    return URL_BASE."opt_out.php?code=".salted_key($user->authenticator)."&userid=$user->id";
+    return secure_url_base()."opt_out.php?code=".salted_key($user->authenticator)."&userid=$user->id";
 }
 ?>

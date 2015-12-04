@@ -10,7 +10,7 @@
     <cgi_url>http://qcn.caltech.edu/sensor_cgi/</cgi_url>
     <msg_to_host/>
     <sched_debug_level>
-      2
+      1
     </sched_debug_level>
     <send_result_abort/>
     <uldl_dir_fanout>
@@ -134,6 +134,7 @@
       </period>
     </task>
     <task>
+      <disabled>1</disabled>
       <output>
         do_stats.out
       </output>

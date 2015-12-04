@@ -22,7 +22,6 @@ require_once("../inc/boinc_db.inc");
 require_once("../inc/util.inc");
 require_once("../inc/result.inc");
 
-error_reporting(0);
 check_get_args(array("hostid", "userid", "offset", "appid", "state", "show_names"));
 
 $config = get_config();
@@ -75,10 +74,15 @@ if ($appid) {
     $clause2 .= ' AND appid='.$appid;
 }
 
-$query = "$clause2 order by id desc limit $offset,".($results_per_page+1);
+if ($show_names) {
+    $order_clause = "order by name";
+} else {
+    $order_clause = "order by sent_time desc";
+}
+$query = "$clause2 $order_clause limit $offset,".($results_per_page+1);
 $results = BoincResult::enum($query);
 
-$info = null;
+$info = new StdClass;
 $info->number_of_results = count($results);
 $info->clause = $clause;
 $info->results_per_page = $results_per_page;

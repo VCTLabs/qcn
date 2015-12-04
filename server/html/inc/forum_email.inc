@@ -20,8 +20,6 @@ require_once("../inc/util.inc");
 require_once("../inc/email.inc");
 require_once("../project/project.inc");
 
-define('MASTER_URL', $master_url);
-
 // send an email to admins:
 // - project forums: everyone in POST_REPORT_EMAILS
 // - team message board: team founder and admins
@@ -62,6 +60,7 @@ function mail_report_list($forum, $subject, $body, $must_send=false) {
 //////////////////// post hidden/unhidden ///////////
 //
 function send_moderation_email($forum, $post, $thread, $explanation, $action) {
+    $master_url = parse_config(get_config(), "<master_url>");
     $moderator=get_logged_in_user();
     $body = "";
     $user = BoincUser::lookup_id($post->user);
@@ -69,21 +68,21 @@ function send_moderation_email($forum, $post, $thread, $explanation, $action) {
     $subject = PROJECT." moderation notice";
 
     $body = "Your post [ID $post->id] in thread '$thread->title'
-".URL_BASE."forum_thread.php?id=$thread->id#$post->id
+".secure_url_base()."forum_thread.php?id=$thread->id#$post->id
 has been $action by moderator $moderator->name (ID $moderator->id).
 $explanation
 
 The content of your post:
 $post->content
 
-For assistance with ".PROJECT." go to ".MASTER_URL;
+For assistance with ".PROJECT." go to ".$master_url;
 
     $success = send_email($user, $subject, $body);
-    pm_send($user, $user, $subject, $body, false);
+    pm_send_msg($user, $user, $subject, $body, false);
 
     $body = "Because of moderation by $moderator->name (ID $moderator->id),
 The following email was sent to $user->name (ID $user->id)
-".URL_BASE."forum_user_posts.php?userid=$user->id
+".secure_url_base()."forum_user_posts.php?userid=$user->id
 ------------------------------
 Subject: $subject
 
@@ -99,22 +98,23 @@ $body
 function send_thread_moderation_email(
     $forum, $thread, $message, $action_name, $explanation
 ) {
+    $master_url = parse_config(get_config(), "<master_url>");
     $moderator = get_logged_in_user();
     $user = BoincUser::lookup_id($thread->owner);
     $body = "";
 
     $subject = PROJECT." forum moderation notice";
     $body = "Your thread '$thread->title'
-".URL_BASE."forum_thread.php?id=$thread->id
+".secure_url_base()."forum_thread.php?id=$thread->id
 has been $action_name by moderator $moderator->name (ID $moderator->id).
 $explanation
 
-For assistance with ".PROJECT." go to ".MASTER_URL;
+For assistance with ".PROJECT." go to ".$master_url;
 
     $subject = "THREAD $action REPORT: $thread->title";
     $success = mail_report_list($forum, $subject, $body);
     $success &= send_email($user, $subject, $body);
-    pm_send($user, $user, $subject, $body, false);
+    pm_send_msg($user, $user, $subject, $body, false);
     return $success;
 }
 
@@ -123,14 +123,14 @@ For assistance with ".PROJECT." go to ".MASTER_URL;
 //
 function send_reply_notification_email($thread, $user){
     $title = PROJECT . ": A user has posted to '". $thread->title ."'";
-    $link = URL_BASE . "forum_thread.php?id=" . $thread->id;
+    $link = secure_url_base() . "forum_thread.php?id=" . $thread->id;
     $body = "Another " . PROJECT . " user has posted to the thread
 \"" . $thread->title . "\".\n"
            ."To view the updated thread, visit:\n$link
 
 --------------------------
 To change email preferences, visit:
-".URL_BASE."edit_forum_preferences_form.php
+".secure_url_base()."edit_forum_preferences_form.php
 Do not reply to this message.
 ";
     return send_email($user, $title, $body);
@@ -139,6 +139,7 @@ Do not reply to this message.
 //////////////////// a user clicks the red "x" to report a post ///////////
 //
 function send_report_post_email($user, $forum, $thread,  $post, $message) {
+	$master_url = parse_config(get_config(), "<master_url>");
     $body = "";
     $owner = BoincUser::lookup_id($post->user);
 
@@ -149,7 +150,7 @@ A post in the ".PROJECT." forums was reported as offensive.
     Thread:         $thread->title
     Post:           $post->id by $owner->id ($owner->name)
     Reporting User: $user->id ($user->name)
-    Link:           ".URL_BASE."forum_thread.php?id=$thread->id#$post->id
+    Link:           ".secure_url_base()."forum_thread.php?id=$thread->id#$post->id
     
 Comments from reporting user:
 $message
@@ -157,7 +158,7 @@ $message
 Contents of the post:
 $post->content
 
-For assistance with ".PROJECT." go to ".MASTER_URL;
+For assistance with ".PROJECT." go to ".$master_url;
 
     $success = mail_report_list($forum, $subject, $body, true);
 
@@ -184,18 +185,19 @@ because your postings have not followed our guidelines.
         $body .= "\n\nThe moderator gave the following explanation about your suspension:\n";
         $body .= $reason;
     }
-    $success = mail_report_list($forum, $user->name." has been banished.", $body);
+    $success = mail_report_list($forum, "$user->name (ID $user->id) has been banished.", $body);
     $success &= send_email($user, $subject, $body);
-    pm_send($user, $user, $subject, $body, false);
+    pm_send_msg($user, $user, $subject, $body, false);
     return $success;
 }
 
 //////////////////// a banishment vote has been started  ///////////
 //
 function send_banish_vote_email($user, $duration, $reason, $end_time) {
+	$master_url = parse_config(get_config(), "<master_url>");
     $now=time();
     $subject = PROJECT." banishment vote underway";
-    $vote_url=parse_config(get_config(), "<master_url>")."forum_banishment_vote.php";
+    $vote_url = $master_url."forum_banishment_vote.php";
     $body = "
 A vote has been started to banish you
 from the ".PROJECT." message boards until ".date('M j,
@@ -211,7 +213,7 @@ able to resume posting at that time.
         $body .= $reason;
     }
     $success = send_email($user, $subject, $body);
-    pm_send($user, $user, $subject, $body, false);
+    pm_send_msg($user, $user, $subject, $body, false);
 
     $body .= "\n\n<a href=".$vote_url."?action=yes&userid="
              .$user->id
