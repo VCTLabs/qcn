@@ -182,7 +182,7 @@ public:
     DB_QCN_HOST_IPADDR(DB_CONN* dc=0) :
           DB_BASE("qcn_host_ipaddr", dc ? dc : &boinc_db)  { clear(); }
 
-    int get_id() {return id;}
+    DB_ID_TYPE get_id() {return id;}
 
     void db_print(char* buf)
     { 
@@ -249,7 +249,7 @@ public:
     DB_QCN_GEO_IPADDR(DB_CONN* dc=0) :
           DB_BASE("qcn_geo_ipaddr", dc ? dc : &boinc_db)  { clear(); }
 
-    int get_id() {return id;}
+    DB_ID_TYPE get_id() {return id;}
 
     void db_print(char* buf)
     {
@@ -292,7 +292,7 @@ public:
     DB_QCN_TRIGGER(DB_CONN* dc=0) :
           DB_BASE("qcn_trigger", dc ? dc : &boinc_db)  { clear(); }
 
-    int get_id() {return id;}
+    DB_ID_TYPE get_id() {return id;}
 
     void db_print(char* buf)
     {
@@ -423,7 +423,7 @@ public:
     DB_QCN_TRIGGER_MEMORY(DB_CONN* dc=0) :
         DB_BASE("qcn_trigger_memory", dc ? dc : &trigmem_db)  { clear(); }
 
-    int get_id() {return triggerid;}
+    DB_ID_TYPE get_id() {return triggerid;}
 
     void db_print(char* buf)
     {
@@ -543,7 +543,7 @@ public:
     DB_QCN_QUAKE(DB_CONN* dc=0) :
           DB_BASE("qcn_quake", dc ? dc : &boinc_db)  { clear(); }
 
-    int get_id() {return id;}
+    DB_ID_TYPE get_id() {return id;}
 
     void db_print(char* buf)
     {
