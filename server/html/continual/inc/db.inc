@@ -212,4 +212,10 @@ function escape_pattern($str) {
     return $str;
 }
 
+
+function lookup_host($id) {
+    return BoincHost::lookup_id($id);
+}
+
+
 ?>
