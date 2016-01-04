@@ -15,6 +15,7 @@ define("GOOGLE_MAPS_KEY", "AIzaSyDVxlyCoT9_i3eRxVF31dLKLPVTk22ZSS4");
 define("IMAGE_PATH", "../user_profile/images/");
 define("IMAGE_URL", "user_profile/images/");
 define("PROFILE_PATH", "../user_profile/");
+define("USE_STOPFORUMSPAM", true);
 define("PROFILE_URL", "user_profile/");
 define("LANGUAGE_FILE", "languages.txt");
 define("STYLESHEET", "qcn.css");

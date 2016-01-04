@@ -17,6 +17,7 @@ define("IMAGE_URL", "user_profile/images/");
 define("PROFILE_PATH", "../user_profile/");
 define("PROFILE_URL", "user_profile/");
 define("LANGUAGE_FILE", "languages.txt");
+define("USE_STOPFORUMSPAM", true);
 define("STYLESHEET", "qcn.css");
 define("COPYRIGHT_HOLDER", "CalTech");
 define("SYS_ADMIN_EMAIL", "carlgt1@hotmail.com");

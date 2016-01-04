@@ -94,6 +94,9 @@
       3
     </max_wus_to_send>
     <prefer_primary_platform>1</prefer_primary_platform>
+    <profile_min_credit> 10 </profile_min_credit>
+    <recaptcha_public_key>6LeF7hMTAAAAADjQ5HnFWWisBPJQi5KaD0oaG-Tt</recaptcha_public_key>
+    <recaptcha_private_key>6LeF7hMTAAAAADQMTIk1pWUPbYNjdRiXV-YOpCrK</recaptcha_private_key>
   </config>
   <tasks>
     <task>
