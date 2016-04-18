@@ -1,5 +1,5 @@
 ./configure --enable-shared --enable-zip --with-gd --with-jpeg-dir \
 --with-png-dir=/usr/local/ --with-xpm-dir=/usr/lib64 --with-freetype-dir=/usr/local/ \
---with-mysql=/usr/local/mysql --with-pear --enable-sockets \
+--with-mysqli=/usr/local/mysql --with-pear --enable-sockets \
 --with-openssl --with-zlib --with-curl=/usr/local/ \
 --with-apxs2=/usr/local/apache2/bin/apxs
