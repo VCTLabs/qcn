@@ -3,3 +3,7 @@
 --with-mysqli --with-pear --enable-sockets \
 --with-openssl --with-zlib --with-curl=/usr/local/ \
 --with-apxs2=/usr/local/apache2/bin/apxs
+
+./configure --enable-shared --enable-zip --with-gd --with-jpeg-dir --with-png-dir=/usr/local/ --with-xpm-dir=/usr/lib64 --with-freetype-dir=/usr/local/ --with-pear --enable-sockets --with-mysql --with-openssl --with-zlib --with-curl=/usr/local/ --with-apxs2=/usr/local/apache2/bin/apxs
+
+
