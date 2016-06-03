@@ -54,7 +54,7 @@ QUERY_TRIGGER_HOST_WHERE = " (varietyid=0 AND " +\
 DBNAME = "sensor"
 DBHOST = "db-private"
 DBUSER = "root"
-DBPASSWD = ""
+DBPASSWD = "PWD"
 
 def updateQuakeTrigger(dbconn):
    # this will update the trigger table with qcn quake events

@@ -17,17 +17,17 @@ from datetime import datetime
 from qcnutil import getSACMetadata
 
 # trigger file download URL base
-URL_DOWNLOAD_BASE = "http://qcn-upl.stanford.edu/trigger/"
+URL_DOWNLOAD_BASE = "http://quakecatcher.net/trigger/"
 
 # CMC note -- make sure these paths exist, or they will be created!
 TMP_DIR = "/tmp"
 UPLOAD_WEB_DIR = "/data/QCN/trigger/"
 UPLOAD_USB_WEB_DIR = "/data/QCN/trigger/usb/"
 UPLOAD_CONTINUAL_WEB_DIR = "/data/QCN/trigger/continual/"
-UPLOAD_BOINC_DIR = "/var/www/boinc/qcn/upload/"
+UPLOAD_BOINC_DIR = "/var/www/boinc/sensor/upload/"
 #not saving original file, moves to /cees2
 #UPLOAD_BACKUP_DIR = "/home/boinc/upload_backup/"
-UNZIP_CMD = "/usr/bin/unzip -o -d " + UPLOAD_WEB_DIR + " " 
+UNZIP_CMD = "/bin/unzip -o -d " + UPLOAD_WEB_DIR + " " 
 
 #UPLOAD_WEB_DIR = "c:\\temp\\web\\"
 #UPLOAD_BOINC_DIR = "c:\\temp\\upload\\"
