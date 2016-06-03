@@ -8,7 +8,7 @@ CMD_UNZIP = "/usr/bin/unzip"
 CMD_ZIP = "/usr/bin/zip"
 
 # trigger file download URL base
-URL_DOWNLOAD_BASE = "http://qcn-upl.stanford.edu/trigger/"
+URL_DOWNLOAD_BASE = "http://quakecatcher.net/trigger/"
 
 # CMC note -- make sure these paths exist, or they will be created!
 TMP_DIR = "/tmp"
