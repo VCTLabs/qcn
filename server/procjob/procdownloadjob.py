@@ -26,15 +26,15 @@ global DBUSER
 global DBPASSWD
 global SMTPS_HOST, SMTPS_PORT, SMTPS_LOCAL_HOSTNAME, SMTPS_KEYFILE, SMTPS_CERTFILE, SMTPS_TIMEOUT
 
-os.environ["HOME"] = "/home/boinc"
+os.environ["HOME"] = "/home/boinc/upload"
 
 DBHOST = "db-private"
 DBUSER = "qcn"
 DBPASSWD = "PWD"
 
-SMTPS_HOST = "smtp.stanford.edu"
-SMTPS_PORT = 465
-SMTPS_LOCAL_HOSTNAME = "qcn-upl.stanford.edu"
+SMTPS_HOST = "smtp.usc.edu"
+SMTPS_PORT = 25
+SMTPS_LOCAL_HOSTNAME = "qcn.usc.edu"
 SMTPS_KEYFILE = "/etc/sslcerts/server.key"
 SMTPS_CERTFILE = "/etc/sslcerts/server.crt"
 SMTPS_TIMEOUT = 60
@@ -227,7 +227,8 @@ def sendEmail(Username, ToEmailAddr, DLURL, NumMB):
   global SMTPS_HOST, SMTPS_PORT, SMTPS_LOCAL_HOSTNAME, SMTPS_KEYFILE, SMTPS_CERTFILE, SMTPS_TIMEOUT
   # sends email that job is done
   FromEmailAddr = "noreply@qcn.stanford.edu"
-  server=smtplib.SMTP_SSL(SMTPS_HOST, SMTPS_PORT, SMTPS_LOCAL_HOSTNAME, SMTPS_KEYFILE, SMTPS_CERTFILE, SMTPS_TIMEOUT)
+  #server=smtplib.SMTP(SMTPS_HOST, SMTPS_PORT, SMTPS_LOCAL_HOSTNAME, SMTPS_KEYFILE, SMTPS_CERTFILE, SMTPS_TIMEOUT)
+  server=smtplib.SMTP(SMTPS_HOST, SMTPS_PORT, SMTPS_LOCAL_HOSTNAME)
   msg = "Hello " + Username + ":\n\n" + "Your requested files are available for download " +\
     "over the next 24 hours from the following URL:\n\n" + DLURL +\
     "\n\nThe file size to download is approximately " + str(NumMB) + " megabytes." +\
