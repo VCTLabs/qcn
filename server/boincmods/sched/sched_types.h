@@ -537,7 +537,7 @@ struct SCHEDULER_REPLY {
     ~SCHEDULER_REPLY(){};
 // CMC here -- added the bool below
     int write(FILE*, SCHEDULER_REQUEST&, bool, DB_QCN_HOST_IPADDR&);
-    // int write(FILE*, SCHEDULER_REQUEST&);
+    //int write(FILE*, SCHEDULER_REQUEST&);
 // CMC end
     void insert_app_unique(APP&);
     void insert_app_version_unique(APP_VERSION&);

@@ -202,7 +202,7 @@ int open_database() {
             log_messages.printf(MSG_CRITICAL,
                 "lost connection to database - trying to reconnect\n"
             );
-        }
+        } 
 /* CMC here
          else {
             return 0;
@@ -217,6 +217,7 @@ int open_database() {
         log_messages.printf(MSG_CRITICAL, "can't open database\n");
         return retval;
     }
+
 // CMC here -- create the trigmem db connection
 #ifdef _USING_TRIGMEM
     retval = trigmem_db.open(
@@ -325,7 +326,7 @@ void set_core_dump_size_limit() {
 
 void attach_to_feeder_shmem() {
     char path[MAXPATHLEN];
-    strncpy(path, config.project_dir, sizeof(path));
+    strlcpy(path, config.project_dir, sizeof(path));
     get_key(path, 'a', sema_key);
     int i, retval;
     void* p;

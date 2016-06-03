@@ -67,6 +67,17 @@
 // CMC -- need to include our trigger file from the qcn svn tree
 #include "../../qcn/server/trigger/qcn_trigger.h"
 // CMC end section
+//
+// are the 2 hosts obviously different computers?
+//
+static bool obviously_different(HOST& h1, HOST& h2) {
+    if (h1.p_ncpus != h2.p_ncpus) return true;
+    if (strcmp(h1.p_vendor, h2.p_vendor)) return true;
+    if (strcmp(h1.p_model, h2.p_model)) return true;
+    if (strcmp(h1.os_name, h2.os_name)) return true;
+    if (strcmp(h1.os_version, h2.os_version)) return true;
+    return false;
+}
 
 // find the user's most recently-created host with given various characteristics
 //
@@ -400,12 +411,19 @@ lookup_user_and_make_new_host:
                     "[HOST#%lu] [USER#%lu] No host ID in request, but host with matching CPID found.\n",
                     host.id, host.userid
                 );
-                if ((g_request->allow_multiple_clients != 1)
-                    && (g_request->other_results.size() == 0)
-                ) {
-                    mark_results_over(host);
+                if (obviously_different(host, g_request->host)) {
+                    log_messages.printf(MSG_NORMAL,
+                        "[HOST#%lu] [USER#%lu] But that host doesn't match request.\n",
+                        host.id, host.userid
+                    );
+                } else {
+                    if ((g_request->allow_multiple_clients != 1)
+                        && (g_request->other_results.size() == 0)
+                    ) {
+                        mark_results_over(host);
+                    }
+                    goto got_host;
                 }
-                goto got_host;
             }
         }
 
@@ -517,7 +535,7 @@ inline static const char* get_remote_addr() {
 //
 static int modify_host_struct(HOST& host) {
     host.timezone = g_request->host.timezone;
-    strncpy(host.domain_name, g_request->host.domain_name, sizeof(host.domain_name));
+    strlcpy(host.domain_name, g_request->host.domain_name, sizeof(host.domain_name));
     char buf[1024], buf2[1024];
     sprintf(buf, "[BOINC|%d.%d.%d",
         g_request->core_client_major_version,
@@ -537,7 +555,7 @@ static int modify_host_struct(HOST& host) {
         strlcat(host.serialnum, buf2, sizeof(host.serialnum));
     }
     if (strcmp(host.last_ip_addr, g_request->host.last_ip_addr)) {
-        strncpy(
+        strlcpy(
             host.last_ip_addr, g_request->host.last_ip_addr,
             sizeof(host.last_ip_addr)
         );
@@ -554,14 +572,14 @@ static int modify_host_struct(HOST& host) {
     host.previous_uptime = g_request->host.previous_uptime;
     host.duration_correction_factor = g_request->host.duration_correction_factor;
     host.p_ncpus = g_request->host.p_ncpus;
-    strncpy(host.p_vendor, g_request->host.p_vendor, sizeof(host.p_vendor));
+    strlcpy(host.p_vendor, g_request->host.p_vendor, sizeof(host.p_vendor));
         // unlikely this will change
-    strncpy(host.p_model, g_request->host.p_model, sizeof(host.p_model));
+    strlcpy(host.p_model, g_request->host.p_model, sizeof(host.p_model));
     host.p_fpops = g_request->host.p_fpops;
     host.p_iops = g_request->host.p_iops;
     host.p_membw = g_request->host.p_membw;
-    strncpy(host.os_name, g_request->host.os_name, sizeof(host.os_name));
-    strncpy(host.os_version, g_request->host.os_version, sizeof(host.os_version));
+    strlcpy(host.os_name, g_request->host.os_name, sizeof(host.os_name));
+    strlcpy(host.os_version, g_request->host.os_version, sizeof(host.os_version));
     host.m_nbytes = g_request->host.m_nbytes;
     host.m_cache = g_request->host.m_cache;
     host.m_swap = g_request->host.m_swap;
@@ -574,7 +592,7 @@ static int modify_host_struct(HOST& host) {
     if (strlen(g_request->host.host_cpid)) {
         safe_strcpy(host.host_cpid, g_request->host.host_cpid);
     }
-    strncpy(host.product_name, g_request->host.product_name, sizeof(host.product_name));
+    strlcpy(host.product_name, g_request->host.product_name, sizeof(host.product_name));
     host.fix_nans();
 
     return 0;
@@ -1058,6 +1076,7 @@ bool wrong_core_client_version() {
     return true;
 }
 
+//void handle_msgs_from_host() {
 void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
     unsigned int i;
     DB_MSG_FROM_HOST mfh;
@@ -1076,9 +1095,7 @@ void handle_msgs_from_host(DB_QCN_HOST_IPADDR& qhip) { // CMC mod line
             "got msg from host; variety %s \n",
             mfh.variety
         );
-
    // CMC here -- begin handle triggers via handle_qcn_trigger
-       // retval = mfh.insert();
         retval = 0;
         int iVariety = -1;
         if (!strcmp(mfh.variety, "trigger")) { // it's a trigger
@@ -1174,11 +1191,11 @@ static inline bool requesting_work() {
 }
 
 // CMC here -- added the bool below so we can bypass some things if it's a trigger trickle
+//void process_request(char* code_sign_key) {
 void process_request(
     char* code_sign_key, bool bTrigger, DB_QCN_HOST_IPADDR& qhip
 ) {
 //    SCHEDULER_REQUEST& sreq, SCHEDULER_REPLY& reply, char* code_sign_key, bool bTrigger
-// void process_request(char* code_sign_key) {
 // CMC end new declaration of process_request
     PLATFORM* platform;
     int retval;
@@ -1562,6 +1579,7 @@ void handle_request(FILE* fin, FILE* fout, char* code_sign_key) {
      sreply.write(fout, sreq, bTrigger, qhip);
      //sreply.write(fout, sreq);
   // CMC end
+
     log_messages.printf(MSG_NORMAL,
         "Scheduler ran %.3f seconds\n", dtime()-start_time
     );

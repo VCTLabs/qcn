@@ -171,7 +171,7 @@ struct USER {
     char global_prefs[BLOB_SIZE];
         // global preferences, within <global_preferences> tag
     char project_prefs[APP_VERSION_XML_BLOB_SIZE];  // CMC here
-    //char project_prefs[BLOB_SIZE];
+    // char project_prefs[BLOB_SIZE];
         // project preferences; format:
         // <project_preferences>
         //    <resource_share>X</resource_share>

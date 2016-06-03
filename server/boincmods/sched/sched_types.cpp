@@ -56,7 +56,6 @@ inline static const char* get_remote_addr() {
 }
 // CMC end
 
-
 #ifdef _USING_FCGI_
 #include "boinc_fcgi.h"
 #endif
@@ -721,7 +720,7 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
          char* strTemp  = NULL;
          char* strQuake = NULL; // CMC note - read_file_malloc allocates this, make sure to free it! new char[APP_VERSION_XML_BLOB_SIZE];
     // CMC end var decl
-
+    
     // Note: at one point we had
     // "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n"
     // after the Content-type (to make it legit XML),
@@ -759,7 +758,7 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
             min_delay_needed = config.min_sendwork_interval+1;
         }
         if (request_delay<min_delay_needed) {
-            request_delay = min_delay_needed;
+            request_delay = min_delay_needed; 
         }
         fprintf(fout, "<request_delay>%f</request_delay>\n", request_delay);
     }
@@ -927,7 +926,6 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
 
          const char* strWhere = strstr(user.project_prefs, "</project_specific>");
          strTemp  = new char[APP_VERSION_XML_BLOB_SIZE];
-
 /*
        if (bTrigger) {  // send lat/lng info back to client for this trigger
          // send lat/lng on trigger trickles
@@ -952,7 +950,7 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
          memset(strTemp,  0x00, sizeof(char) * APP_VERSION_XML_BLOB_SIZE);
          //memset(strQuake, 0x00, sizeof(char) * APP_VERSION_XML_BLOB_SIZE);
 
-         if (boinc_file_exists("../qcn-quake.xml"))
+        if (boinc_file_exists("../qcn-quake.xml"))
             read_file_malloc("../qcn-quake.xml", strQuake); // strQuake holds the quake file contents
          if (strQuake && strlen(strQuake)>1 && strstr(strQuake, "<quakes>") && strstr(strQuake, "</quakes>")) { // we have valid quake data
            if (strWhere) { // we found </project so prefs exist, insert quake in the middle
@@ -991,6 +989,7 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
 
 // CMC End
 
+    }
     if (hostid) {
         fprintf(fout,
             "<hostid>%lu</hostid>\n",
