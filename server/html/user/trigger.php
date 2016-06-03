@@ -6,6 +6,11 @@ require_once("../inc/util.inc");
 require_once("../inc/user.inc");
 require_once("../inc/host.inc");
 
+
+function lookup_host($id) {
+    return BoincHost::lookup_id($id);
+}
+
 db_init();
 $hostid = get_int("hostid");
 $host = lookup_host($hostid);
