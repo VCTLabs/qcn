@@ -2,6 +2,24 @@
 
 require_once('../inc/cache.inc');
 
+function get_double($name, $optional=false) {
+    $x=null;
+    if (isset($_GET[$name])) $x = $_GET[$name];
+    if (!is_numeric($x)) {
+        if ($optional) {
+            if ($x) {
+                Header("Location: non_num_arg.html");
+                die;
+            }
+            return null;
+        } else {
+            Header("Location: missing_arg_$name.html");
+            die;
+        }
+    }
+    return (double)$x;
+}
+
 // Functions to display and edit project-specific prefs go here
 
 // generate world map

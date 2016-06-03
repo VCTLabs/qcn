@@ -252,9 +252,6 @@ function end_cache($max_age,$params=""){
         }
     }
 }
-function set_cache_data($data,$params="",$mypath=""){
-    set_cached_data(86400, $data, $params, $mypath);
-}
 
 function set_cached_data($max_age, $data, $params=""){
     // for the benefit of hackers
