@@ -64,12 +64,15 @@ def getSACMetadata(zipinname, hostid, latTrig, lonTrig, lvlTrig, lvlType, idQuak
 #outputs closest lon/lat point and elevation in meters
   myElev = 0.0
   # lvlType of 4 or 5 means they explicitly put in the elevation, so no need to look up 
-  if lvlType not in (4,5):
-    grdstr = str(lonTrig - .005) + "/" + str(lonTrig + .005) + "/" + str(latTrig - .005) + "/" + str(latTrig + .005)
-    cc = Popen(GRD_CMD + grdstr, shell=True, stdout=PIPE).communicate()[0]
-    vals = cc.rstrip("\n").split("\t")
-    if len(vals) == 3:
-      myElev = float(vals[2])
+
+  # CMC disable this for now
+  #
+  #if lvlType not in (4,5):
+  #  grdstr = str(lonTrig - .005) + "/" + str(lonTrig + .005) + "/" + str(latTrig - .005) + "/" + str(latTrig + .005)
+  #  cc = Popen(GRD_CMD + grdstr, shell=True, stdout=PIPE).communicate()[0]
+  #  vals = cc.rstrip("\n").split("\t")
+  #  if len(vals) == 3:
+  #    myElev = float(vals[2])
 
   # at this point myElev is either 0 or their estimated elevation in meters based on lat/lng
 
