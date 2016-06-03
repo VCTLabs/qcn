@@ -39,7 +39,6 @@ if ($user && $user->id != $host->userid) {
 
 page_head(tra("Computer %1", $hostid));
 show_host($host, $user, $ipprivate);
-show_trigger($host->id,$heading, $host->userid == $user->id);
 page_tail();
 
 ?>

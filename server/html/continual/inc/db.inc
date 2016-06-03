@@ -110,7 +110,7 @@ if (MYSQLI) {
     }
 } else {
     function _mysql_connect($host, $user, $pass, $db_name) {
-        $link = @mysql_pconnect($host, $user, $pass);
+        $link = mysql_pconnect($host, $user, $pass);
         if (!$link) return null;
         if (!mysql_select_db($db_name, $link)) {
             return null;
@@ -191,14 +191,14 @@ function db_init_aux($try_replica=false) {
             return 1;
         }
     } else {
-    $link = mysql_pconnect($host, $user, $pass);
-    if (!$link) {
-        return 1;
-    }
-    if (!mysql_select_db($db_name, $link)) {
-        echo "selecting $db_name\n";
-        return 2;
-    }
+        $link = mysql_pconnect($host, $user, $pass);
+        if (!$link) {
+            return 1;
+        }
+        if (!mysql_select_db($db_name, $link)) {
+            echo "selecting $db_name\n";
+            return 2;
+        }
     }
 
     return 0;
@@ -211,11 +211,5 @@ function escape_pattern($str) {
     $str = str_replace('%', '\\\\%', $str);
     return $str;
 }
-
-
-function lookup_host($id) {
-    return BoincHost::lookup_id($id);
-}
-
 
 ?>

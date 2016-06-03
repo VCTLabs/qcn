@@ -24,7 +24,6 @@ ini_set('display_startup_errors', true);
 
 require_once("../inc/util_basic.inc");
 require_once("../project/project.inc");
-require_once("../project/project_specific_prefs.inc");
 require_once("../inc/countries.inc");
 require_once("../inc/db.inc");
 require_once("../inc/boinc_db.inc");
@@ -116,6 +115,24 @@ function clear_cookie($name, $ops=false) {
         $path .= "_ops/";
     }
     setcookie($name, '', time()-3600, $path);
+}
+
+function get_double($name, $optional=false) {
+    $x=null;
+    if (isset($_GET[$name])) $x = $_GET[$name];
+    if (!is_numeric($x)) {
+        if ($optional) {
+            if ($x) {
+                Header("Location: non_num_arg.html");
+                die;
+            }
+            return null;
+        } else {
+            Header("Location: missing_arg_$name.html");
+            die;
+        }
+    }
+    return (double)$x;
 }
 
 $g_logged_in_user = null;
@@ -572,25 +589,6 @@ function check_get_args($args) {
     }
 }
 
-function get_double($name, $optional=false) {
-    $x=null;
-    if (isset($_GET[$name])) $x = $_GET[$name];
-    if (!is_numeric($x)) {
-        if ($optional) {
-            if ($x) {
-                Header("Location: non_num_arg.html");
-                die;
-            }
-            return null;
-        } else {
-            Header("Location: missing_arg_$name.html");
-            die;
-        }
-    }
-    return (double)$x;
-}
-
-
 // returns null if the arg is optional and missing
 //
 function get_int($name, $optional=false) {
@@ -660,6 +658,18 @@ function post_str($name, $optional=false) {
         $x = null;
     }
     return undo_magic_quotes($x);
+}
+
+function post_arr($name, $optional=false) {
+    if (isset($_POST[$name]) && is_array($_POST[$name])) {
+        $x = $_POST[$name];
+    } else {
+        if (!$optional) {
+            error_page("missing or bad parameter: $name");
+        }
+        $x = null;
+    }
+    return $x;
 }
 
 function is_ascii($str) {
@@ -1005,29 +1015,6 @@ function version_string_maj_min_rel($v) {
     $min = (int)($v/100);
     $v -= $min*100;
     return sprintf("%d.%d.%d", $maj, $min, $v);
-}
-
-// recaptcha utilities
-
-function recaptcha_get_head_extra() {
-    // are we using recaptcha?
-    $publickey = parse_config(get_config(), "<recaptcha_public_key>");
-    if ($publickey) {
-        // the meta tag must be included
-        // for Recaptcha to work with some IE browsers
-        return '<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" >
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-    } else {
-        return null;
-    }
-}
-
-function boinc_recaptcha_get_html($publickey) {
-    if ($publickey) {
-        return '<div class="g-recaptcha" data-sitekey="' . $publickey . '"></div>';
-    } else {
-        return '';
-    }
 }
 
 $cvs_version_tracker[]="\$Id$";  //Generated automatically - do not edit

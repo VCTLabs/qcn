@@ -7,7 +7,7 @@
     <generated_locally/>
     <upload_when_present/>
     <max_nbytes>50000000</max_nbytes>
-    <url>http://qcn-upl.stanford.edu/qcn_cgi/file_upload_handler</url>
+    <url>http://quakecatcher.net/sensor_cgi/file_upload_handler</url>
 </file_info>
 <result>
     <file_ref>
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
             "   <generated_locally/>\n"
             "   <upload_when_present/>\n"
             "   <max_nbytes>50000000</max_nbytes>\n"
-            "   <url>http://qcn-upl.stanford.edu/qcn_cgi/file_upload_handler</url>\n</file_info>\n", i
+            "   <url>http://quakecatcher.net/sensor_cgi/file_upload_handler</url>\n</file_info>\n", i
         );
    }
    fprintf(fOut, "<result>\n");

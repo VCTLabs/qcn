@@ -2,37 +2,37 @@
    <gui_url>
        <name>QCN Home Page</name>
        <description>The home page for the Quake-Catcher network</description>
-       <url>http://qcn.caltech.edu</url>
+       <url>http://quakecatcher.net</url>
    </gui_url>
    <gui_url>
        <name>Your QCN Account</name>
        <description>Your account data for the Quake-Catcher Network</description>
-       <url>http://qcn.caltech.edu/sensor/home.php</url>
+       <url>http://quakecatcher.net/sensor/home.php</url>
    </gui_url>
    <gui_url>
        <name>Message Boards</name>
        <description>Help Desk and Message Board for QCN Participants</description>
-       <url>http://qcn.caltech.edu/sensor/forum_index.php</url>
+       <url>http://quakecatcher.net/sensor/forum_index.php</url>
    </gui_url>
    <gui_url>
        <name>Computer Location Info</name>
        <description>View/set location (lat/long) info for this computer</description>
-       <url>http://qcn.caltech.edu/sensor/edit_host_info_form.php?hostid=<hostid/></url>
+       <url>http://quakecatcher.net/sensor/edit_host_info_form.php?hostid=<hostid/></url>
    </gui_url>
    <gui_url>
        <name>Computer Triggers</name>
        <description>View recent triggers for this computer</description>
-       <url>http://qcn.caltech.edu/sensor/trigger.php?hostid=<hostid/></url>
+       <url>http://quakecatcher.net/sensor/trigger.php?hostid=<hostid/></url>
    </gui_url>
    <gui_url>
        <name>Trigger Map</name>
        <description>View QCN triggers on an interactive map</description>
-       <url>http://qcn.caltech.edu/sensor/maptrig.php?hostid=<hostid/>&amp;zoom=16&amp;timeint=D</url>
+       <url>http://quakecatcher.net/sensor/maptrig.php?hostid=<hostid/>&amp;zoom=16&amp;timeint=D</url>
    </gui_url>
 </gui_urls>
 <rss_feeds>
     <rss_feed>
-        <url>http://qcn.caltech.edu/sensor/notices.php?userid=<userid/>&amp;auth=<rss_auth/></url>
+        <url>http://quakecatcher.net/sensor/notices.php?userid=<userid/>&amp;auth=<rss_auth/></url>
         <poll_interval>86400</poll_interval>
     </rss_feed>
 </rss_feeds>

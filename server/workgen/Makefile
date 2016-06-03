@@ -4,13 +4,13 @@ BOINCDIR = ../../../boinc
 MYSQLDIR = /usr/local/mysql
 
 MYSQL_CFLAGS = -I$(MYSQLDIR)/include  -DUNIV_LINUX
-MYSQL_LIBS = -rdynamic -L$(MYSQLDIR)/lib -lmysqlclient_r -lz -lrt -lcrypt -lnsl -lm
+MYSQL_LIBS = -rdynamic -L$(MYSQLDIR)/lib -lmysqlclient -lz -lrt -lcrypt -lnsl -lm
 
 SSL_CFLAGS = -I/usr/local/ssl/include
 SSL_CXXFLAGS = -I/usr/local/ssl/include
 SSL_LIBS = -L/usr/local/ssl/lib -lssl -lcrypto -ldl -lz
 
-ifeq ($(shell hostname),qcn-web.caltech.edu)
+ifeq ($(shell hostname),qcn.usc.edu)
   QCNDIR = /var/www/boinc/sensor
   CONTDIR = /var/www/boinc/continual
 else

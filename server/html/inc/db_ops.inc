@@ -24,6 +24,7 @@ ini_set('display_startup_errors', true);
 
 require_once("../inc/util_basic.inc");
 require_once("../inc/result.inc");
+require_once("../inc/boinc_db.inc");
 
 class BoincAssignment {
     static function enum($where_clause = null) {
@@ -62,11 +63,49 @@ function mysqltime_str($x) {
     return time_str($time);
 }
 
+// translate type_id into humand readable text
+// http://php.net/manual/de/mysqli-result.fetch-field-direct.php
+//
+function mysql_fieldtype_str($type_id) {
+    static $types;
+    // maps php constants to well known mysql definitions
+    static $mysql_data_type_hash = array(
+        MYSQLI_TYPE_TINY=>'tinyint',
+        MYSQLI_TYPE_SHORT=>'smallint',
+        MYSQLI_TYPE_LONG=>'int',
+        MYSQLI_TYPE_FLOAT=>'float',
+        MYSQLI_TYPE_DOUBLE=>'double',
+        MYSQLI_TYPE_TIMESTAMP=>'timestamp',
+        MYSQLI_TYPE_LONGLONG=>'bigint',
+        MYSQLI_TYPE_INT24=>'mediumint',
+        MYSQLI_TYPE_DATE=>'date',
+        MYSQLI_TYPE_TIME=>'time',
+        MYSQLI_TYPE_DATETIME=>'datetime',
+        MYSQLI_TYPE_YEAR=>'year',
+        MYSQLI_TYPE_BIT=>'bit',
+        MYSQLI_TYPE_BLOB=>'blob',
+        MYSQLI_TYPE_VAR_STRING=>'varchar',
+        MYSQLI_TYPE_STRING=>'char',
+        MYSQLI_TYPE_DECIMAL=>'decimal'
+    );
+    if (array_key_exists($type_id, $mysql_data_type_hash)) {
+        return $mysql_data_type_hash[$type_id];
+    }
+    // $type_id is not well known or new so get the constant name and return that
+    if (!isset($types)) {
+        $types = array();
+        $constants = get_defined_constants(true);
+        foreach ($constants['mysqli'] as $c => $n) if (preg_match('/^MYSQLI_TYPE_(.*)/', $c, $m)) $types[$n] = $m[1];
+    }
+    return array_key_exists($type_id, $types)? strtolower($types[$type_id]) : "unknown";
+}
+
 // Function prints a description of $table 
 //
 function print_describe_table_onecol($table, $which, $columns) {
-    $result = _mysql_query("SELECT * from $table LIMIT 1");
-    $fields = _mysql_num_fields($result);
+    $db = BoincDb::get(true);
+    $result = $db->do_query("SELECT * from $table LIMIT 1");
+    $fields = $result->field_count;
 
     $avgnum=(int)($fields/$columns);
     if ($avgnum*$columns<$fields) {
@@ -92,9 +131,9 @@ function print_describe_table_onecol($table, $which, $columns) {
     echo "<tr><th align=\"left\">NAME</th><th align=\"left\">Type</th><th align=\"left\">Bytes</th>\n";
     for ($count=$bot; $count<$top; $count++) {
         if ($count<$fields) {
-            $x = _mysql_field_attrs($result, $count);
+            $x = $result->fetch_field_direct($count);
             $name = $x->name;
-            $type = $x->type;
+            $type = mysql_fieldtype_str($x->type);
             $length = $x->length;
         } else {
             $name="<br/> ";
@@ -104,6 +143,7 @@ function print_describe_table_onecol($table, $which, $columns) {
         echo "\t<tr><td><b>$name</b></td><td>$type</td><td>$length</td></tr>\n";
     }
     echo "</table></td>";
+    $result->free();
     return 0;
 }
 
@@ -281,11 +321,11 @@ class SqlQueryString {
 
     function count() {
         $count_query = "select count(*) as cnt from $this->table $this->query";
-
-        $result = _mysql_query($count_query);
+        $db = BoincDb::get(true);
+        $result = $db->do_query($count_query);
         if (!$result) return 0;
-        $res = _mysql_fetch_object($result);
-        _mysql_free_result($result);
+        $res = $result->fetch_object();
+        $result->free();
         return $res->cnt;
     }
 
@@ -471,13 +511,14 @@ FROM result WHERE true
     }
 
     $urlquery = $q->urlquery;
-    $result = _mysql_query($main_query);
+    $db = BoincDb::get(true);
+    $result = $db->do_query($main_query);
 
     // echo "Main query was $main_query<br/>";
 
     if ($result) {
 
-        $res = _mysql_fetch_object($result);
+        $res = $result->fetch_object();
         $ntotal          = $res->nTotal;
 
         $server_state[1] = $res->serverstate_inactive;
@@ -515,7 +556,7 @@ FROM result WHERE true
         $file_delete[3]  = $res->filedeletestate_error;
 
         $nfile_deleted   = $res->filedeletestate_ready + $res->filedeletestate_done + $res->filedeletestate_error;
-        _mysql_free_result($result);
+        $result->free();
     }
 
 
@@ -714,6 +755,7 @@ function show_app_version($app_version) {
     row("Application", "<a href=\"db_action.php?table=app&id=$app_version->appid\">" . app_name_by_id($app_version->appid) . "</a>");
     row("Version num", $app_version->version_num);
     row("Platform", "<a href=\"db_action.php?table=platform&id=$app_version->platformid\">" . platform_name_by_id($app_version->platformid) . "</a>" );
+    row("Plan Class", $app_version->plan_class);
     row("XML doc", "<pre>".htmlspecialchars($app_version->xml_doc)."</pre>");
     row("min_core_version", $app_version->min_core_version);
     row("max_core_version", $app_version->max_core_version);
@@ -729,6 +771,7 @@ function app_version_short_header() {
         <th>Application</th>
         <th>Version</th>
         <th>Platform</th>
+        <th>Plan Class</th>
         </tr>
     ";
 }
@@ -742,6 +785,7 @@ function show_app_version_short($app_version) {
         <td><a href=\"db_action.php?table=app&id=$app_version->appid\">$x</a></td>
         <td>$app_version->version_num</td>
         <td><a href=\"db_action.php?table=platform&id=$app_version->platformid\">$y</a></td>
+        <td>$app_version->plan_class</td>
         </tr>
     ";
 }
@@ -851,25 +895,29 @@ function show_host($host) {
     row("CPU", "$host->p_vendor $host->p_model");
     row("GFLOPS", number_format($host->p_fpops/1e9, 2));
     row("GIOPS", number_format($host->p_iops/1e9, 2));
-    row("memory bandwidth", $host->p_membw);
+    $x = $host->p_membw/(1024*1024);
+    $y = number_format($x, 2);
+    row("Memory bandwidth", "$y MB/sec");
     row("Operating System", "$host->os_name $host->os_version");
     $x = $host->m_nbytes/(1024*1024);
-    $y = round($x, 2);
+    $y = number_format($x, 2);
     row("Memory", "$y MB");
     $x = $host->m_cache/1024;
-    $y = round($x, 2);
+    $y = number_format($x, 2);
     row("Cache", "$y KB");
     $x = $host->m_swap/(1024*1024);
-    $y = round($x, 2);
+    $y = number_format($x, 2);
     row("Swap Space", "$y MB");
     $x = $host->d_total/(1024*1024*1024);
-    $y = round($x, 2);
+    $y = number_format($x, 2);
     row("Total Disk Space", "$y GB");
     $x = $host->d_free/(1024*1024*1024);
-    $y = round($x, 2);
+    $y = number_format($x, 2);
     row("Free Disk Space", "$y GB");
-    row("Avg network bandwidth (upstream)", "$host->n_bwup bytes/sec");
-    row("Avg network bandwidth (downstream)", "$host->n_bwdown bytes/sec");
+    $x = number_format($host->n_bwup/1024);
+    row("Avg network bandwidth (upstream)", "$x kB/sec");
+    $x = number_format($host->n_bwdown/1024);
+    row("Avg network bandwidth (downstream)", "$x kB/sec");
     row("Average turnaround", days_string($host->avg_turnaround));
     row("Number of RPCs", $host->rpc_seqno);
     row("Last RPC", time_str($host->rpc_time));
@@ -894,10 +942,16 @@ function show_workunit($wu) {
     row("XML doc", "<pre>".htmlspecialchars($wu->xml_doc)."</pre>");
     row("Application", "<a href=\"db_action.php?table=app&id=$wu->appid\">" . app_name_by_id($wu->appid) . " [".$wu->appid."]</a>");
     row("Batch", $wu->batch);
-    row("Estimated FP Operations", $wu->rsc_fpops_est);
-    row("Max FP Operations", $wu->rsc_fpops_bound);
-    row("Max Memory Usage", $wu->rsc_memory_bound);
-    row("Max Disk Usage", $wu->rsc_disk_bound);
+    $x = number_format($wu->rsc_fpops_est/1e9, 2);
+    row("Estimated FP Operations", "$x GFLOPS");
+    $x = number_format($wu->rsc_fpops_bound/1e9, 2);
+    row("Max FP Operations", "$x GFLOPS");
+    $x = $wu->rsc_memory_bound/(1024*1024);
+    $y = number_format($x, 2);
+    row("Max Memory Usage", "$y MB");
+    $x = $wu->rsc_disk_bound/(1024*1024);
+    $y = number_format($x, 2);
+    row("Max Disk Usage", "$y MB");
     row("Need validate?", ($wu->need_validate?"yes [":"no [").$wu->need_validate."]");
     row("Canonical resultid",
             "<a href=\"db_action.php?table=result&id=$wu->canonical_resultid\">".$wu->canonical_resultid."</a>");
@@ -962,16 +1016,11 @@ function host_user_link($hostid) {
     if (!$hostid) return '---';
 
     $h = "<a href=\"db_action.php?table=host&id=$hostid\">$hostid</a>";
-    $result = _mysql_query("select userid from host where id='$hostid' limit 1");
-    if (!$result) return $h;
-    $host = _mysql_fetch_object($result);
-    _mysql_free_result($result);
-    if (!$host->userid) return $h;
-    $result = _mysql_query("select id, name from user where id='$host->userid' limit 1");
-    if (!$result) return $h;
-    $user = _mysql_fetch_object($result);
-    _mysql_free_result($result);
-    return "$h<br><small>(<a href=\"db_action.php?table=user&id=$user->id\">$user->name</a>)</small>";
+    $host = BoincHost::enum_fields("userid", "id=".$hostid, "limit 1");
+    if (!$host) return $h;
+    $user = BoincUser::enum_fields("id, name", "id=".$host[0]->userid, "limit 1");
+    if (!$user) return $h;
+    return "$h<br><small>(<a href=\"db_action.php?table=user&id=".$user[0]->id."\">".$user[0]->name."</a>)</small>";
 }
 
 function validate_color($validate_state) {
@@ -1044,7 +1093,14 @@ function show_result_ops($result) {
     row("Priority",$result->priority);
     row("XML doc in", "<pre>".htmlspecialchars($result->xml_doc_in)."</pre>");
     row("XML doc out", "<pre>".htmlspecialchars($result->xml_doc_out)."</pre>");
-    row("stderr out", "<pre>".htmlspecialchars($result->stderr_out)."</pre>");
+    row("stderr out", "<pre>"
+        .htmlspecialchars(
+            $result->stderr_out,
+            ENT_QUOTES | (defined('ENT_SUBSTITUTE')?ENT_SUBSTITUTE:0),
+            'utf-8'
+        )
+        ."</pre>"
+    );
     end_table();
     echo "
         <center>
@@ -1100,7 +1156,7 @@ function show_result_short($result) {
             $received = "<font color=\"#ff3333\">". time_str($result->report_deadline) . "</font>";
         }
     }
-    $version = app_version_string($result);
+    $version = app_version_string($result)." (<a href=\"db_action.php?table=app_version&id=$result->app_version_id\">$result->app_version_id</a>)";
     $outcome_color = outcome_color($result->outcome);
     $validate_color = validate_color($result->validate_state);
     $host_user = host_user_link($result->hostid);
@@ -1134,6 +1190,7 @@ function show_user($user) {
     row("Name", $user->name);
     row("Authenticator", $user->authenticator);
     row("Email address", $user->email_addr);
+    row("OK to send Email?", $user->send_email);
     row("Country", $user->country);
     row("Postal code", $user->postal_code);
     row("Total credit", $user->total_credit);
@@ -1150,31 +1207,29 @@ function show_user($user) {
 function show_user_summary($maxuser) {
     $top_country = array();
     $top_language = array();
-    $stats_res = _mysql_query("select max(id) as maxuser,
+    $db = BoincDb::get(true);
+    $stats_res = $db->do_query("select max(id) as maxuser,
         SUM(case when has_profile = '1' then 1 else 0 end) as profuser,
         SUM(case when teamid != '0' then 1 else 0 end) as teamuser
         from user"
     );
-    $stats = _mysql_fetch_assoc($stats_res);
+    $stats = $stats_res->fetch_assoc();
     if ($maxuser > $stats['maxuser']) {
         $maxuser = $stats['maxuser'];
     }
-    $user_res = _mysql_query("select * from user order by posts desc limit ".$maxuser);
-    $profile_res = _mysql_query("select * from profile order by posts desc limit ".$maxuser);
-    for ($i=1;$i<=$maxuser;$i++) {
-        $user = _mysql_fetch_object($user_res);
+    // TODO: what is in profile.posts? A user can post in the forums without a profile.
+    $users = BoincUser::enum(null, "order by posts desc limit ".$maxuser);
+    $profiles = BoincProfile::enum(null, "order by posts desc limit ".$maxuser);
+    foreach ($users as $user) {
         $top10poster[$i] = $user;
         $top_country[$user->country] += 1;
     }
-    for ($i=1;$i<=$maxuser;$i++) {
-        $profile = _mysql_fetch_object($profile_res);    
+    foreach ($profiles as $profile) {
         if ($profile->language != '') {
             $top_language[$profile->language] += 1;
         }
     }
-    _mysql_free_result($user_res);
-    _mysql_free_result($profile_res);
-    _mysql_free_result($stats_res);
+    $stats_res->free();
     echo "<table>
           <tr valign=\"top\">
             <td><h2>General</h2></td>
@@ -1243,40 +1298,37 @@ function show_team($team) {
 }
 
 function team_name_by_id($teamid) {
-    $result = _mysql_query("select * from team where id = $teamid");
-    $team = _mysql_fetch_object($result);
+    $team = BoincTeam::lookup_id($teamid);
+    if (!$team) return "No team";
     return $team->name;
 }
 
 function user_name_by_id($user_id) {
-    $result = _mysql_query("select * from user where id = $user_id");
-    $user = _mysql_fetch_object($result);
+    $user = BoincUser::lookup_id($user_id);
     if (!$user) return "No user";
     return $user->name;
 }
 
 function app_name_by_id($appid) {
-    $result = _mysql_query("select * from app where id = $appid");
-    $app = _mysql_fetch_object($result);
+    $app = BoincApp::lookup_id($appid);
+    if (!$app) return "No app";
     return $app->name;
 }
 
 function wu_name_by_id($workunitid) {
-    $result = _mysql_query("select * from workunit where id = $workunitid");
-    $wu = _mysql_fetch_object($result);
+    $wu = BoincWorkunit::lookup_id($workunitid);
     if (!$wu) return "Missing workunit";
     return $wu->name;
 }
 
 function platform_name_by_id($platformid) {
-    $result = _mysql_query("select * from platform where id = $platformid");
-    $plat = _mysql_fetch_object($result);
+    $plat = BoincPlatform::lookup_id($platformid);
+    if (!$plat) return "Missing platform";
     return $plat->name;
 }
 
 function host_name_by_id($hostid) {
-    $result = _mysql_query("select * from host where id = $hostid");
-    $host = _mysql_fetch_object($result);
+    $host = BoincHost::lookup_id($hostid);
     if (!$host) return "No host";
     if (!strlen($host->domain_name) && !strlen($host->last_ip_addr)) {
         return "(blank)";
@@ -1285,5 +1337,4 @@ function host_name_by_id($hostid) {
     }
 }
 
-$cvs_version_tracker[]="\$Id$";  //Generated automatically - do not edit
 ?>

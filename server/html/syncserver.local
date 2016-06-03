@@ -1,0 +1,201 @@
+#!/bin/bash
+# note -- as you edit a file on the server, add a line here to get it locally, also don't forget to add it to subversion (& commit)
+cp /var/www/qcnwp/wp-content/plugins/external-database-authentication/* qcnwp/external-database-authentication
+cp /var/www/qcn/ramp/index.php ../ramp/
+cp /var/www/boinc/sensor/project_files.xml ../config/
+cp /var/www/boinc/sensor/plan_class_spec.xml ../config/
+cp /var/www/boinc/sensor/gui_urls.xml ../config/
+cp /var/www/boinc/sensor/bin/generate_maptrig.sh ../config/
+cp /usr/local/apache2/conf/extra/httpd-ssl.conf ../config/
+cp /var/www/boinc/sensor/bin/clean_tmpdata.sh ../config/
+cp /usr/local/apache2/conf/httpd.conf ../config/
+cp /usr/local/apache2/conf/drupal.conf ../config/
+cp /etc/init.d/httpd ../config/
+cp /var/www/boinc/sensor/html/inc/qcn_trigger_rep.inc inc/
+cp /var/www/boinc/sensor/html/inc/forum_email.inc inc/
+cp /var/www/boinc/sensor/html/inc/prefs_util.inc inc/
+cp /var/www/boinc/sensor/html/inc/cache.inc inc/
+cp /var/www/boinc/sensor/html/inc/sqlquerystring.inc inc/
+cp /var/www/boinc/sensor/html/inc/db_ops.inc inc/
+cp /var/www/boinc/sensor/html/inc/db_conn.inc inc/
+cp /var/www/boinc/sensor/html/inc/forum.inc inc/
+cp /var/www/boinc/sensor/html/inc/host.inc inc/
+cp /var/www/boinc/sensor/html/inc/phoogle.inc inc/
+cp /var/www/boinc/sensor/html/inc/prefs.inc inc/
+cp /var/www/boinc/sensor/html/inc/user.inc inc/
+cp /var/www/boinc/sensor/html/inc/distance.inc inc/
+cp /var/www/boinc/sensor/html/inc/util.inc inc/
+cp /var/www/boinc/sensor/html/inc/utils.inc inc/
+cp /var/www/boinc/sensor/html/inc/google_translate.inc inc/
+cp /var/www/boinc/sensor/html/project/common.inc project/
+cp /var/www/boinc/sensor/html/project/csh.env project/
+cp /var/www/boinc/sensor/html/project/bash.env project/
+cp /var/www/boinc/sensor/html/project/cache_parameters.inc project/
+cp /var/www/boinc/sensor/html/project/project.inc project/
+cp /var/www/boinc/sensor/html/project/project_news.inc project/
+cp /var/www/boinc/sensor/html/project/project_specific_prefs.inc project/
+cp /var/www/boinc/sensor/html/project/plate_boundary.inc project/
+cp /var/www/boinc/sensor/config.xml ../config/
+cat ../config/config.xml | grep -v 'NQu' > cc.txt
+mv cc.txt ../config/config.xml
+cp /var/www/boinc/continual/config.xml ../config/continual_config.xml
+cat ../config/continual_config.xml | grep -v 'NQu' > cc.txt
+mv cc.txt ../config/continual_config.xml
+cp /var/www/boinc/sensor/html/user/tw_continual_rep.php user/
+cp /var/www/boinc/sensor/html/user/tw_sensor_rep.php user/
+cp /var/www/boinc/sensor/html/user/create_profile.php user/
+cp /var/www/boinc/sensor/html/user/fr_continual_rep.php user/
+cp /var/www/boinc/sensor/html/user/fr_sensor_rep.php user/
+cp /var/www/boinc/sensor/html/user/mx_continual_rep.php user/
+cp /var/www/boinc/sensor/html/user/mx_sensor_rep.php user/
+cp /var/www/boinc/sensor/html/user/forum_help_desk.php user/
+cp /var/www/boinc/sensor/html/user/forum_rate.php user/
+cp /var/www/boinc/sensor/html/user/REDS_list_signup.php user/
+cp /var/www/boinc/sensor/html/user/ramp_signup.php user/
+cp /var/www/boinc/sensor/html/user/rampreg_signup.php user/
+cp /var/www/boinc/sensor/html/user/rampnz_signup.php user/
+cp /var/www/boinc/sensor/html/user/login_form.php user/
+cp /var/www/boinc/sensor/html/user/ramp_map.php user/
+cp /var/www/boinc/sensor/html/user/account_finish.php user/
+cp /var/www/boinc/sensor/html/user/account_finish_action.php user/
+cp /var/www/boinc/sensor/html/user/create_account.php user/
+cp /var/www/boinc/sensor/html/user/create_account_form.php user/
+cp /var/www/boinc/sensor/html/user/info.php user/
+cp /var/www/boinc/sensor/html/user/edit_host_info_form.php user/
+cp /var/www/boinc/sensor/html/user/edit_host_info_action.php user/
+cp /var/www/boinc/sensor/html/user/edit_user_info_form.php user/
+cp /var/www/boinc/sensor/html/user/index.php user/
+cp /var/www/boinc/sensor/html/user/forum_index.php user/
+cp /var/www/boinc/sensor/html/user/rss_main.php user/
+cp /var/www/boinc/sensor/html/user/all_news.php user/
+cp /var/www/boinc/sensor/html/user/maptrig.php user/
+cp /var/www/boinc/sensor/html/user/maptrigtime.php user/
+cp /var/www/boinc/sensor/html/user/results.php user/
+cp /var/www/boinc/sensor/html/user/qcn.css user/
+cp /var/www/boinc/sensor/html/user/qcn_orig.css user/
+cp /var/www/boinc/sensor/html/user/qcn_wordpress.css user/
+cp /var/www/boinc/sensor/html/user/show_host_detail.php user/
+cp /var/www/boinc/sensor/html/user/server_status.php user/
+cp /var/www/boinc/sensor/html/user/trigger.php user/
+cp /var/www/boinc/sensor/html/user/show_user.php user/
+cp /var/www/boinc/sensor/html/user/hosts_user.php user/
+cp /var/www/boinc/sensor/html/user/ramp.php user/
+cp /var/www/boinc/sensor/html/user/trdl.php user/
+cp /var/www/boinc/sensor/html/user/trdlreq.php user/
+cp /var/www/boinc/sensor/html/user/calendarDateInput.js user/
+cp /var/www/boinc/sensor/html/user/calendar.jpg user/
+cp /var/www/boinc/sensor/html/ops/mass_email.php ops/
+cp /var/www/boinc/sensor/html/ops/db_form.php ops/
+cp /var/www/boinc/sensor/html/ops/db_action.php ops/
+cp /var/www/boinc/sensor/html/ops/index.php ops/
+cp /var/www/boinc/sensor/html/ops/next.gif ops/
+cp /var/www/boinc/sensor/html/ops/prev.gif ops/
+cp /var/www/boinc/sensor/html/ops/dbinfo.php ops/
+cp /var/www/boinc/sensor/html/ops/generate_maptrig.php ops/
+cp /var/www/boinc/sensor/html/ops/weekly-host.php ops/
+cp /var/www/boinc/sensor/html/ops/.htaccess ops/
+cp /var/www/boinc/sensor/html/inc/earthquake_email.inc inc/
+cp /var/www/boinc/sensor/html/inc/email.inc inc/
+cp /var/www/boinc/sensor/html/user/earthquake_email.php user/
+
+#continual
+cp /var/www/boinc/continual/html/ops/generate_maptrig.php continual/ops/
+cp /var/www/boinc/continual/html/inc/db.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/db_conn.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/prefs.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/utils.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/util.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/user.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/host.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/cache.inc continual/inc/
+cp /var/www/boinc/continual/html/inc/email.inc continual/inc/
+cp /var/www/boinc/continual/html/project/common.inc continual/project/
+cp /var/www/boinc/continual/html/project/project.inc continual/project/
+cp /var/www/boinc/continual/html/project/project_specific_prefs.inc continual/project/
+cp /var/www/boinc/continual/html/project/cache_parameters.inc continual/project/
+cp /var/www/boinc/continual/html/user/calendar.jpg continual/user/
+cp /var/www/boinc/continual/html/user/calendarDateInput.js continual/user/
+cp /var/www/boinc/continual/html/user/prefs.php continual/user/
+cp /var/www/boinc/continual/html/user/edit_host_info_form.php continual/user/
+cp /var/www/boinc/continual/html/user/edit_host_info_action.php continual/user/
+cp /var/www/boinc/continual/html/user/maptrig.php continual/user/
+cp /var/www/boinc/continual/html/user/maptrigtime.php continual/user/
+cp /var/www/boinc/continual/html/user/account_finish.php continual/user/
+cp /var/www/boinc/continual/html/user/account_finish_action.php continual/user/
+cp /var/www/boinc/continual/html/user/index.php continual/user/
+
+# earthquake scripts etc
+cp /var/www/qcn/earthquakes/earthquake_stats.php qcn/earthquakes/
+cp /var/www/qcn/earthquakes/events.xy qcn/earthquakes/
+cp /var/www/qcn/earthquakes/index_jday.php qcn/earthquakes/
+cp /var/www/qcn/earthquakes/index.php qcn/earthquakes/
+cp /var/www/qcn/earthquakes/latency.php qcn/earthquakes/
+cp /var/www/qcn/earthquakes/map_quakes.php qcn/earthquakes/
+cp /var/www/qcn/earthquakes/recent_quakes.php qcn/earthquakes/
+cp /var/www/qcn/earthquakes/popup.js qcn/earthquakes/
+cp /var/www/qcn/earthquakes/view_events.php qcn/earthquakes/
+cp /var/www/qcn/earthquakes/recent_quakes.php qcn/earthquakes/
+
+#earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/index_earthquake.php qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/index_earthquake_sub.php qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/amp_v_dist.text qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/bash.env qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/csh.env qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/common.inc qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/CNelevatio2.txt qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/int_v1.cpt qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/dl.inc qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/earthquake_email.inc qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/earthquake_email.list qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/gmt_map.php qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/gmt_quakes.inc qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/gmt_scatter_script.csh qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/intensity.php qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/popup.inc qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/qcn_trigger_info.inc qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/revise_magnitude.csh qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/revise_magnitude.php qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/scatter_lines.xy qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/update_index_php.csh qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/worldcities_names.gmt qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/worldcitiespop.gmt qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/drag.js qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/CNtype2.txt qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/CNtype2_key.txt qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/amp_v_dist.text qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/inc/amp_v_dist.theo qcn/earthquakes/inc
+cp /var/www/qcn/earthquakes/view/qcn_map_sensor.php qcn/earthquakes/view
+cp /var/www/qcn/earthquakes/view/qcn_map_network.php qcn/earthquakes/view
+
+#earthquakes/view
+cp /var/www/qcn/earthquakes/view/index.php qcn/earthquakes/view
+cp /var/www/qcn/earthquakes/view/plot_data.sh qcn/earthquakes/view
+cp /var/www/qcn/earthquakes/view/update_waveform.sh qcn/earthquakes/view
+cp /var/www/qcn/earthquakes/view/view_data.php qcn/earthquakes/view
+cp /var/www/qcn/earthquakes/view/plot_all_data.sh qcn/earthquakes/view
+
+#rt_image
+cp /var/www/qcn/rt_image/index.php qcn/rt_image/
+cp /var/www/qcn/rt_image/ltn.php qcn/rt_image/
+cp /var/www/qcn/rt_image/rt_triggers_DTN.xyz qcn/rt_image/
+cp /var/www/qcn/rt_image/rt_triggers_LTN.xyz qcn/rt_image/
+cp /var/www/qcn/rt_image/rt_triggers.xyz qcn/rt_image/
+cp /var/www/qcn/rt_image/usb_sensors.php qcn/rt_image/
+
+#rt_image/inc
+cp /var/www/qcn/rt_image/inc/GMT_globe_grey.cpt qcn/rt_image/inc/
+cp /var/www/qcn/rt_image/inc/GMT_gray.cpt qcn/rt_image/inc/
+cp /var/www/qcn/rt_image/inc/gmt_quakes.inc qcn/rt_image/inc/
+cp /var/www/qcn/rt_image/inc/int.cpt qcn/rt_image/inc/
+cp /var/www/qcn/rt_image/inc/rt_images.sh qcn/rt_image/inc/
+cp /var/www/qcn/rt_image/inc/update_data.inc qcn/rt_image/inc/
+
+#qcn/inc
+cp /var/www/qcn/inc/legal.inc qcn/inc/
+cp /var/www/qcn/inc/google_translate.inc qcn/inc/
+cp /var/www/qcn/inc/qcn_auto_detect.inc qcn/inc/
+cp /var/www/qcn/inc/show_notices.inc qcn/inc/
+cp /var/www/qcn/inc/contacts.inc qcn/inc/
+
+## end

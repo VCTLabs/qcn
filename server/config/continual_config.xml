@@ -1,16 +1,18 @@
 <?xml version="1.0" ?>
 <boinc>
   <config>
-    <master_url>http://qcn.caltech.edu/continual/</master_url>
+    <master_url>http://quakecatcher.net/continual/</master_url>
     <upload_dir>
-      /var/www/boinc/continual/upload
+      /var/www/boinc/sensor/upload
     </upload_dir>
     <msg_to_host/>
+   <dont_generate_upload_certificates/>
+   <ignore_upload_certificates/>
     <long_name>
       QCN Continual
     </long_name>
     <cgi_url>
-      http://qcn.caltech.edu/continual_cgi/
+      http://quakecatcher.net/continual_cgi/
     </cgi_url>
     <app_dir>
       /var/www/boinc/continual/apps
@@ -28,10 +30,8 @@
     <uldl_dir_fanout>
       1024
     </uldl_dir_fanout>
-   <dont_generate_upload_certificates/>
-   <ignore_upload_certificates/>
     <download_url>
-      http://qcn.caltech.edu/continual/download
+      http://quakecatcher.net/continual/download
     </download_url>
     <min_core_client_version_announced> 60200 </min_core_client_version_announced>
     <min_core_client_upgrade_deadline> 1241650148 </min_core_client_upgrade_deadline>
@@ -41,10 +41,10 @@
       0x1213d096
     </shmem_key>
     <host>
-       qcn-web
+       qcn
     </host>
     <db_host>
-       db-private
+       10.1.1.1
     </db_host>
     <db_user>
        qcn
@@ -76,7 +76,7 @@
       /var/www/boinc/keys/
     </key_dir>
     <upload_url>
-      http://qcn.caltech.edu/continual_cgi/file_upload_handler
+      http://quakecatcher.net/continual_cgi/file_upload_handler
     </upload_url>
     <non_cpu_intensive>
        1

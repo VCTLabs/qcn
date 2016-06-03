@@ -1,13 +1,14 @@
 <?xml version="1.0" ?>
 <boinc>
   <config>
+    <ignore_upload_certificates/>
     <upload_dir>
       /var/www/boinc/sensor/upload
     </upload_dir>
     <long_name>
       Quake-Catcher Network
     </long_name>
-    <cgi_url>http://qcn.caltech.edu/sensor_cgi/</cgi_url>
+    <cgi_url>http://quakecatcher.net/sensor_cgi/</cgi_url>
     <msg_to_host/>
     <sched_debug_level>
       1
@@ -16,21 +17,20 @@
     <uldl_dir_fanout>
       1024
     </uldl_dir_fanout>
-    <uldl_host>qcn-upl</uldl_host>
+    <uldl_host>qcn</uldl_host>
     <uldl_pid>/var/run/httpd</uldl_pid>
     <dont_generate_upload_certificates/>
-    <ignore_upload_certificates/>
-    <download_url>http://qcn.caltech.edu/sensor/download</download_url>
-    <log_dir>/var/www/boinc/sensor/log_qcn-web</log_dir>
+    <download_url>http://quakecatcher.net/sensor/download</download_url>
+    <log_dir>/var/www/boinc/sensor/log_qcn</log_dir>
     <app_dir>/var/www/boinc/sensor/apps</app_dir>
     <download_dir>/var/www/boinc/sensor/download</download_dir>
     <fuh_debug_level>0</fuh_debug_level>
-    <master_url>http://qcn.caltech.edu/sensor/</master_url>
+    <master_url>http://quakecatcher.net/sensor/</master_url>
     <host>
-      qcn-web
+      qcn
     </host>
     <db_host>
-       db-private
+       10.1.1.1
     </db_host>
     <db_user>
        qcn
@@ -67,7 +67,7 @@
       /var/www/boinc/keys/
     </key_dir>
     <upload_url>
-      http://qcn.caltech.edu/sensor_cgi/file_upload_handler
+      http://quakecatcher.net/sensor_cgi/file_upload_handler
     </upload_url>
     <non_cpu_intensive>
        1
@@ -135,7 +135,6 @@
       </period>
     </task>
     <task>
-      <disabled>1</disabled>
       <output>
         do_stats.out
       </output>
