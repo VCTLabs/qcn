@@ -3,7 +3,6 @@
  *  qcn
  *
  *  Created by Carl Christensen on 11/08/2007
- *  Copyright 2007 Stanford University.  All rights reserved.
  *
  */
 

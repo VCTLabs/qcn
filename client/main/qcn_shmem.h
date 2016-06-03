@@ -1,6 +1,5 @@
 #ifndef _CQCNSHMEM_H_
 #define _CQCNSHMEM_H_
-// Carl Christensen, copyright 2007 Stanford University
 // this class will be instantiated in shared memory, for updating of sensor data and sharing with an external OpenGL graphics app
 // note that some variables that are important are global in qcn_main namespace, as they are not necessary for graphics, so don't
 // need to be here

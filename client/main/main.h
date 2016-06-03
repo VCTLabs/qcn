@@ -8,7 +8,6 @@
  *  declares the qcn_main namespace and globals as defined below
 
  *  Created by Carl Christensen on 08/11/2007.
- *  Copyright 2007 Stanford University. All rights reserved.
  *
  */
 

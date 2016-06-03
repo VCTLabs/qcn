@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>QCNLive</string>
 	<key>CFBundleIdentifier</key>
-	<string>edu.stanford.qcn.QCNLive</string>
+	<string>edu.iris.QCNLive</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>

@@ -110,9 +110,9 @@ int main(int argc, char** argv)
     fprintf(stdout, "Getting latest earthquake list...");
     fflush(stdout);
 #ifdef _WIN32
-	bStatus = runit("projects\\qcn.edu_qcn\\curl.exe -s http://qcn.stanford.edu/qcnalpha/download/qcn-quake.xml > slots/0/qcn-quake.xml");
+	bStatus = runit("projects\\qcn.edu_qcn\\curl.exe -s http://quakecatcher.net/qcnalpha/download/qcn-quake.xml > slots/0/qcn-quake.xml");
 #else
-	bStatus = runit("curl -s http://qcn.stanford.edu/qcnalpha/download/qcn-quake.xml > slots/0/qcn-quake.xml");
+	bStatus = runit("curl -s http://quakecatcher.net/qcnalpha/download/qcn-quake.xml > slots/0/qcn-quake.xml");
 #endif
     if (!bStatus)  {
 #ifdef _WIN32

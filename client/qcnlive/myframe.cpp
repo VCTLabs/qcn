@@ -3,7 +3,6 @@
  *  qcn
  *
  *  Created by Carl Christensen on 2/15/08.
- *  Copyright 2008 Stanford University School of Earth Sciences. All rights reserved.
  *
  */
 
@@ -59,7 +58,7 @@ const short ICON_SIZE = 32;
 MyAboutBox::MyAboutBox(QMainWindow *pmw)  
    : QMessageBox(QMessageBox::Information, 
 				 tr("About QCNLive"), 
-				 tr("<b>QCNLive</b> is provided by the <BR> Quake-Catcher Network Project <BR><BR>http://qcn.stanford.edu<BR><BR>(c) 2008-2014 Stanford University"),
+				 tr("<b>QCNLive</b> is provided by the <BR> Quake-Catcher Network Project <BR><BR>http://quakecatcher.net<BR><BR>(c) 2008-2016 IRIS"),
 				 QMessageBox::Ok,
 				 pmw
 				 )
@@ -69,8 +68,8 @@ MyAboutBox::MyAboutBox(QMainWindow *pmw)
 	 //myAboutBox.SetIcon(wxIcon("qcnwin.ico", wxBITMAP_TYPE_ICO));
 	 myAboutBox.SetVersion(wxString(QCN_VERSION_STRING));
 	 myAboutBox.SetName(wxT("QCNLive"));
-	 myAboutBox.SetWebSite(wxT("http://qcn.stanford.edu"), wxT("Quake-Catcher Network Website"));
-	 myAboutBox.SetCopyright(wxT("(c) 2008-2014 Stanford University")); 
+	 myAboutBox.SetWebSite(wxT("http://quakecatcher.net"), wxT("Quake-Catcher Network Website"));
+	 myAboutBox.SetCopyright(wxT("(c) 2008-2016 IRIS")); 
 	 //myAboutBox.AddDeveloper(wxT("Carl Christensen  (carlgt1@hotmail.com"));
 	 myAboutBox.SetDescription(wxT("This software is provided free of charge for educational purposes.\n\nPlease visit us on the web:\n"));
 	 
@@ -807,25 +806,25 @@ void MyFrame::actionHelp()
 	QAction *pAction = qobject_cast<QAction*>(QObject::sender());
 	std::string strURL("");
 	if (pAction == m_actionHelpManual) {
-		strURL = "http://qcn.stanford.edu/downloads/QCNLive_User_Manual.pdf";
+		strURL = "http://quakecatcher.net/downloads/QCNLive_User_Manual.pdf";
 	}
 	else if (pAction == m_actionHelpWebQCN) {
-		strURL = "http://qcn.stanford.edu";
+		strURL = "http://quakecatcher.net";
 	}
 	else if (pAction == m_actionHelpWebQCNLive) {
-		strURL = "http://qcn.stanford.edu/learning/software.php";
+		strURL = "http://quakecatcher.net/learning/software.php";
 	}
 	else if (pAction == m_actionHelpWebEarthquakes) {
-		strURL = "http://qcn.stanford.edu/learning/earthquakes.php";
+		strURL = "http://quakecatcher.net/learning/earthquakes.php";
 	}
 	else if (pAction == m_actionHelpWebLessons) {
-		strURL = "http://qcn.stanford.edu/learning/lessons.php";
+		strURL = "http://quakecatcher.net/learning/lessons.php";
 	}
 	else if (pAction == m_actionHelpWebRequestSensor) {
-		strURL = "http://qcn.stanford.edu/learning/requests.php";
+		strURL = "http://quakecatcher.net/learning/requests.php";
 	}
 	else if (pAction == m_actionHelpWebGlossary) {
-		strURL = "http://qcn.stanford.edu/learning/glossary.php";
+		strURL = "http://quakecatcher.net/learning/glossary.php";
 	}
 	else if (pAction == m_actionHelpAbout) {
 		//MyAboutBox myabout(this);
@@ -839,10 +838,11 @@ void MyFrame::actionHelp()
 			"<BR>no guarantees or warrantees or liabilities,<BR>"
 			"(i.e. use at your own risk),<BR>all rights reserved, by the "
 			"<BR> Quake-Catcher Network Project <BR><BR>"
-			"<A HREF='http://qcn.stanford.edu'>http://qcn.stanford.edu</A>"
-		    "<BR><BR>Stanford University<BR>School of Earth Sciences<BR><BR>"
-			"University of California at Riverside<BR>Department of Earth Sciences"
-			"<BR><BR>(c) 2008-2014 Stanford University")
+			"<A HREF='http://quakecatcher.net'>http://quakecatcher.net</A>"
+		    "<BR><BR><A HREF='http://www.iris.edu/'>Incorporated Research Institutions for Seismology (IRIS)</A>"
+                        <BR><BR>"
+			"<A HREF='http://www.scec.org/'>Southern California Earthquake Center (SCEC)</A>"
+			"<BR><BR>(c) 2008-2016 IRIS")
 		);
 		strVer += QCN_VERSION_STRING;
 		QMessageBox::about(this, strVer, 

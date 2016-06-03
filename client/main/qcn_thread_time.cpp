@@ -48,7 +48,7 @@ void* QCNThreadTime(void*)
     char* strReply = new char[iLenReply];
     memset(strReply, 0x00, iLenReply);
     char strExec[_MAX_PATH];  // set exec & boinc resolved filename for ntpdate
-  //#define NTPDATE_ARGS { "ntpdatemainthread", "-p", "8", "-t", "20", "-u", "-b", "-q", "qcn-upl.stanford.edu" }
+  //#define NTPDATE_ARGS { "ntpdatemainthread", "-p", "8", "-t", "20", "-u", "-b", "-q", "quakecatcher.net" }
   //#define NTPDATE_ARGC 9
   //  const char* ntpdate_argv[NTPDATE_ARGC] = NTPDATE_ARGS;
 

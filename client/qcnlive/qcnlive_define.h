@@ -15,7 +15,7 @@
 
 #define FILENAME_SPLASH "splash.png"
 
-#define SET_COMPANY "edu.stanford.qcn"
+#define SET_COMPANY "edu.iris"
 #define SET_APP     "QCNLive"
 
 #define DIR_MAKEQUAKE "../makequake"
@@ -51,7 +51,7 @@
 
 
 // URL for the earthquake xml listing
-#define QCNGUI_URL_QUAKE "http://qcn.stanford.edu/sensor/download/qcn-quake.xml"
+#define QCNGUI_URL_QUAKE "http://quakecatcher.net/sensor/download/qcn-quake.xml"
 
 #define QCNGUI_SHMEM       "quakewx"
 #define QCNGUI_SHMEM_FILE  "boinc_quakewx_0"

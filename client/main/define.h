@@ -8,7 +8,6 @@
  *  global defines used for the Quake Catcher Network client, graphics, and QCNLive programs
 
  *  Created by Carl Christensen on 08/11/2007.
- *  Copyright 2007 Stanford University. All rights reserved.
  *
 */
 
@@ -345,10 +344,10 @@ struct FDSET_GROUP {
 
 // the args used for ntpdate call for 8 samples, a timeout of 20 seconds, an unprivileged port, no adjtime, and no system update of the clock
 #ifdef _USE_NTPDATE_EXEC_
-  #define NTPDATE_ARGS "-p 8 -t 20 -u -b -q qcn-upl.stanford.edu"
+  #define NTPDATE_ARGS "-p 8 -t 20 -u -b -q quakecatcher.net"
   #define NTPDATE_ARGC 8
 #else
-  #define NTPDATE_ARGS { "-p", "8", "-t", "20", "-u", "-b", "-q", "qcn-upl.stanford.edu" }
+  #define NTPDATE_ARGS { "-p", "8", "-t", "20", "-u", "-b", "-q", "quakecatcher.net" }
   #define NTPDATE_ARGC 8
 #endif
 
