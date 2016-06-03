@@ -1,8 +1,11 @@
 This is the git repository for the Quake-Catcher Network project, Home Page:
 
-http://qcn.stanford.edu
+http://quakecatcher.net
 
-All files are (c) 2013 Stanford University, School of Earth Sciences
+All files are (c) 2007-2016 Incorporated Research Institutions for Seismology (IRIS)
+
+Project formerly developed at Stanford University (2007-2014), the hosted at CalTech, now at USC via 
+the Southern California Earthquake Center with support by IRIS.
 
 Primary author of all files unless otherwise noted is Carl Christensen, carlgt1@hotmail.com  (github: carlgt1)
 
