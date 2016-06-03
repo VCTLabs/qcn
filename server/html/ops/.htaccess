@@ -1,5 +1,5 @@
-AuthUserFile /var/www/boinc/boinc_passwd
-AuthName EnterPassword
 AuthType Basic
+AuthUserFile "/var/www/boinc/boinc_passwd"
+AuthName "Password Required"
+Require user admin
 
-require user admin
