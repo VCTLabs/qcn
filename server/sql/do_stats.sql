@@ -48,10 +48,10 @@ BEGIN
         FROM qcn_trigsummary
         WHERE id IN (SELECT MAX(id) FROM qcn_trigsummary GROUP BY result_name);
 
-    UPDATE result r, qcn_stats s
+    UPDATE result u, qcn_stats s
        SET u.granted_credit=
           IFNULL(total_credit,0), u.claimed_credit=u.granted_credit, u.validate_state=3
-           WHERE r.name=s.result_name;
+           WHERE u.name=s.result_name;
 
     UPDATE user u SET total_credit=IFNULL((select sum(total_credit) from 
           qcn_stats r WHERE r.userid=u.id),0),
