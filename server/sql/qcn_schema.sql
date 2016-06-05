@@ -16,6 +16,7 @@ drop table if exists qcn_ramp_participant;
 drop table if exists qcn_ramp_coordinator;
 drop table if exists qcn_constant;
 drop table if exists qcn_kml_region;
+drop table if exists qcn_trigsummary;
 
 create table qcn_constant (
     id int not null primary key auto_increment,
@@ -424,12 +425,22 @@ CREATE TABLE qcn_recalcresult (resultid int(11) NOT NULL PRIMARY KEY, weight dou
 ALTER TABLE qcn_recalcresult ADD INDEX recalc_result (resultid);
 
 CREATE TABLE qcn_stats
-         (userid integer, hostid integer, teamid integer,
-             resultid integer, total_credit double, weight double, expavg_time double);
-
+         (userid int(11), hostid int(11), teamid int(11), 
+             result_name varchar(254), total_credit double, weight double, expavg_time double);
+        
 ALTER TABLE qcn_stats ADD INDEX qcn_stats_userid (userid);
 ALTER TABLE qcn_stats ADD INDEX qcn_stats_hostid (hostid);
 ALTER TABLE qcn_stats ADD INDEX qcn_stats_teamid (teamid);
+          
+CREATE TABLE qcn_trigsummary
+(id integer not null auto_increment primary key,       
+userid int(11), hostid int(11), teamid int(11),
+result_name varchar(254),
+total_credit double, weight double,
+time_received double, is_archive boolean
+);
+
+CREATE INDEX qcn_trigsummary_result on qcn_trigsummary(result_name, total_credit);
 
 CREATE TABLE qcn_finalstats
 (
