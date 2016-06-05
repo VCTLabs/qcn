@@ -18,8 +18,6 @@ BEGIN
     SET AUTOCOMMIT=1;
 
     /* make a subset of result table - truncate old recalc table, just live recs of new table */
-    TRUNCATE TABLE qcn_stats;
-    DELETE FROM qcn_trigsummary WHERE is_archive=0;
 
     /* rebuild trigsummary for archive records
          INSERT INTO qcn_trigsummary (userid, hostid, teamid, result_name, total_credit, weight, time_received, is_archive) 
@@ -33,6 +31,17 @@ BEGIN
     */
 
     /* get latest credit-worthy triggers into trigsummary */
+    DELETE FROM qcn_trigsummary WHERE is_archive=0;
+    INSERT INTO qcn_trigsummary (userid, hostid, teamid, result_name, total_credit, weight, time_received, is_archive) 
+            SELECT h.userid, hostid, u.teamid, result_name, 
+               IF(runtime_clock>86400.0, 50.0, CEIL(runtime_clock * 0.0005787)) total_credit,
+               EXP(-(ABS(unix_timestamp()-time_received))*0.69314718/604800.0) weight, 
+               time_received, 
+               0 is_archive
+            FROM qcn_trigger t, host h, user u
+            WHERE hostid=h.id AND h.userid=u.id AND runtime_clock>3600 ORDER BY time_trigger;
+
+    TRUNCATE TABLE qcn_stats;
     INSERT INTO qcn_stats
         SELECT 
           userid, hostid, teamid, result_name, total_credit, weight, total_credit*weight

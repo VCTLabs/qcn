@@ -441,6 +441,7 @@ time_received double, is_archive boolean
 );
 
 CREATE INDEX qcn_trigsummary_result on qcn_trigsummary(result_name, total_credit);
+CREATE INDEX qcn_trigsummary_archive on qcn_trigsummary(is_archive);
 
 CREATE TABLE qcn_finalstats
 (
