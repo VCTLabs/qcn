@@ -1,0 +1,20 @@
+[Unit]
+Description=MySQL Server
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/run/mysqld
+ExecStartPre=/bin/chown mysql:mysql -R /var/run/mysqld
+ExecStart=/usr/local/mysql/bin/mysqld --basedir=/usr/local/mysql --datadir=/data/mysql --plugin-dir=/usr/local/mysql/lib/plugin --log-error=/data/mysql/error.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock --port=3306
+TimeoutSec=300
+PrivateTmp=true
+User=mysql
+Group=mysql
+WorkingDirectory=/usr/local/mysql
+
+[Install]
+WantedBy=multi-user.target
+
