@@ -43,8 +43,14 @@ BEGIN
          WHERE f.resultid IS NULL and t.runtime_clock>0
                    GROUP BY r.id);
 
-    /* archived triggers */
+
     INSERT INTO qcn_recalcresult
+       SELECT * FROM qcn_recalcresult_archive q 
+           WHERE q.resultid NOT IN (SELECT resultid FROM qcn_recalcresult);
+
+    /* archived triggers 
+    DROP TABLE qcn_recalcresult_archive;
+    CREATE TABLE qcn_recalcresult_archive
       (SELECT r.id resultid,                              
        exp(-(abs(unix_timestamp()-max(t.time_received))*0.69314718/604800.0)) weight,
          (50.0*IF(MAX(t.runtime_clock)>100000.0,100000.0,MAX(t.runtime_clock)))/86400.0 total_credit,
@@ -55,7 +61,7 @@ BEGIN
            JOIN continual_archive.qcn_trigger t ON r.name=t.result_name
          WHERE f.resultid IS NULL AND q.result_name IS NULL AND t.runtime_clock>0
                    GROUP BY r.id);
-
+     */
 
     TRUNCATE TABLE qcn_stats;
     INSERT INTO qcn_stats 
