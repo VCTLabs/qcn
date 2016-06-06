@@ -20,6 +20,7 @@ BEGIN
     /* make a subset of result table - truncate old recalc table, just live recs of new table */
 
     /* rebuild trigsummary for archive records
+
          INSERT INTO qcn_trigsummary (userid, hostid, teamid, result_name, total_credit, weight, time_received, is_archive) 
             SELECT h.userid, hostid, u.teamid, result_name, 
                IF(runtime_clock>86400.0, 50.0, CEIL(runtime_clock * 0.0005787)) total_credit,
@@ -29,6 +30,11 @@ BEGIN
             FROM sensor_archive.qcn_trigger t, host h, user u
             WHERE hostid=h.id AND h.userid=u.id AND runtime_clock>3600 ORDER BY time_trigger;
     */
+
+     /* the following line returns trigger counts by year-month
+       select concat(year(from_unixtime(time_received)), lpad(month(from_unixtime(time_received)), 2, '0')) ym, 
+              count(*) from continual_archive.qcn_trigger group by ym;
+     */
 
     /* get latest credit-worthy triggers into trigsummary */
     DELETE FROM qcn_trigsummary WHERE is_archive=0;
