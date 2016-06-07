@@ -16,7 +16,7 @@
 # To install in $HOME instead of /usr/local, use:
 #    make install prefix=$HOME
 
-CC=/usr/bin/gcc
+CC=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
 
 CFLAGS=-O2  -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//System/Library/Frameworks/Kernel.framework/Versions/A/Headers/ -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//usr/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -arch x86_64 -m64
 #CFLAGS=-O -DMAX_WBITS=14 -DMAX_MEM_LEVEL=7
@@ -27,8 +27,8 @@ CFLAGS=-O2  -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platfo
 SFLAGS=-O2  -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//System/Library/Frameworks/Kernel.framework/Versions/A/Headers/ -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//usr/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -arch x86_64 -fPIC -m64
 LDFLAGS=-L/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//usr/lib/ -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -Wl,-syslibroot,/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -arch x86_64 -L. libz.a
 TEST_LDFLAGS=-L. libz.a
-LDSHARED=/usr/bin/gcc
-CPP=/usr/bin/gcc -E
+LDSHARED=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
+CPP=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc -E
 
 STATICLIB=libz.a
 SHAREDLIB=

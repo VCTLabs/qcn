@@ -8,8 +8,9 @@ export LIBTOOL='/usr/local/bin/libtool --tag=CC'
 export LIBTOOLIZE=/usr/local/bin/libtoolize
 
 export MARCH='-arch i386'
-export CXX=/usr/bin/g++
-export CC=/usr/bin/gcc
+export CC=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
+export CXX=/Applications/Xcode.app/Contents/Developer/usr/bin/g++
+
 export MACOSX_DEPLOYMENT_TARGET=10.9
 export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/"
 #export EXTRA_INCLUDE=$SDKROOT/usr/include/c++/4.2.1/tr1

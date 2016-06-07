@@ -3,18 +3,22 @@
 #!/bin/bash
 chmod uog+rx configure
 
-export MACOSX_DEPLOYMENT_TARGET=10.6
-export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export EXTRA_INCLUDE=$SDKROOT/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/
-
-#export CXX=/usr/bin/llvm-g++
-#export CC=/usr/bin/llvm-gcc
+export LIBTOOL='/usr/local/bin/libtool --tag=CC'
+export LIBTOOLIZE=/usr/local/bin/libtoolize
 
 export MARCH='-arch i386'
+export CXX=/usr/bin/g++
+export CC=/usr/bin/gcc
+export MACOSX_DEPLOYMENT_TARGET=10.9
+export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/"
+#export EXTRA_INCLUDE=$SDKROOT/usr/include/c++/4.2.1/tr1
+export EXTRA_INCLUDE=$SDKROOT/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/
+
 export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT $MARCH"
-export CPPFLAGS="-O2 -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
-export CFLAGS="-O2 $BIGFILES -isysroot $SDKROOT $MARCH"
-export CXXFLAGS="-O2 $BIGFILES -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CPPFLAGS="-O2 -I$EXTRA_INCLUDE -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CFLAGS="-O2 $BIGFILES -I$EXTRA_INCLUDE -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CXXFLAGS="-O2 $BIGFILES -I$EXTRA_INCLUDE -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+
 ./configure --without-ssl --disable-shared --disable-ldap
 make clean
 make
