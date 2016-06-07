@@ -8,10 +8,10 @@ export LIBTOOL='/usr/local/bin/libtool --tag=CC'
 export LIBTOOLIZE=/usr/local/bin/libtoolize
 
 export MARCH='-arch i386'
-export CXX=/Developer/usr/bin/g++-4.2
-export CC=/Developer/usr/bin/gcc-4.2
-export MACOSX_DEPLOYMENT_TARGET=10.6
-export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+export CXX=/usr/bin/g++
+export CC=/usr/bin/gcc
+export MACOSX_DEPLOYMENT_TARGET=10.9
+export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/"
 #export EXTRA_INCLUDE=$SDKROOT/usr/include/c++/4.2.1/tr1
 export EXTRA_INCLUDE=$SDKROOT/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/
 
