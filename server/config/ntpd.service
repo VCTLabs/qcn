@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart=/usr/local/bin/ntpd -g -p /var/run/ntpd/ntpd.pid
+ExecStart=/usr/local/bin/ntpd -g -c /etc/ntp.conf -p /var/run/ntpd/ntpd.pid
 TimeoutSec=60
 User=root
 Group=root
