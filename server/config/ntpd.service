@@ -1,0 +1,15 @@
+[Unit]
+Description=NTPD Time service
+After=syslog.target
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/ntpd -g -p /var/run/ntpd/ntpd.pid
+TimeoutSec=60
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+
