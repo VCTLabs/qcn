@@ -24,6 +24,11 @@ make
 mv lib/.libs/libcurl.a libcurl_i386.a
 
 export MARCH='-arch x86_64'
+export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT $MARCH"
+export CPPFLAGS="-O2 -I$EXTRA_INCLUDE -include sys/errno.h -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CXXFLAGS="-O2 $BIGFILES -I$EXTRA_INCLUDE -include sys/errno.h -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CFLAGS="-O2 $BIGFILES -isysroot $SDKROOT $MARCH"
+
 ./configure --without-ssl --disable-shared --disable-ldap
 make clean
 make
