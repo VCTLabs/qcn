@@ -5,18 +5,22 @@
 chmod uog+rx configure
 
 export LIBTOOLIZE=
-export LIBTOOL='/usr/local/bin/libtool --tag=CC'
+export LIBTOOL='/usr/bin/libtool --tag=CC'
 
-export MACOSX_DEPLOYMENT_TARGET=10.6
-export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-#export SDKROOT=/Developer/SDKs/MacOSX10.6.sdk
-#export EXTRA_INCLUDE=$SDKROOT/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/
+export LIBTOOL='/usr/bin/libtool --tag=CC'
+export LIBTOOLIZE=/usr/bin/libtoolize
 
 export MARCH=i386
+export CC=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
+export CXX=/Applications/Xcode.app/Contents/Developer/usr/bin/g++
+export MACOSX_DEPLOYMENT_TARGET=10.9
+export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk"
+
 export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT -arch $MARCH"
-export CPPFLAGS="-O2 -I$EXTRA_INCLUDE -I../../freetype-2.4.6/include -I$SDKROOT/usr/include -isysroot $SDKROOT -arch $MARCH"
-export CFLAGS="-O2 -I../../freetype-2.4.6/include -I$SDKROOT/usr/include -isysroot $SDKROOT -arch $MARCH"
-export CXXFLAGS="-O2 -I../../freetype-2.4.6/include -I$SDKROOT/usr/include -isysroot $SDKROOT -arch $MARCH"
+export CPPFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CXXFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+
 ./configure --enable-shared=no --enable-static=yes --host=$MARCH
 make clean
 make
@@ -24,9 +28,10 @@ mv src/.libs/libftgl.a libftgl_i386.a
 
 export MARCH=x86_64
 export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT -arch $MARCH"
-export CPPFLAGS="-O2 -I$EXTRA_INCLUDE -I../../freetype-2.4.6/include -I$SDKROOT/usr/include -isysroot $SDKROOT -arch $MARCH"
-export CFLAGS="-O2 -I../../freetype-2.4.6/include -I$SDKROOT/usr/include -isysroot $SDKROOT -arch $MARCH"
-export CXXFLAGS="-O2 -I../../freetype-2.4.6/include -I$SDKROOT/usr/include -isysroot $SDKROOT -arch $MARCH"
+export CPPFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CXXFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+
 ./configure --enable-shared=no --enable-static=yes --host=$MARCH
 make clean
 make
