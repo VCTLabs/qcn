@@ -9,22 +9,29 @@ elseif (file_exists("common.inc"))
  
 $file = $_REQUEST["dat"];
 $fthumb = $_REQUEST["fthumb"];
-view_data($file,$fthumb);
+$is_archive = $_REQUEST["is_archive"];
+$fanout_dir = $_REQUEST["fanout_dir"];
 
-function view_data($file,$fthumb=null){
+view_data($file,$fthumb, $is_archive, $fanout_dir);
+
+function view_data($file,$fthumb=null, $archive=0, $fanout=0){
 
 if (!$fthumb) {$fthumb=400;}
+// Set file name
 // Check if this is a continual or sensor network station
 if (preg_match("/conti/i","substr($file,0,4)")) {
- $url = UPLOADPATH . "/trigger/continual/";
+ if ($archive) 
+    $url = UPLOADPATH . "/trigger/archive/continual/" . $fanout . "/";
+ else
+    $url = UPLOADPATH . "/trigger/continual/";
 } else {
- $url = UPLOADPATH . "/trigger/";
+ if ($archive) 
+    $url = UPLOADPATH . "/trigger/archive/" . $fanout . "/";
+ else
+    $url = UPLOADPATH . "/trigger/";
 }
-// Set file name
 
-
-$file_orig = $url.$file;
-//echo $file_orig;
+$file_orig = $url . $file;
 if (!file_exists($file_orig)) {
    echo "Waveform Not Found. Try again later.<BR><BR>" . $file_orig;
    return;
@@ -50,20 +57,20 @@ if (!file_exists($dir))  {
  $file_new = $dir.'/'.$file;
 
  copy($file_orig,$file_new);
-
+ $errmsg = "";
  if(!file_exists($file_new)) {
     echo "File does not exist: $file...\n";
  } else {
-    system(SHELL_CMD . " " . BASEPATH . "/qcnwp/earthquakes/view/plot_data.sh $dir > $dir/temp.txt");
+    $errmsg = system(SHELL_CMD . " " . BASEPATH . "/qcnwp/earthquakes/view/plot_data.sh $dir > $dir/temp.txt");
    rotateImage($jpgfile,$fthumb);
  }
     $jpgfile = "$dir/waveform.jpg";
-
+  if ($errmsg) echo "\n<BR>ErrMsg = " . $errmsg . "\n\n<BR><BR>";
 
 
 }
    echo "<html><head></head><body>\n";
-   echo "<img src=\"http://qcn.stanford.edu/earthquakes/view/".$dir_sub."/waveform.jpg\" width=\"".$fthumb."\">\n";
+   echo "<img src=\"" . UPLOADURL . "/earthquakes/view/".$dir_sub."/waveform.jpg\" width=\"".$fthumb."\">\n";
    echo "</body></head>\n";
 
 // Remove all old data so it doesn't build up over time

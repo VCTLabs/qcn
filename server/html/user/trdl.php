@@ -989,7 +989,7 @@ function view_waveform_sensor_header($res,$print_dist=null) {
 
 function view_waveform_image($file_in) {
 /* This function handles the output of the waveform information needed for the info window in google maps*/
-   $message = "<p><iframe src=\"" . BASEURL . "/earthquakes/view/view_data.php?dat=".basename($file_in)."&fthumb=250\" frameborder=\"0\" scrolling=\"auto\"></iframe>";
+   $message = "<p><iframe src=\"" . BASEURL . "/earthquakes/view/view_data.php?dat=".basename($file_in)."&fthumb=250&is_archive=" . $res->is_archive ."&fanout_dir=" . get_fanout_dir($res->trigger_time) . "\" frameborder=\"0\" scrolling=\"auto\"></iframe>";
    return $message;
 }
 
@@ -1162,7 +1162,7 @@ global $unixtimeArchive;
  
         if ($file_url != "N/A") {
           echo "<td><font size=\"1\"><a href=\"" . $file_url . "\">Download</a></font size></td>";
-          echo "<td><font size=\"1\"><a href=\"javascript:void(0)\"onclick=\"window.open('" . BASEURL . "/earthquakes/view/view_data.php?dat=".basename($file_url)."&fthumb=340','linkname','height=550,width=400,scrollbars=no')\">View</a></font size></td>";
+          echo "<td><font size=\"1\"><a href=\"javascript:void(0)\"onclick=\"window.open('" . BASEURL . "/earthquakes/view/view_data.php?dat=".basename($file_url)."&fthumb=340&is_archive=" . $res->is_archive . "&fanout_dir=" . get_fanout_dir($res->trigger_time) . "','linkname','height=550,width=400,scrollbars=no')\">View</a></font size></td>";
         }
         else {
           echo "<td><font size=\"1\">N/A</font size></td>";
@@ -1224,13 +1224,18 @@ if ($res->received_file == 100) {
       $fileurl .= "continual/";
    }
    if ($res->is_archive) { // add the fanout dir
-     $fandir = floor($res->trigger_time/10000);
-     $fileurl .= $fandir . "/";
+     $fileurl .= get_fanout_dir($res->trigger_time) . "/";
    }
    $fileurl .= $res->trigger_file;
 }
 return $fileurl;
 }
+
+function get_fanout_dir($trigger_time)
+{
+    return floor($trigger_time/10000);
+}
+
 
 function printDownloadOptions($bUseCSV, $ftmp, $fileTemp, $bResultShow, $bUseArchive, $db_name, $auth, $plot_map)
 {

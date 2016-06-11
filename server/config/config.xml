@@ -132,6 +132,7 @@
       </period>
     </task>
     <task>
+      <disabled>1</disabled>
       <output>
         do_stats.out
       </output>
