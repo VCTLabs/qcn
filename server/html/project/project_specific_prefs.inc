@@ -89,7 +89,7 @@ function qcn_generate_world_map(&$data, $timeint)
               LEFT JOIN qcn_sensor s ON t.qcn_sensorid=s.id 
                 where t.qcn_sensorid>0 AND t.hostid not in (select hostid from qcn_showhostlocation)
                  and time_trigger>unix_timestamp()-" . $trigtime . "
-                   group by lat,lng,s.is_usb
+                   group by lat,lng,s.is_usb,t.hostid
          UNION
       select latitude lat, longitude lng, s.is_usb, count(*) ctr, from_unixtime(max(time_trigger)) timetrig, 
           0 is_quake, concat('Total (#', t.hostid, ' Location): ', count(*), '<BR>Earliest: ', 
@@ -99,8 +99,9 @@ function qcn_generate_world_map(&$data, $timeint)
               LEFT JOIN qcn_sensor s ON t.qcn_sensorid=s.id 
                 where t.qcn_sensorid>0 AND t.hostid in (select hostid from qcn_showhostlocation)
                  and time_trigger>unix_timestamp()-" . $trigtime . "
-                   group by lat,lng,s.is_usb
+                   group by lat,lng,s.is_usb,t.hostid
        ";
+
     $result = mysql_query($strSQL);
     //mt_srand();  // seed the Mersenne random number generator
     if ($result) {
@@ -147,7 +148,7 @@ function qcn_generate_world_map(&$data, $timeint)
        // Now we convert the long/lat coordinates into screen coordinates 
        $x = (($data[$i]->lng + 180.0) * ($scale_x / 360.0));
        $y = ((($data[$i]->lat * -1.0) + 90.0) * ($scale_y / 180.0));
-      
+
        if ($data[$i]->is_quake) { // quake - draw red circle
           // Now mark the point on the map using a circle
           imagefilledellipse($im, $x, $y, 6, 6, $colorquake);

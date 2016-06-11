@@ -11,12 +11,9 @@
     <cgi_url>http://quakecatcher.net/sensor_cgi/</cgi_url>
     <msg_to_host/>
     <sched_debug_level>
-      1
+      2
     </sched_debug_level>
     <send_result_abort/>
-    <uldl_dir_fanout>
-      1024
-    </uldl_dir_fanout>
     <uldl_host>qcn</uldl_host>
     <uldl_pid>/var/run/httpd</uldl_pid>
     <dont_generate_upload_certificates/>
@@ -24,7 +21,7 @@
     <log_dir>/var/www/boinc/sensor/log_qcn</log_dir>
     <app_dir>/var/www/boinc/sensor/apps</app_dir>
     <download_dir>/var/www/boinc/sensor/download</download_dir>
-    <fuh_debug_level>0</fuh_debug_level>
+    <fuh_debug_level>3</fuh_debug_level>
     <master_url>http://quakecatcher.net/sensor/</master_url>
     <host>
       qcn

@@ -41,8 +41,11 @@ function make_cache_dirs() {
     }
 }
 
-function get_path($params, $phpfile=null) {
+function get_path($params, $phpfile=null, $fileforce=null) {
     if (!@filemtime("../cache/00")) make_cache_dirs();
+    if ($fileforce) {
+       $path = $fileforce;
+    } else  {
     if ($phpfile) {
         $z = $phpfile;
     } else {
@@ -55,6 +58,7 @@ function get_path($params, $phpfile=null) {
     $path = "../cache/".$sz."/".$z;
     if ($params) {
         $path = $path."_".urlencode($params);
+    }
     }
     return $path;
 }
@@ -138,8 +142,40 @@ function cache_need_to_regenerate($path, $max_age){
     return $regenerate;
 }
 
+// CMC HERE - add phpfile to force our base file name
 // Returns cached data or false if nothing was found
-function get_cached_data($max_age, $params=""){
+function get_cached_data($max_age, $params="", $phpfile=""){
+    global $no_cache;
+
+    if ($no_cache) return;
+
+    if ($phpfile)
+       $path = get_path($params, $phpfile, $phpfile);
+    else
+       $path = get_path($params);
+
+    if ($max_age) {
+        if (defined('MEMCACHE_SERVERS')) {
+            $cache = BoincMemcache::get()->get($path);
+            if ($cache['content']) {
+                return $cache['content'];
+            } else {
+                return $cache;
+            }
+        } else {
+            cache_check_diskspace();
+            $regenerate=cache_need_to_regenerate($path, $max_age);
+            if (!$regenerate) {
+                return file_get_contents($path);
+            }
+        }
+    }
+    return false; //No data was cached, just return
+}
+
+
+// Returns cached data or false if nothing was found
+function get_cached_data_new($max_age, $params=""){
     global $no_cache;
 
     if ($no_cache) return;
@@ -253,24 +289,24 @@ function end_cache($max_age,$params=""){
     }
 }
 
-function set_cached_data($max_age, $data, $params=""){
+function set_cached_data($max_age, $data, $params="", $forcefile=""){
     // for the benefit of hackers
     if (strstr($params, "..")) {
-        return "bad params";
+        return;
     }
-    $path = get_path($params);
+    $path = get_path($params, $forcefile, $forcefile);
     if (defined('MEMCACHE_SERVERS')) {
         $cache = array('content' => $data, 'timestamp' => time());
         BoincMemcache::get()->set($path, $cache, $max_age);
     } else {
-        $fhandle = @fopen($path, "w");
-        if (!$fhandle) {
-            return "can't open $path";
-        }
+        $fhandle = fopen($path, "w");
         fwrite($fhandle, $data);
         fclose($fhandle);
     }
-    return "";
+}
+
+function set_cache_data($data,$params="",$mypath=""){
+    set_cached_data(86400, $data, $params, $mypath);
 }
 
 function clear_cache_entry($phpfile, $params) {

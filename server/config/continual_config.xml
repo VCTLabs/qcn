@@ -20,16 +20,10 @@
     <download_dir>
       /var/www/boinc/continual/download
     </download_dir>
-    <uldl_dir_fanout>
-      1024
-    </uldl_dir_fanout>
     <sched_debug_level>
-      1
+      2
     </sched_debug_level>
     <send_result_abort/>
-    <uldl_dir_fanout>
-      1024
-    </uldl_dir_fanout>
     <download_url>
       http://quakecatcher.net/continual/download
     </download_url>
@@ -76,7 +70,7 @@
       /var/www/boinc/keys/
     </key_dir>
     <upload_url>
-      http://quakecatcher.net/continual_cgi/file_upload_handler
+      http://quakecatcher.net/sensor_cgi/file_upload_handler
     </upload_url>
     <non_cpu_intensive>
        1

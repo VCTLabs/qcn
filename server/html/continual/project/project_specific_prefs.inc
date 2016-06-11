@@ -3,7 +3,23 @@
 require_once('../inc/cache.inc');
 
 // Functions to display and edit project-specific prefs go here
-
+function get_double($name, $optional=false) {
+    $x=null;
+    if (isset($_GET[$name])) $x = $_GET[$name];
+    if (!is_numeric($x)) {
+        if ($optional) {
+            if ($x) {
+                Header("Location: non_num_arg.html");
+                die;
+            }
+            return null;
+        } else {
+            Header("Location: missing_arg_$name.html");
+            die;
+        }
+    }
+    return (double)$x;
+}
 // generate world map
 function qcn_generate_world_map(&$data, $timeint)
 { // timeint can be H (default 4 hr), or D=Day, W=Week, M=Month
@@ -62,7 +78,7 @@ function qcn_generate_world_map(&$data, $timeint)
     }
 
     // get latest triggers per lat/lng point, with a random offset so we don't show their exact address
-    $strSQL = 
+    $strSQL =
       "select round(latitude, 2) lat, round(longitude, 2) lng, s.is_usb, count(*) ctr, from_unixtime(max(time_trigger)) timetrig, 
           0 is_quake, concat('Total: ', count(*), '<BR>Earliest: ', 
                from_unixtime(min(time_trigger)), ' UTC', '<BR>Latest: ', 
@@ -71,7 +87,7 @@ function qcn_generate_world_map(&$data, $timeint)
               LEFT JOIN qcn_sensor s ON t.qcn_sensorid=s.id 
                 where t.qcn_sensorid>0 AND t.hostid not in (select hostid from qcn_showhostlocation)
                  and time_trigger>unix_timestamp()-" . $trigtime . "
-                   group by lat,lng,s.is_usb
+                   group by lat,lng,s.is_usb,t.hostid
          UNION
       select latitude lat, longitude lng, s.is_usb, count(*) ctr, from_unixtime(max(time_trigger)) timetrig, 
           0 is_quake, concat('Total (#', t.hostid, ' Location): ', count(*), '<BR>Earliest: ', 
@@ -81,7 +97,7 @@ function qcn_generate_world_map(&$data, $timeint)
               LEFT JOIN qcn_sensor s ON t.qcn_sensorid=s.id 
                 where t.qcn_sensorid>0 AND t.hostid in (select hostid from qcn_showhostlocation)
                  and time_trigger>unix_timestamp()-" . $trigtime . "
-                   group by lat,lng,s.is_usb
+                   group by lat,lng,s.is_usb,t.hostid
        ";
     $result = mysql_query($strSQL);
     //mt_srand();  // seed the Mersenne random number generator
