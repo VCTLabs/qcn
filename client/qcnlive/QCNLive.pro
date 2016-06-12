@@ -17,7 +17,7 @@ GRAPHICSDIR = $$BASEDIRQCN/client/graphics
 BINDIR = $$BASEDIRQCN/client/bin
 BAPIDIR = $$BASEDIRBOINC/api
 BLIBDIR = $$BASEDIRBOINC/lib
-CURLDIR = $$BASEDIRQCN/curl-7.25.0/include
+CURLDIR = $$BASEDIRQCN/curl-7.49.1/include
 BZDIR = $$BASEDIRQCN/bzip2-1.0.6
 
 CFLAGS = -Wall -Wno-deprecated
@@ -28,16 +28,14 @@ CFLAGS = -Wall -Wno-deprecated
 
 # Mac specific settings
 macx {
-GCC_VERSION="LLVM GCC 4.2"
-QMAKE_CC = llvm-gcc-4.2
-QMAKE_CXX = llvm-g++-4.2
-QMAKE_MACOSX_DEPLOYMENT_TARGET=10.6
+GCC_VERSION="Apple LLVM version 6.1.0"
+QMAKE_CC = /Applications/XCode.app/Contents/Developer/usr/bin/gcc
+QMAKE_CXX = /Applications/XCode.app/Contents/Developer/usr/bin/g++
+CC=$$QMAKE_CC
+CXX=$$QUAKE_CXX
+MACOSX_DEPLOYMENT_TARGET=10.9
+QMAKE_MACOSX_DEPLOYMENT_TARGET=10.9
 QMAKE_MAC_SDK=macosx
-
-MACINC = /Developer/Qt5.2.0/5.2.0/clang_64/lib/QtCore.framework/Versions/5/Headers \
-   /Developer/Qt5.2.0/5.2.0/clang_64/lib/QtGui.framework/Versions/5/Headers \
-   /Developer/Qt5.2.0/5.2.0/clang_64/lib/QtOpenGL.framework/Versions/5/Headers \
-   /Developer/Qt5.2.0/5.2.0/clang_64/lib/QtPrintSupport.framework/Versions/5/Headers
 
 # my own specific plist not the qmake generated one
 QMAKE_INFO_PLIST = "Info.plist.mac"
@@ -82,7 +80,7 @@ INCLUDEPATH += \
         $$BZDIR \
         $$CURLDIR \
         $$BASEDIRQCN/ftgl-2.1.3/include \
-        $$BASEDIRQCN/freetype-2.4.6/include \
+        $$BASEDIRQCN/freetype-2.6/include \
         $$MAINDIR \
         $$SENSORDIR \
         $$UTILDIR \

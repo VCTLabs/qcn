@@ -840,7 +840,7 @@ void MyFrame::actionHelp()
 			"<BR> Quake-Catcher Network Project <BR><BR>"
 			"<A HREF='http://quakecatcher.net'>http://quakecatcher.net</A>"
 		    "<BR><BR><A HREF='http://www.iris.edu/'>Incorporated Research Institutions for Seismology (IRIS)</A>"
-                        <BR><BR>"
+                        "<BR><BR>"
 			"<A HREF='http://www.scec.org/'>Southern California Earthquake Center (SCEC)</A>"
 			"<BR><BR>(c) 2008-2016 IRIS")
 		);

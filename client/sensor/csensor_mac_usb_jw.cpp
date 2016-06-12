@@ -91,14 +91,14 @@ io_iterator_t CSensorMacUSBJW::FindHIDDevices (const mach_port_t masterPort, int
     hidMatchDictionary = SetUpHIDMatchingDictionary (inVendorID, inDeviceID);
     if (NULL == hidMatchDictionary) {
         fprintf(stderr, "Couldn't create a matching dictionary.");
-        return nil;
+        return NULL;
     }
 	
     // Now search I/O Registry for matching devices.
     ioReturnValue = IOServiceGetMatchingServices (masterPort, hidMatchDictionary, &hidObjectIterator);
     // If error, print message and hang (for debugging purposes).
     if ((ioReturnValue != kIOReturnSuccess) || (!hidObjectIterator)) {
-        return nil;
+        return NULL;
     }
 	
     // IOServiceGetMatchingServices consumes a reference to the dictionary, so we don't need to release the dictionary ref.
@@ -109,10 +109,10 @@ io_iterator_t CSensorMacUSBJW::FindHIDDevices (const mach_port_t masterPort, int
 
 CFMutableArrayRef CSensorMacUSBJW::DiscoverHIDInterfaces(int vendorID, int deviceID)
 {
-	mach_port_t    masterPort = nil;
-	io_iterator_t  hidObjectIterator = nil;
+	mach_port_t    masterPort = NULL;
+	io_iterator_t  hidObjectIterator = NULL;
 	IOReturn       ioReturnValue;
-	CFMutableArrayRef result = CFArrayCreateMutable(kCFAllocatorDefault,0,nil);
+	CFMutableArrayRef result = CFArrayCreateMutable(kCFAllocatorDefault,0,NULL);
 
 	//ioReturnValue = IOMasterPort(bootstrap_port, &masterPort);
 	ioReturnValue = IOMasterPort(MACH_PORT_NULL, &masterPort);
@@ -122,7 +122,7 @@ CFMutableArrayRef CSensorMacUSBJW::DiscoverHIDInterfaces(int vendorID, int devic
 	}
 	hidObjectIterator = FindHIDDevices(masterPort, vendorID, deviceID); 
 	if (hidObjectIterator) {
-		io_object_t hidDevice = nil;
+		io_object_t hidDevice = NULL;
 		IOReturn    ioReturnValue = kIOReturnSuccess;
 		
 		while ((hidDevice = IOIteratorNext(hidObjectIterator)))

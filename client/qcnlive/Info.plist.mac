@@ -11,13 +11,13 @@
 	<key>CFBundleIdentifier</key>
 	<string>edu.iris.QCNLive</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+	<string>8.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>CMC1</string>
 	<key>CFBundleVersion</key>
-	<string>6.74</string>
+	<string>8.00</string>
 	<key>NSPrincipalClass</key>
 	<string>CarbonApp</string>
 </dict>
