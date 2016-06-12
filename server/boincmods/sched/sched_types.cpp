@@ -986,10 +986,8 @@ int SCHEDULER_REPLY::write(FILE* fout, SCHEDULER_REQUEST& sreq, bool bTrigger, D
      } // ! bTrigger
      // end CMC mods
     }  // userid
-
 // CMC End
 
-    }
     if (hostid) {
         fprintf(fout,
             "<hostid>%lu</hostid>\n",
