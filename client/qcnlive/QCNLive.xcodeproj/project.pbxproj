@@ -35,6 +35,7 @@
 		373D056D3EA84044951DEAB9 /* moc_myframe.cpp in Compile Sources */ = {isa = PBXBuildFile; fileRef = B9DA1676AA08C2A4600B07E0 /* moc_myframe.cpp */; settings = {ATTRIBUTES = (); }; };
 		3F909D3567D886DF29BFC418 /* coastline.cpp in Compile Sources */ = {isa = PBXBuildFile; fileRef = D005909A8A7932AA8F23A78A /* coastline.cpp */; settings = {ATTRIBUTES = (); }; };
 		416B1873EAD7CA9D56B19D64 /* boinc_api in Link Binary With Libraries */ = {isa = PBXBuildFile; fileRef = F14260F64827531F20087491 /* boinc_api */; };
+		430D28691D0DA1750055FA84 /* Phidget21.framework in Link Binary With Libraries */ = {isa = PBXBuildFile; fileRef = 430D28681D0DA1750055FA84 /* Phidget21.framework */; };
 		433D30BC1F72D0C8741C4B73 /* qcn_thread_sensor_loop.cpp in Compile Sources */ = {isa = PBXBuildFile; fileRef = C1B1E238A0EF870CE3498E3D /* qcn_thread_sensor_loop.cpp */; settings = {ATTRIBUTES = (); }; };
 		441989C811DFBC3F0067B1A6 /* qcn_thread_time.cpp in Compile Sources */ = {isa = PBXBuildFile; fileRef = 718A8057F943173D0A2A10B2 /* qcn_thread_time.cpp */; settings = {ATTRIBUTES = (); }; };
 		46C26329AB4E629A9D586742 /* ftgl-universal in Link Binary With Libraries */ = {isa = PBXBuildFile; fileRef = A26650E32CFCD871DA4805BB /* ftgl-universal */; };
@@ -108,6 +109,7 @@
 		26C65EBB9BA87E699769FE51 /* qcn_earth.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = qcn_earth.cpp; path = ../graphics/qcn_earth.cpp; sourceTree = "<absolute>"; };
 		2847F5C8B862A14BBFA9D4F3 /* trickleup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = trickleup.cpp; path = ../util/trickleup.cpp; sourceTree = "<absolute>"; };
 		38E693F9DA7C40D8B2060832 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = /Developer/Qt5.2.0/5.2.0/clang_64/lib/QtCore.framework; sourceTree = "<absolute>"; };
+		430D28681D0DA1750055FA84 /* Phidget21.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Phidget21.framework; path = Library/Frameworks/Phidget21.framework; sourceTree = "<group>"; };
 		43E02894187B60620091ECD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = qcnlive/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		442843363A36EF6E9AE032D6 /* execproc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = execproc.cpp; path = ../util/execproc.cpp; sourceTree = "<absolute>"; };
 		54960AFFABDD849C1CA6FCCC /* bz2-universal */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "bz2-universal"; path = "../mac_build/libbz2-universal.a"; sourceTree = "<absolute>"; };
@@ -182,6 +184,7 @@
 				8D267F2E4776F0ECA2F49DC8 /* IOKit.framework in Link Binary With Libraries */,
 				F8ED42CF8679BF83227DAFC4 /* Carbon.framework in Link Binary With Libraries */,
 				6780BDE5E218886D1FEFE354 /* QtPrintSupport.framework in Link Binary With Libraries */,
+				430D28691D0DA1750055FA84 /* Phidget21.framework in Link Binary With Libraries */,
 				A4C7AEAA7E8733E505F9DC5F /* QtWidgets.framework in Link Binary With Libraries */,
 				6FD2B353FE1F216A527809F5 /* QtGui.framework in Link Binary With Libraries */,
 				AA1E12FE7A98C9092ECBA5D6 /* QtCore.framework in Link Binary With Libraries */,
@@ -280,6 +283,7 @@
 		AF39DD055C3EF8226FBE929D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				430D28681D0DA1750055FA84 /* Phidget21.framework */,
 				A1A67BEAA744704B29168D39 /* IOKit.framework */,
 				9DFF62A901D70814B8A323D4 /* Carbon.framework */,
 				95D5D836EADE274F246B344F /* QtPrintSupport.framework */,
@@ -712,27 +716,37 @@
 		6666AA5E688052234F6758D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				PRODUCT_NAME = qcnlive;
 				QT_LIBRARY_SUFFIX = "";
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 			};
 			name = Release;
 		};
 		77418F46922677BB04ED38DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_NAME = qcnlive;
 				QT_LIBRARY_SUFFIX = _debug;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 			};
 			name = Debug;
 		};
