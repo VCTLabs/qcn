@@ -15,7 +15,7 @@ CXX           = /usr/bin/g++
 DEFINES       = -D_USE_NTPDATE_EXEC_ -DFTGL_LIBRARY_STATIC -DQCNLIVE -DGRAPHICS_PROGRAM -DAPP_GRAPHICS -D_ZLIB -DQCN -D_THREAD_SAFE -DCURL_STATICLIB -D_ZLIB -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk -mmacosx-version-min=10.9 -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -O2 -std=gnu++11 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk -mmacosx-version-min=10.9 -Wall -W -fPIC $(DEFINES)
-INCPATH       = -I. -I../../../qcn -I../../zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I../../bzip2-1.0.6 -I../../curl-7.49.1/include -I../../ftgl-2.1.3/include -I../../freetype-2.6/include -I../main -I../sensor -I../util -I../../../boinc/lib -I../../../boinc/api -I../../../boinc/zip -I../../../boinc/samples/jpeglib -I../graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Headers  -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/AGL.framework/Headers -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -F/Developer/Qt/5.6/clang_64/lib
+INCPATH       = -I. -I/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers -I../../../qcn -I../../zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I../../bzip2-1.0.6 -I../../curl-7.49.1/include -I../../ftgl-2.1.3/include -I../../freetype-2.6/include -I../main -I../sensor -I../util -I../../../boinc/lib -I../../../boinc/api -I../../../boinc/zip -I../../../boinc/samples/jpeglib -I../graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/AGL.framework/Headers -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -F/Developer/Qt/5.6/clang_64/lib
 QMAKE         = /Developer/Qt/5.6/clang_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = qcnlive1.0.0
 DISTDIR = /Users/carlgt1/projects/qcn/client/qcnlive/.tmp/qcnlive1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -headerpad_max_install_names -stdlib=libc++ -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk -mmacosx-version-min=10.9 -Wl,-rpath,/Developer/Qt/5.6/clang_64/lib
-LIBS          = $(SUBLIBS) -F/Developer/Qt/5.6/clang_64/lib -framework IOKit -framework Carbon -framework QtPrintSupport -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework QtOpenGL -L/Users/carlgt1/projects/qcn/client/mac_build -lboinc_api -lboinc -lboinc_zip -lboinc_graphics2 -ljpeg -lcurl-universal -lbz2-universal -lz-universal -lfreetype-universal -lftgl-universal -framework OpenGL -framework AGL 
+LIBS          = $(SUBLIBS) -F/Developer/Qt/5.6/clang_64/lib -framework IOKit -L/Developer/Qt/5.6/clang_64/lib -framework Carbon -framework QtPrintSupport -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework QtOpenGL -L/Users/carlgt1/projects/qcn/client/mac_build -lboinc_api -lboinc -lboinc_zip -lboinc_graphics2 -ljpeg -lcurl-universal -lbz2-universal -lz-universal -lfreetype-universal -lftgl-universal -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -811,6 +811,12 @@ moc_qcnqt.cpp: /Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QAppli
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -913,7 +919,7 @@ moc_qcnqt.cpp: /Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QAppli
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QDockWidget \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qdockwidget.h \
 		qcnqt.h
-	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib qcnqt.h -o moc_qcnqt.cpp
+	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib qcnqt.h -o moc_qcnqt.cpp
 
 moc_qcnopenglwidget.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -1036,6 +1042,12 @@ moc_qcnopenglwidget.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -1137,7 +1149,7 @@ moc_qcnopenglwidget.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qdockwidget.h \
 		qcnlive_define.h \
 		qcnopenglwidget.h
-	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib qcnopenglwidget.h -o moc_qcnopenglwidget.cpp
+	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib qcnopenglwidget.h -o moc_qcnopenglwidget.cpp
 
 moc_myframe.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -1260,6 +1272,12 @@ moc_myframe.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -1361,7 +1379,7 @@ moc_myframe.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qdockwidget.h \
 		qcnlive_define.h \
 		myframe.h
-	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib myframe.h -o moc_myframe.cpp
+	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib myframe.h -o moc_myframe.cpp
 
 moc_dlgsettings.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -1484,6 +1502,12 @@ moc_dlgsettings.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -1585,7 +1609,7 @@ moc_dlgsettings.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qdockwidget.h \
 		qcnlive_define.h \
 		dlgsettings.h
-	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib dlgsettings.h -o moc_dlgsettings.cpp
+	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib dlgsettings.h -o moc_dlgsettings.cpp
 
 moc_dlgmakequake.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -1708,6 +1732,12 @@ moc_dlgmakequake.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -1811,7 +1841,7 @@ moc_dlgmakequake.cpp: qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QList \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		dlgmakequake.h
-	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib dlgmakequake.h -o moc_dlgmakequake.cpp
+	/Developer/Qt/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Developer/Qt/5.6/clang_64/mkspecs/macx-clang -I/Users/carlgt1/projects/qcn/client/qcnlive -I/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers -I/Users/carlgt1/projects/qcn -I/Users/carlgt1/projects/qcn/zlib-1.2.5 -I/Users/carlgt1/projects/qcn/curl-7.34.0/include -I/Users/carlgt1/projects/qcn/bzip2-1.0.6 -I/Users/carlgt1/projects/qcn/curl-7.49.1/include -I/Users/carlgt1/projects/qcn/ftgl-2.1.3/include -I/Users/carlgt1/projects/qcn/freetype-2.6/include -I/Users/carlgt1/projects/qcn/client/main -I/Users/carlgt1/projects/qcn/client/sensor -I/Users/carlgt1/projects/qcn/client/util -I/Users/carlgt1/projects/boinc/lib -I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/zip -I/Users/carlgt1/projects/boinc/samples/jpeglib -I/Users/carlgt1/projects/qcn/client/graphics -I/Developer/Qt/5.6/clang_64/lib/QtOpenGL.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtGui.framework/Headers -I/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers -F/Developer/Qt/5.6/clang_64/lib dlgmakequake.h -o moc_dlgmakequake.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1951,6 +1981,12 @@ qcnopenglwidget.o: qcnopenglwidget.cpp /Developer/Qt/5.6/clang_64/lib/QtGui.fram
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/QSplashScreen \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -2175,6 +2211,12 @@ qcnqt.o: qcnqt.cpp qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -2398,6 +2440,12 @@ myframe.o: myframe.cpp qcnqt.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -2630,6 +2678,12 @@ dlgsettings.o: dlgsettings.cpp dlgsettings.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \
@@ -2862,6 +2916,12 @@ dlgmakequake.o: dlgmakequake.cpp dlgmakequake.h \
 		/Developer/Qt/5.6/clang_64/lib/QtWidgets.framework/Headers/qsplashscreen.h \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/QTimer \
 		/Developer/Qt/5.6/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinter \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinter.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrintPreviewDialog \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprintpreviewdialog.h \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/QPrinterInfo \
+		/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers/qprinterinfo.h \
 		../main/main.h \
 		../main/define.h \
 		../../../qcn/qcn_config_win.h \

@@ -36,15 +36,19 @@ CXX=$$QUAKE_CXX
 MACOSX_DEPLOYMENT_TARGET=10.9
 QMAKE_MACOSX_DEPLOYMENT_TARGET=10.9
 QMAKE_MAC_SDK=macosx
+QTLIBDIR=/Developer/Qt/5.6/clang_64/lib
 
 # my own specific plist not the qmake generated one
 QMAKE_INFO_PLIST = "Info.plist.mac"
 
-LIBS += -framework IOKit -framework Carbon -framework QtPrintSupport -framework QtCore -framework QtGui -framework QtOpenGL \
+LIBS += -framework IOKit -L$$QTLIBDIR -framework Carbon -framework QtPrintSupport \
+   -framework QtCore -framework QtGui -framework QtOpenGL \
    -L$$BASEDIRQCN/client/mac_build \
      -lboinc_api -lboinc -lboinc_zip -lboinc_graphics2 \
     -ljpeg -lcurl-universal -lbz2-universal \
      -lz-universal -lfreetype-universal -lftgl-universal
+
+MACINC="/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers"
 
 ICON = qcnmac.icns
 RC_FILE = qcnmac.icns
