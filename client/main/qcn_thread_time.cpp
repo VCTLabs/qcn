@@ -44,7 +44,7 @@ void* QCNThreadTime(void*)
 
     // this just calls the ntpdate executable and then gets & sets the sm->dOffset time stuff
     bool bRet;
-    const int iLenReply = 1024;  // that should be plenty for the return value, it's probably more like 100 chars across two lines
+    const int iLenReply = 512;  // that should be plenty for the return value, it's probably more like 100 chars across two lines
     char* strReply = new char[iLenReply];
     memset(strReply, 0x00, iLenReply);
     char strExec[_MAX_PATH];  // set exec & boinc resolved filename for ntpdate

@@ -354,7 +354,7 @@ struct FDSET_GROUP {
 
 // search strings to parse in the reply for ntpdate
 #define NTPDATE_STR_SEARCH_1 "time server"
-#define NTPDATE_STR_SEARCH_2 "offset "
+#define NTPDATE_STR_SEARCH_2 "ffset "
 #define NTPDATE_STR_SEARCH_3 "sec"
 
 // time to wait if they were in interactive mode before sending a trigger, timeout in 60 seconds

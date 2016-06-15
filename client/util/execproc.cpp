@@ -349,7 +349,7 @@ for (int i = 0 ; i < argc ; i++) {
    pid_t pid = 0;
    FILE* fPipe;
    int iRetVal = 0, iNumRead = 0, iNumTotal = 0, iPIDStatus = 0;
-   const int ciBufLen = 256;
+   const int ciBufLen = iLenReply;
    char* strBuf = new char[ciBufLen];
 
    try {
