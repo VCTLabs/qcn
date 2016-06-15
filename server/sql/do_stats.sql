@@ -74,7 +74,7 @@ BEGIN
                time_received, 
                0 is_archive
             FROM qcn_trigger t, host h, user u
-            WHERE hostid=h.id AND h.userid=u.id AND total_credit>3600 ORDER BY time_trigger;
+            WHERE hostid=h.id AND h.userid=u.id AND runtime_clock>3600 ORDER BY time_trigger;
 
     TRUNCATE TABLE qcn_stats;
     INSERT INTO qcn_stats
