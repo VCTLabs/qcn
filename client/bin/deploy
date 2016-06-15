@@ -45,7 +45,7 @@ print_common_boinc_files ()
 ntpexec=$1
 echo put init/hvt >> qcnsftp.up
 echo put init/cbt >> qcnsftp.up
-echo put init/logo.jpg >> qcnsftp.up
+echo put init/logo_iris.jpg >> qcnsftp.up
 echo put init/$ntpexec >> qcnsftp.up
 echo put init/xyzaxes.jpg >> qcnsftp.up
 echo put init/xyzaxesbl.jpg >> qcnsftp.up
@@ -75,7 +75,7 @@ zipuplstring='init/hvt init/cbt init/hvtb init/splash.png \
          init/xyzaxes.jpg \
          init/xyzaxesbl.jpg \
          init/qcnlogo.png \
-         init/logo.jpg'
+         init/logo_iris.jpg'
  ntpversion='ntpdate_4.2.4p7c_'
  ntpdv='ntpdate_4.2.4p7c_universal-apple-darwin'
 if ( test "`uname -s`" = "Darwin" ) then
@@ -145,7 +145,7 @@ print_qcn_files $vnci $suffixs $ntpdv $pathprecont 1
 
 
 echo exit >> qcnsftp.up
-sftp -b qcnsftp.up carlgt1@qcn-web.stanford.edu
+sftp -b qcnsftp.up carlgt1@qcn-web.usc.edu
 
 
 else
@@ -195,7 +195,7 @@ else
   print_qcn_files $vnci $suffix $ntpdv $pathprecont 1
   #print_qcn_files $vnon $suffix $ntpdv $pathprecont
 
-  sftp -b qcnsftp.up carlgt1@qcn-web.stanford.edu
+  sftp -b qcnsftp.up carlgt1@qcn-web.usc.edu
 fi
 
 #cleanup_files

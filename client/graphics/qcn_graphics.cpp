@@ -329,7 +329,7 @@ double viewpoint_distance[4]={ 10.0, 10.0, 10.0, 10.0};
 
 //float color[4] = {.7, .2, .5, 1};
 
-TEXTURE_DESC logo;   // customized version of the boinc/api/gutil.h TEXTURE_DESC
+TEXTURE_DESC txLogo;   // customized version of the boinc/api/gutil.h TEXTURE_DESC
 
 TEXTURE_DESC txAdd;  // optional additional image
 TEXTURE_DESC txXYZAxes;  // legend for XYZ axes
@@ -569,11 +569,11 @@ void draw_logo(bool bExtraOnly)
 	*/
 																								  
 																																											
-    if (!bExtraOnly && logo.id) {
+    if (!bExtraOnly && txLogo.id) {
 
         float pos[3] = {0.0f, .50f, 0.f};
           float size[3] = {.21, .21, 0};
-          logo.draw(pos, size, ALIGN_CENTER, ALIGN_CENTER, g_alphaLogo);
+          txLogo.draw(pos, size, ALIGN_CENTER, ALIGN_CENTER, g_alphaLogo);
     }
 
     if (txAdd.id) {
@@ -1638,7 +1638,7 @@ void Init()
     char path[_MAX_PATH];
 	
 	// init textures
-	memset(&logo, 0x00, sizeof(TEXTURE_DESC));
+	memset(&txLogo, 0x00, sizeof(TEXTURE_DESC));
 	memset(&txAdd, 0x00, sizeof(TEXTURE_DESC));
 	memset(&txXYZAxes, 0x00, sizeof(TEXTURE_DESC));
 	memset(&txXYZAxesBlack, 0x00, sizeof(TEXTURE_DESC));

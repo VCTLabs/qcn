@@ -491,7 +491,7 @@ enum e_drawtype { NATION = 0, PLATE, COUNTRY, COASTLINE };
 #define IMG_EARTH_MASK        "earthmask.rgb"
 #define TEXTURE_X 4096
 #define TEXTURE_Y 2048
-#define IMG_LOGO         "logo.jpg"
+#define IMG_LOGO         "logo_iris.jpg"
 #define IMG_LOGO_EXTRA   "ad.jpg"
 #define IMG_LOGO_XYZAXES "xyzaxes.jpg"
 #define IMG_LOGO_XYZAXES_BLACK "xyzaxesbl.jpg"
