@@ -33,7 +33,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = i386-apple-darwin15.5.0
-host_triplet = x86_64-pc-none
+host_triplet = i386-pc-none
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -138,14 +138,14 @@ AUTOMAKE = ${SHELL} /Users/carlgt1/projects/qcn/ftgl-2.1.3/.auto/missing --run a
 AWK = awk
 CC = /Applications/Xcode.app/Contents/Developer/usr/bin/gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64 -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs
+CFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch i386 -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs
 CONVERT = no
 CPP = /Applications/Xcode.app/Contents/Developer/usr/bin/gcc -E
-CPPFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64 -I${top_srcdir}/src -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wshadow -Wsign-compare
+CPPFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch i386 -I${top_srcdir}/src -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wshadow -Wsign-compare
 CXX = /Applications/Xcode.app/Contents/Developer/usr/bin/g++
 CXXCPP = /Applications/Xcode.app/Contents/Developer/usr/bin/g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64
+CXXFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch i386
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -170,7 +170,7 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 KPSEWHICH = no
 LATEX = no
 LD = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld
-LDFLAGS = -L/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/usr/lib/ -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -Wl,-syslibroot,/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64
+LDFLAGS = -L/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/usr/lib/ -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -Wl,-syslibroot,/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch i386
 LIBOBJS = 
 LIBS = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
@@ -234,9 +234,9 @@ datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-host = x86_64-pc-none
-host_alias = x86_64
-host_cpu = x86_64
+host = i386-pc-none
+host_alias = i386
+host_cpu = i386
 host_os = none
 host_vendor = pc
 htmldir = ${docdir}

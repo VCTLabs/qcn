@@ -38,7 +38,7 @@ make
 mv src/.libs/libftgl.a libftgl_x86_64.a
 #mv src/.libs/libftgl.a ../client/mac_build/libftgl-universal.a
 /usr/bin/lipo -arch i386 libftgl_i386.a -arch x86_64 libftgl_x86_64.a -create -output ../client/mac_build/libftgl-universal.a
-make clean
-rm *.a
-rm -rf src/.libs
+#make clean
+#rm *.a
+#rm -rf src/.libs
 

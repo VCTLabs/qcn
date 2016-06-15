@@ -4,56 +4,40 @@
 export LIBTOOL='/usr/local/bin/libtool --tag=CC'
 export LIBTOOLIZE=/usr/local/bin/libtoolize
 
+export BIGFILES=-D_FILE_OFFSET_BITS=64
 
-export AR=/Developer/usr/bin/ar
-export RANLIB=/Developer/usr/bin/ranlib
-BIGFILES=-D_FILE_OFFSET_BITS=64
+export MACOSX_DEPLOYMENT_TARGET=10.9
 
-#PowerPC 32-bit Mac
-#export MARCH=ppc
-#export CXX=/Developer/usr/bin/g++-4.0
-#export CC=/Developer/usr/bin/gcc-4.0
-#export MACOSX_DEPLOYMENT_TARGET=10.4
-#export SDKROOT="/Developer/SDKs/MacOSX10.4u.sdk"
-#export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT -arch $MARCH"
-#export CPPFLAGS="-O2 -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT -arch $MARCH"
-#export CFLAGS="-O2 $BIGFILES -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT -arch $MARCH"
-#export CXXFLAGS="-O2 $BIGFILES -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT -arch $MARCH"
-#make clean
-#make
-#mv libbz2.a libbz2_ppc.a
+export MARCH='-arch i386'
+export CC=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
+export CXX=/Applications/Xcode.app/Contents/Developer/usr/bin/g++
+export MACOSX_DEPLOYMENT_TARGET=10.9
+export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/"
+export EXTRA_INCLUDE=$SDKROOT/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/
 
-#Intel 32-bit Mac
-#export MARCH=i386
-#export CXX=/Developer/usr/bin/g++-4.2
-#export CC=/Developer/usr/bin/gcc-4.2
-#export MACOSX_DEPLOYMENT_TARGET=10.6
-#export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-#export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT -arch $MARCH"
-#export CPPFLAGS="-O2 -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT -arch $MARCH"
-#export CFLAGS="-O2 $BIGFILES -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT -arch $MARCH"
-#export CXXFLAGS="-O2 $BIGFILES -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT -arch $MARCH"
-#
-#make clean
-#make
-#mv libbz2.a libbz2_i386.a
-
-#Intel 64-bit Mac
-export MARCH='-arch i386 -arch x86_64'
-export CXX=/Developer/usr/bin/g++-4.2
-export CC=/Developer/usr/bin/gcc-4.2
-export MACOSX_DEPLOYMENT_TARGET=10.6
-export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT $MARCH"
-export CPPFLAGS="-O2 -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT $MARCH"
-export CFLAGS="-O2 $BIGFILES -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT $MARCH"
-export CXXFLAGS="-O2 $BIGFILES -I$SDKROOT/usr/include -I$SDKROOT/usr/local/include -isysroot $SDKROOT $MARCH"
-
+export LDFLAGS="-stdlib=libstdc++ -L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT $MARCH"
+export CPPFLAGS="-stdlib=libstdc++ -O2 -I$EXTRA_INCLUDE -include sys/errno.h -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CXXFLAGS="-stdlib=libstdc++ -O2 $BIGFILES -I$EXTRA_INCLUDE -include sys/errno.h -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CFLAGS="-stdlib=libstdc++ -O2 $BIGFILES -isysroot $SDKROOT $MARCH"
 make clean
 make
-mv libbz2.a ../client/mac_build/libbz2-universal.a
+mv libbz2.a libbz2_i386.a
 
-#lipo -arch i386 libbz2_i386.a -arch x86_64 libbz2_x86_64.a -create -output libbz2-universal.a
-#mv libbz2-universal.a ../client/mac_build/
+export MARCH='-arch x86_64'
+export CC=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
+export CXX=/Applications/Xcode.app/Contents/Developer/usr/bin/g++
+export MACOSX_DEPLOYMENT_TARGET=10.9
+export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/"
+export EXTRA_INCLUDE=$SDKROOT/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/
+
+export LDFLAGS="-stdlib=libstdc++ -L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT $MARCH"
+export CPPFLAGS="-stdlib=libstdc++ -O2 -I$EXTRA_INCLUDE -include sys/errno.h -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CXXFLAGS="-stdlib=libstdc++ -O2 $BIGFILES -I$EXTRA_INCLUDE -include sys/errno.h -I$SDKROOT/usr/include -isysroot $SDKROOT $MARCH"
+export CFLAGS="-stdlib=libstdc++ -O2 $BIGFILES -isysroot $SDKROOT $MARCH"
+make clean
+make
+mv libbz2.a libbz2_x86_64.a
+
+lipo -arch i386 libbz2_i386.a -arch x86_64 libbz2_x86_64.a -create -output ../client/mac_build/libbz2-universal.a
 make clean ; rm -f *.a
 

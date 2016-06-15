@@ -21,6 +21,11 @@
 		435A7D2C1D10F020007988CC /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D241D10F020007988CC /* libboinc.a */; };
 		435A7D2D1D10F020007988CC /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D241D10F020007988CC /* libboinc.a */; };
 		4369D19515F6AEBF00FAFE27 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4369D19415F6AEBF00FAFE27 /* texture.cpp */; };
+		43866EB11D11730B00CCDE8C /* libboinc_graphics2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43866EB01D11730B00CCDE8C /* libboinc_graphics2.a */; };
+		43A967281D117336003CFBAA /* libftgl-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A967261D117336003CFBAA /* libftgl-universal.a */; };
+		43A967291D117336003CFBAA /* libfreetype-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A967271D117336003CFBAA /* libfreetype-universal.a */; };
+		43A967301D1178D3003CFBAA /* libbz2-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A9672E1D1178D3003CFBAA /* libbz2-universal.a */; };
+		43A967311D1178D3003CFBAA /* libpng-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A9672F1D1178D3003CFBAA /* libpng-universal.a */; };
 		43B3792B1D10F77C00E44297 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B3792A1D10F77C00E44297 /* libz-universal.a */; };
 		43B3792C1D10F77C00E44297 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B3792A1D10F77C00E44297 /* libz-universal.a */; };
 		43B3792D1D10F77C00E44297 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B3792A1D10F77C00E44297 /* libz-universal.a */; };
@@ -94,12 +99,17 @@
 		435A7D231D10F020007988CC /* libboinc_api.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc_api.a; sourceTree = "<group>"; };
 		435A7D241D10F020007988CC /* libboinc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc.a; sourceTree = "<group>"; };
 		4369D19415F6AEBF00FAFE27 /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = ../util/texture.cpp; sourceTree = SOURCE_ROOT; };
+		43866EB01D11730B00CCDE8C /* libboinc_graphics2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc_graphics2.a; sourceTree = "<group>"; };
 		4394A75D10A20763006FF691 /* dlgsettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgsettings.h; sourceTree = "<group>"; };
 		4394A7B610A20763006FF691 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icons.h; sourceTree = "<group>"; };
 		4394A7B710A20763006FF691 /* icons32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icons32.h; sourceTree = "<group>"; };
 		4394A7B910A20763006FF691 /* myframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myframe.h; sourceTree = "<group>"; };
 		4394A7BB10A20763006FF691 /* myglpane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myglpane.h; sourceTree = "<group>"; };
 		4394A7C110A20763006FF691 /* qcnwx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qcnwx.h; sourceTree = "<group>"; };
+		43A967261D117336003CFBAA /* libftgl-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libftgl-universal.a"; sourceTree = "<group>"; };
+		43A967271D117336003CFBAA /* libfreetype-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libfreetype-universal.a"; sourceTree = "<group>"; };
+		43A9672E1D1178D3003CFBAA /* libbz2-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libbz2-universal.a"; sourceTree = "<group>"; };
+		43A9672F1D1178D3003CFBAA /* libpng-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libpng-universal.a"; sourceTree = "<group>"; };
 		43B3792A1D10F77C00E44297 /* libz-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libz-universal.a"; sourceTree = "<group>"; };
 		43C1FDA5141725D900F8F3E7 /* csensor_mac_usb_generic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csensor_mac_usb_generic.cpp; path = ../sensor/csensor_mac_usb_generic.cpp; sourceTree = "<group>"; };
 		43C1FDA71417260200F8F3E7 /* csensor_mac_usb_generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csensor_mac_usb_generic.h; path = ../sensor/csensor_mac_usb_generic.h; sourceTree = "<group>"; };
@@ -211,7 +221,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43A967281D117336003CFBAA /* libftgl-universal.a in Frameworks */,
+				43A967291D117336003CFBAA /* libfreetype-universal.a in Frameworks */,
 				435A7D291D10F020007988CC /* libboinc_api.a in Frameworks */,
+				43866EB11D11730B00CCDE8C /* libboinc_graphics2.a in Frameworks */,
+				43A967301D1178D3003CFBAA /* libbz2-universal.a in Frameworks */,
+				43A967311D1178D3003CFBAA /* libpng-universal.a in Frameworks */,
 				435A7D261D10F020007988CC /* libboinc_zip.a in Frameworks */,
 				43B3792C1D10F77C00E44297 /* libz-universal.a in Frameworks */,
 				435A7D2C1D10F020007988CC /* libboinc.a in Frameworks */,
@@ -253,6 +268,11 @@
 		E3A499DB0D64E60400E51CDF = {
 			isa = PBXGroup;
 			children = (
+				43A9672E1D1178D3003CFBAA /* libbz2-universal.a */,
+				43A9672F1D1178D3003CFBAA /* libpng-universal.a */,
+				43A967261D117336003CFBAA /* libftgl-universal.a */,
+				43A967271D117336003CFBAA /* libfreetype-universal.a */,
+				43866EB01D11730B00CCDE8C /* libboinc_graphics2.a */,
 				43B3792A1D10F77C00E44297 /* libz-universal.a */,
 				435A7D221D10F020007988CC /* libboinc_zip.a */,
 				435A7D231D10F020007988CC /* libboinc_api.a */,
@@ -1001,7 +1021,7 @@
 					../graphics,
 					../qcnusb,
 					"../../bzip2-1.0.6",
-					"../../freetype-2.4.6/include",
+					"../../freetype-2.6/include",
 					"../../ftgl-2.1.3/include",
 					../../../boinc/lib,
 					../../../boinc/lib/mac,
@@ -1070,7 +1090,7 @@
 					../graphics,
 					../qcnusb,
 					"../../bzip2-1.0.6",
-					"../../freetype-2.4.6/include",
+					"../../freetype-2.6/include",
 					"../../ftgl-2.1.3/include",
 					../../../boinc/lib,
 					../../../boinc/lib/mac,
