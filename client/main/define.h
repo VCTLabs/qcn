@@ -14,12 +14,12 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <sys/select.h>
 
 #ifdef _WIN32
    #include "qcn_config_win.h"
    #include <direct.h>
 #else
+   #include <sys/select.h>
    #include "config.h"
 #endif
 

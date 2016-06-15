@@ -36,9 +36,6 @@
     <ClCompile Include="..\..\..\boinc\lib\hostinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\boinc\lib\md5.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\boinc\lib\md5_file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
