@@ -224,7 +224,7 @@ extern float g_fmax[4], g_fmin[4];
 
 //extern float color[4] = {.7, .2, .5, 1};
 
-extern TEXTURE_DESC logo;  // customized version of the boinc/api/gutil.h TEXTURE_DESC
+extern TEXTURE_DESC txLogo;  // customized version of the boinc/api/gutil.h TEXTURE_DESC
 extern RIBBON_GRAPH rgx, rgy, rgz, rgs; // override the standard boinc/api ribbon graph draw as it's making the earth red!
 
 #ifndef QCNLIVE

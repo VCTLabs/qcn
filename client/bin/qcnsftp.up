@@ -1,12 +1,12 @@
 chdir /var/www/boinc/sensor/download
 put *.zip
 chdir /var/www/boinc/sensor/apps/qcnsensor
--mkdir 8.01
-chdir 8.01
+-mkdir 8.02
+chdir 8.02
 -mkdir i686-apple-darwin__nci
 chdir i686-apple-darwin__nci
-put qcn_8.01_i686-apple-darwin__nci
-put qcn_graphics_8.01_i686-apple-darwin
+put qcn_8.02_i686-apple-darwin__nci
+put qcn_graphics_8.02_i686-apple-darwin
 put version_i686-apple-darwin__nci.xml version.xml
 put init/hvt
 put init/cbt
@@ -18,12 +18,12 @@ put init/earthday4096.jpg
 put init/earthnight4096.jpg
 put init/phidget218.dylib
 chdir /var/www/boinc/sensor/apps/qcnsensor
--mkdir 8.01
-chdir 8.01
+-mkdir 8.02
+chdir 8.02
 -mkdir x86_64-apple-darwin__nci
 chdir x86_64-apple-darwin__nci
-put qcn_8.01_x86_64-apple-darwin__nci
-put qcn_graphics_8.01_x86_64-apple-darwin
+put qcn_8.02_x86_64-apple-darwin__nci
+put qcn_graphics_8.02_x86_64-apple-darwin
 put version_x86_64-apple-darwin__nci.xml version.xml
 put init/hvt
 put init/cbt
@@ -35,12 +35,12 @@ put init/earthday4096.jpg
 put init/earthnight4096.jpg
 put init/phidget218.dylib
 chdir /var/www/boinc/continual/apps/qcncontinual
--mkdir 8.01
-chdir 8.01
+-mkdir 8.02
+chdir 8.02
 -mkdir i686-apple-darwin__nci
 chdir i686-apple-darwin__nci
-put qcn_8.01_i686-apple-darwin__nci
-put qcn_graphics_8.01_i686-apple-darwin
+put qcn_8.02_i686-apple-darwin__nci
+put qcn_graphics_8.02_i686-apple-darwin
 put version_i686-apple-darwin__nci.xml version.xml
 put init/hvt
 put init/cbt
@@ -52,12 +52,12 @@ put init/earthday4096.jpg
 put init/earthnight4096.jpg
 put init/phidget218.dylib
 chdir /var/www/boinc/continual/apps/qcncontinual
--mkdir 8.01
-chdir 8.01
+-mkdir 8.02
+chdir 8.02
 -mkdir x86_64-apple-darwin__nci
 chdir x86_64-apple-darwin__nci
-put qcn_8.01_x86_64-apple-darwin__nci
-put qcn_graphics_8.01_x86_64-apple-darwin
+put qcn_8.02_x86_64-apple-darwin__nci
+put qcn_graphics_8.02_x86_64-apple-darwin
 put version_x86_64-apple-darwin__nci.xml version.xml
 put init/hvt
 put init/cbt

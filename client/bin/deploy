@@ -145,7 +145,7 @@ print_qcn_files $vnci $suffixs $ntpdv $pathprecont 1
 
 
 echo exit >> qcnsftp.up
-sftp -b qcnsftp.up carlgt1@qcn-web.usc.edu
+sftp -b qcnsftp.up carlgt1@qcn.usc.edu
 
 
 else
@@ -195,7 +195,7 @@ else
   print_qcn_files $vnci $suffix $ntpdv $pathprecont 1
   #print_qcn_files $vnon $suffix $ntpdv $pathprecont
 
-  sftp -b qcnsftp.up carlgt1@qcn-web.usc.edu
+  sftp -b qcnsftp.up carlgt1@qcn.usc.edu
 fi
 
 #cleanup_files

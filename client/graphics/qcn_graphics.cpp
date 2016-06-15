@@ -1703,7 +1703,7 @@ void Init()
     boinc_resolve_filename(IMG_LOGO, path, sizeof(path));
 #endif
 
-    if (!boinc_file_exists(path) || logo.load_image_file(path)) { // can use load_image_file but we know it's a JPG so just use that
+    if (!boinc_file_exists(path) || txLogo.load_image_file(path)) { // can use load_image_file but we know it's a JPG so just use that
        fprintf(stderr, "Error loading QCN logo file %s\n", path); 
     }
 
