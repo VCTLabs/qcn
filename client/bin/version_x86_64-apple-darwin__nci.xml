@@ -1,10 +1,10 @@
 <version>
   <file>
-    <physical_name>qcn_8.03_x86_64-apple-darwin__nci</physical_name>
+    <physical_name>qcn_8.05_x86_64-apple-darwin__nci</physical_name>
     <main_program/>
   </file>
   <file>
-    <physical_name>qcn_graphics_8.03_x86_64-apple-darwin</physical_name>
+    <physical_name>qcn_graphics_8.05_x86_64-apple-darwin</physical_name>
     <logical_name>graphics_app</logical_name>
   </file>
 </version>

@@ -48,9 +48,6 @@ void* QCNThreadTime(void*)
     char* strReply = new char[iLenReply];
     memset(strReply, 0x00, iLenReply);
     char strExec[_MAX_PATH];  // set exec & boinc resolved filename for ntpdate
-  //#define NTPDATE_ARGS { "ntpdatemainthread", "-p", "8", "-t", "20", "-u", "-b", "-q", "quakecatcher.net" }
-  //#define NTPDATE_ARGC 9
-  //  const char* ntpdate_argv[NTPDATE_ARGC] = NTPDATE_ARGS;
 
 //#ifdef QCNLIVE
    #ifdef _WIN32
@@ -131,7 +128,10 @@ void* QCNThreadTime(void*)
        }
        else {
           fprintf(stderr, "Time synchronization failed local time = %f, will retry in 3 minutes - elapsed time = %f\n", dTimeNow, dTimeNow - dStart);
+          fprintf(stderr, "CmdLine: %s\nArgs:    %s\n", strExec, NTPDATE_ARGS);
+          fprintf(stderr, "Reply  : %s\n", strReply);
           fprintf(stdout, "Time synchronization failed local time = %f, will retry in 3 minutes - elapsed time = %f\n", dTimeNow, dTimeNow - dStart);
+          fprintf(stdout, "CmdLine: %s\nArgs:    %s\n", strExec, NTPDATE_ARGS);
        }
        fflush(stdout);
        fflush(stderr);

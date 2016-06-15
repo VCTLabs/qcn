@@ -345,16 +345,16 @@ struct FDSET_GROUP {
 
 // the args used for ntpdate call for 8 samples, a timeout of 20 seconds, an unprivileged port, no adjtime, and no system update of the clock
 #ifdef _USE_NTPDATE_EXEC_
-  #define NTPDATE_ARGS "-p 8 -t 20 -u -b -q pool.ntp.org"
-  #define NTPDATE_ARGC 8
+  #define NTPDATE_ARGS "-t 20 -q pool.ntp.org"
+  #define NTPDATE_ARGC 4
 #else
-  #define NTPDATE_ARGS { "-p", "8", "-t", "20", "-u", "-b", "-q", "pool.ntp.org" }
-  #define NTPDATE_ARGC 8
+  #define NTPDATE_ARGS { "-t", "20", "-q", "pool.ntp.org" }
+  #define NTPDATE_ARGC 4
 #endif
 
 // search strings to parse in the reply for ntpdate
-#define NTPDATE_STR_SEARCH_1 " step time server"
-#define NTPDATE_STR_SEARCH_2 "ffset "
+#define NTPDATE_STR_SEARCH_1 "time server"
+#define NTPDATE_STR_SEARCH_2 "offset "
 #define NTPDATE_STR_SEARCH_3 "sec"
 
 // time to wait if they were in interactive mode before sending a trigger, timeout in 60 seconds
