@@ -518,7 +518,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "8.02"
+#define PACKAGE_VERSION "8.03"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -549,7 +549,7 @@
 /* #undef UTMP_LOCATION */
 
 /* Version number of package */
-#define VERSION "8.02"
+#define VERSION "8.03"
 
 /* Define to prevent redefinition of INT32 in jconfig.h */
 /* #undef XMD_H */
