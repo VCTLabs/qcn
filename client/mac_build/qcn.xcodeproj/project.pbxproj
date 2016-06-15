@@ -7,36 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		431757601698D45E0068B3EA /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4317575F1698D45E0068B3EA /* libjpeg.a */; };
 		43304A7510FF76BB00A823FE /* qcn_thread_sensor_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43304A7310FF76BB00A823FE /* qcn_thread_sensor_util.cpp */; };
 		43304A7610FF76BB00A823FE /* qcn_thread_sensor_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43304A7310FF76BB00A823FE /* qcn_thread_sensor_util.cpp */; };
 		43304A9910FF7D9000A823FE /* qcn_thread_sensor_loop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43304A9710FF7D9000A823FE /* qcn_thread_sensor_loop.cpp */; };
 		43304A9A10FF7D9000A823FE /* qcn_thread_sensor_loop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43304A9710FF7D9000A823FE /* qcn_thread_sensor_loop.cpp */; };
+		435A7D251D10F020007988CC /* libboinc_zip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D221D10F020007988CC /* libboinc_zip.a */; };
+		435A7D261D10F020007988CC /* libboinc_zip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D221D10F020007988CC /* libboinc_zip.a */; };
+		435A7D271D10F020007988CC /* libboinc_zip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D221D10F020007988CC /* libboinc_zip.a */; };
+		435A7D281D10F020007988CC /* libboinc_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D231D10F020007988CC /* libboinc_api.a */; };
+		435A7D291D10F020007988CC /* libboinc_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D231D10F020007988CC /* libboinc_api.a */; };
+		435A7D2A1D10F020007988CC /* libboinc_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D231D10F020007988CC /* libboinc_api.a */; };
+		435A7D2B1D10F020007988CC /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D241D10F020007988CC /* libboinc.a */; };
+		435A7D2C1D10F020007988CC /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D241D10F020007988CC /* libboinc.a */; };
+		435A7D2D1D10F020007988CC /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 435A7D241D10F020007988CC /* libboinc.a */; };
 		4369D19515F6AEBF00FAFE27 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4369D19415F6AEBF00FAFE27 /* texture.cpp */; };
-		437FD49B1415CF21007B95DA /* libbz2-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 437FD49A1415CF21007B95DA /* libbz2-universal.a */; };
+		43B3792B1D10F77C00E44297 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B3792A1D10F77C00E44297 /* libz-universal.a */; };
+		43B3792C1D10F77C00E44297 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B3792A1D10F77C00E44297 /* libz-universal.a */; };
+		43B3792D1D10F77C00E44297 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B3792A1D10F77C00E44297 /* libz-universal.a */; };
 		43C1FDA6141725D900F8F3E7 /* csensor_mac_usb_generic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43C1FDA5141725D900F8F3E7 /* csensor_mac_usb_generic.cpp */; };
 		43E276911146C38F00D80E16 /* csensor_mac_usb_jw24f14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43E2768F1146C38F00D80E16 /* csensor_mac_usb_jw24f14.cpp */; };
 		43E276931146C38F00D80E16 /* csensor_mac_usb_jw24f14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43E2768F1146C38F00D80E16 /* csensor_mac_usb_jw24f14.cpp */; };
-		43E45A84129241E800D7ACEB /* libfreetype-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E45A80129241E800D7ACEB /* libfreetype-universal.a */; };
-		43E45A85129241E800D7ACEB /* libftgl-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E45A81129241E800D7ACEB /* libftgl-universal.a */; };
 		43E45A9C1292428E00D7ACEB /* ttfont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43E45A9A1292428E00D7ACEB /* ttfont.cpp */; };
-		43E9296D129B24EF001F3626 /* libboinc_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296A129B24EF001F3626 /* libboinc_api.a */; };
-		43E9296E129B24EF001F3626 /* libboinc_graphics2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296B129B24EF001F3626 /* libboinc_graphics2.a */; };
-		43E9296F129B24EF001F3626 /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296C129B24EF001F3626 /* libboinc.a */; };
-		43E92970129B24EF001F3626 /* libboinc_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296A129B24EF001F3626 /* libboinc_api.a */; };
-		43E92971129B24EF001F3626 /* libboinc_graphics2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296B129B24EF001F3626 /* libboinc_graphics2.a */; };
-		43E92972129B24EF001F3626 /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296C129B24EF001F3626 /* libboinc.a */; };
-		43E92973129B24EF001F3626 /* libboinc_api.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296A129B24EF001F3626 /* libboinc_api.a */; };
-		43E92974129B24EF001F3626 /* libboinc_graphics2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296B129B24EF001F3626 /* libboinc_graphics2.a */; };
-		43E92975129B24EF001F3626 /* libboinc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E9296C129B24EF001F3626 /* libboinc.a */; };
 		43EB686C1698CDD700368222 /* csensor_mac_usb_onavi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43EB686A1698CDD700368222 /* csensor_mac_usb_onavi.cpp */; };
 		43EB686D1698CDD700368222 /* csensor_usb_phidgets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43EB686B1698CDD700368222 /* csensor_usb_phidgets.cpp */; };
-		E33EF7C00FF1DF7400CD5708 /* libboinc_zip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E33EF7BD0FF1DF7400CD5708 /* libboinc_zip.a */; };
-		E33EF7C20FF1DF7400CD5708 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E33EF7BF0FF1DF7400CD5708 /* libz-universal.a */; };
-		E33EF7C60FF1DF7500CD5708 /* libboinc_zip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E33EF7BD0FF1DF7400CD5708 /* libboinc_zip.a */; };
-		E33EF7C80FF1DF7500CD5708 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E33EF7BF0FF1DF7400CD5708 /* libz-universal.a */; };
-		E33EF7C90FF1DF7500CD5708 /* libboinc_zip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E33EF7BD0FF1DF7400CD5708 /* libboinc_zip.a */; };
-		E33EF7CB0FF1DF7500CD5708 /* libz-universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E33EF7BF0FF1DF7400CD5708 /* libz-universal.a */; };
 		E388F8500FF1B9A900D948DE /* qcn_shmem_usb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3D35C190FF17AB200E64121 /* qcn_shmem_usb.cpp */; };
 		E388F8510FF1B9A900D948DE /* qcn_signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3D35C130FF179E900E64121 /* qcn_signal.cpp */; };
 		E388F8540FF1B9A900D948DE /* gzstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3C0E7A50D64E9BE0099B905 /* gzstream.cpp */; };
@@ -92,31 +85,28 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4317575F1698D45E0068B3EA /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjpeg.a; sourceTree = "<group>"; };
 		43304A7310FF76BB00A823FE /* qcn_thread_sensor_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qcn_thread_sensor_util.cpp; path = ../main/qcn_thread_sensor_util.cpp; sourceTree = SOURCE_ROOT; };
 		43304A7810FF76D300A823FE /* qcn_thread_sensor_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qcn_thread_sensor_util.h; path = ../main/qcn_thread_sensor_util.h; sourceTree = SOURCE_ROOT; };
 		43304A9710FF7D9000A823FE /* qcn_thread_sensor_loop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qcn_thread_sensor_loop.cpp; path = ../main/qcn_thread_sensor_loop.cpp; sourceTree = SOURCE_ROOT; };
 		43304A9C10FF7DA400A823FE /* qcn_thread_sensor_loop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qcn_thread_sensor_loop.h; path = ../main/qcn_thread_sensor_loop.h; sourceTree = SOURCE_ROOT; };
 		4330BD5B114B11A60008D847 /* qcnusb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qcnusb.h; path = ../qcnusb/qcnusb.h; sourceTree = SOURCE_ROOT; };
+		435A7D221D10F020007988CC /* libboinc_zip.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc_zip.a; sourceTree = "<group>"; };
+		435A7D231D10F020007988CC /* libboinc_api.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc_api.a; sourceTree = "<group>"; };
+		435A7D241D10F020007988CC /* libboinc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc.a; sourceTree = "<group>"; };
 		4369D19415F6AEBF00FAFE27 /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = ../util/texture.cpp; sourceTree = SOURCE_ROOT; };
-		437FD49A1415CF21007B95DA /* libbz2-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libbz2-universal.a"; sourceTree = "<group>"; };
 		4394A75D10A20763006FF691 /* dlgsettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlgsettings.h; sourceTree = "<group>"; };
 		4394A7B610A20763006FF691 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icons.h; sourceTree = "<group>"; };
 		4394A7B710A20763006FF691 /* icons32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = icons32.h; sourceTree = "<group>"; };
 		4394A7B910A20763006FF691 /* myframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myframe.h; sourceTree = "<group>"; };
 		4394A7BB10A20763006FF691 /* myglpane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myglpane.h; sourceTree = "<group>"; };
 		4394A7C110A20763006FF691 /* qcnwx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qcnwx.h; sourceTree = "<group>"; };
+		43B3792A1D10F77C00E44297 /* libz-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libz-universal.a"; sourceTree = "<group>"; };
 		43C1FDA5141725D900F8F3E7 /* csensor_mac_usb_generic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csensor_mac_usb_generic.cpp; path = ../sensor/csensor_mac_usb_generic.cpp; sourceTree = "<group>"; };
 		43C1FDA71417260200F8F3E7 /* csensor_mac_usb_generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csensor_mac_usb_generic.h; path = ../sensor/csensor_mac_usb_generic.h; sourceTree = "<group>"; };
 		43E2768B1146C32E00D80E16 /* csensor_mac_usb_jw24f14.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csensor_mac_usb_jw24f14.h; path = ../sensor/csensor_mac_usb_jw24f14.h; sourceTree = SOURCE_ROOT; };
 		43E2768F1146C38F00D80E16 /* csensor_mac_usb_jw24f14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csensor_mac_usb_jw24f14.cpp; path = ../sensor/csensor_mac_usb_jw24f14.cpp; sourceTree = SOURCE_ROOT; };
-		43E45A80129241E800D7ACEB /* libfreetype-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libfreetype-universal.a"; sourceTree = "<group>"; };
-		43E45A81129241E800D7ACEB /* libftgl-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libftgl-universal.a"; sourceTree = "<group>"; };
 		43E45A9A1292428E00D7ACEB /* ttfont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ttfont.cpp; path = ../util/ttfont.cpp; sourceTree = SOURCE_ROOT; };
 		43E45A9D129242A100D7ACEB /* ttfont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ttfont.h; path = ../util/ttfont.h; sourceTree = SOURCE_ROOT; };
-		43E9296A129B24EF001F3626 /* libboinc_api.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc_api.a; sourceTree = "<group>"; };
-		43E9296B129B24EF001F3626 /* libboinc_graphics2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc_graphics2.a; sourceTree = "<group>"; };
-		43E9296C129B24EF001F3626 /* libboinc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc.a; sourceTree = "<group>"; };
 		43EB686A1698CDD700368222 /* csensor_mac_usb_onavi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csensor_mac_usb_onavi.cpp; path = ../sensor/csensor_mac_usb_onavi.cpp; sourceTree = "<group>"; };
 		43EB686B1698CDD700368222 /* csensor_usb_phidgets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csensor_usb_phidgets.cpp; path = ../sensor/csensor_usb_phidgets.cpp; sourceTree = "<group>"; };
 		43EB686E1698CEA800368222 /* csensor_mac_usb_onavi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csensor_mac_usb_onavi.h; path = ../sensor/csensor_mac_usb_onavi.h; sourceTree = "<group>"; };
@@ -127,15 +117,12 @@
 		E30F9E9C0DEC6D4C0000FACE /* csensor.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = csensor.cpp; path = ../sensor/csensor.cpp; sourceTree = SOURCE_ROOT; };
 		E30F9E9E0DEC6D5F0000FACE /* csensor.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = csensor.h; path = ../sensor/csensor.h; sourceTree = SOURCE_ROOT; };
 		E3222D780FF2E3D500B25EB2 /* qcnmac.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = qcnmac.icns; path = ../qcnlive/qcnmac.icns; sourceTree = SOURCE_ROOT; };
-		E33EF7BD0FF1DF7400CD5708 /* libboinc_zip.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboinc_zip.a; sourceTree = "<group>"; };
-		E33EF7BF0FF1DF7400CD5708 /* libz-universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libz-universal.a"; sourceTree = "<group>"; };
 		E371C7F60E2AB5D0009B4DAA /* csensor_mac_laptop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csensor_mac_laptop.cpp; path = ../sensor/csensor_mac_laptop.cpp; sourceTree = SOURCE_ROOT; };
 		E371C7F70E2AB5D0009B4DAA /* csensor_mac_usb_jw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csensor_mac_usb_jw.cpp; path = ../sensor/csensor_mac_usb_jw.cpp; sourceTree = SOURCE_ROOT; };
 		E378CDB40D64E96C008A3885 /* qcn-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "qcn-Info.plist"; sourceTree = "<group>"; };
 		E388F7C70FF1B3E500D948DE /* qcnusb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = qcnusb.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E388F7C90FF1B3E500D948DE /* qcnusb-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "qcnusb-Info.plist"; sourceTree = "<group>"; };
 		E388F8770FF1B9CD00D948DE /* qcnusb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qcnusb.cpp; path = ../qcnusb/qcnusb.cpp; sourceTree = SOURCE_ROOT; };
-		E388F9110FF1BE6000D948DE /* qcnlive-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "qcnlive-Info.plist"; sourceTree = "<group>"; };
 		E3B747A60E8C6DFC00D401EB /* csensor_mac_laptop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csensor_mac_laptop.h; path = ../sensor/csensor_mac_laptop.h; sourceTree = SOURCE_ROOT; };
 		E3B747A80E8C6DFC00D401EB /* csensor_mac_usb_jw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csensor_mac_usb_jw.h; path = ../sensor/csensor_mac_usb_jw.h; sourceTree = SOURCE_ROOT; };
 		E3B747AD0E8C6E3800D401EB /* qcn_shmem_usb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = qcn_shmem_usb.h; path = ../qcnusb/qcn_shmem_usb.h; sourceTree = SOURCE_ROOT; };
@@ -202,11 +189,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E33EF7C00FF1DF7400CD5708 /* libboinc_zip.a in Frameworks */,
-				E33EF7C20FF1DF7400CD5708 /* libz-universal.a in Frameworks */,
-				43E92973129B24EF001F3626 /* libboinc_api.a in Frameworks */,
-				43E92974129B24EF001F3626 /* libboinc_graphics2.a in Frameworks */,
-				43E92975129B24EF001F3626 /* libboinc.a in Frameworks */,
+				435A7D2A1D10F020007988CC /* libboinc_api.a in Frameworks */,
+				435A7D271D10F020007988CC /* libboinc_zip.a in Frameworks */,
+				43B3792D1D10F77C00E44297 /* libz-universal.a in Frameworks */,
+				435A7D2D1D10F020007988CC /* libboinc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,12 +200,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E33EF7C90FF1DF7500CD5708 /* libboinc_zip.a in Frameworks */,
-				E33EF7CB0FF1DF7500CD5708 /* libz-universal.a in Frameworks */,
-				43E9296D129B24EF001F3626 /* libboinc_api.a in Frameworks */,
-				43E9296E129B24EF001F3626 /* libboinc_graphics2.a in Frameworks */,
-				43E9296F129B24EF001F3626 /* libboinc.a in Frameworks */,
-				431757601698D45E0068B3EA /* libjpeg.a in Frameworks */,
+				435A7D281D10F020007988CC /* libboinc_api.a in Frameworks */,
+				435A7D251D10F020007988CC /* libboinc_zip.a in Frameworks */,
+				43B3792B1D10F77C00E44297 /* libz-universal.a in Frameworks */,
+				435A7D2B1D10F020007988CC /* libboinc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,14 +211,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				437FD49B1415CF21007B95DA /* libbz2-universal.a in Frameworks */,
-				E33EF7C60FF1DF7500CD5708 /* libboinc_zip.a in Frameworks */,
-				E33EF7C80FF1DF7500CD5708 /* libz-universal.a in Frameworks */,
-				43E45A84129241E800D7ACEB /* libfreetype-universal.a in Frameworks */,
-				43E45A85129241E800D7ACEB /* libftgl-universal.a in Frameworks */,
-				43E92970129B24EF001F3626 /* libboinc_api.a in Frameworks */,
-				43E92971129B24EF001F3626 /* libboinc_graphics2.a in Frameworks */,
-				43E92972129B24EF001F3626 /* libboinc.a in Frameworks */,
+				435A7D291D10F020007988CC /* libboinc_api.a in Frameworks */,
+				435A7D261D10F020007988CC /* libboinc_zip.a in Frameworks */,
+				43B3792C1D10F77C00E44297 /* libz-universal.a in Frameworks */,
+				435A7D2C1D10F020007988CC /* libboinc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,22 +253,16 @@
 		E3A499DB0D64E60400E51CDF = {
 			isa = PBXGroup;
 			children = (
-				437FD49A1415CF21007B95DA /* libbz2-universal.a */,
-				4317575F1698D45E0068B3EA /* libjpeg.a */,
-				43E9296A129B24EF001F3626 /* libboinc_api.a */,
-				43E9296B129B24EF001F3626 /* libboinc_graphics2.a */,
-				43E9296C129B24EF001F3626 /* libboinc.a */,
-				43E45A80129241E800D7ACEB /* libfreetype-universal.a */,
-				43E45A81129241E800D7ACEB /* libftgl-universal.a */,
+				43B3792A1D10F77C00E44297 /* libz-universal.a */,
+				435A7D221D10F020007988CC /* libboinc_zip.a */,
+				435A7D231D10F020007988CC /* libboinc_api.a */,
+				435A7D241D10F020007988CC /* libboinc.a */,
 				E3222D780FF2E3D500B25EB2 /* qcnmac.icns */,
-				E33EF7BD0FF1DF7400CD5708 /* libboinc_zip.a */,
-				E33EF7BF0FF1DF7400CD5708 /* libz-universal.a */,
 				E3C0E7D90D64E9D30099B905 /* Headers */,
 				E3C0E7D80D64E9C50099B905 /* Sources */,
 				E3A499EF0D64E62A00E51CDF /* Products */,
 				E3D35BC80FF175D500E64121 /* qcn_graphics-Info.plist */,
 				E388F7C90FF1B3E500D948DE /* qcnusb-Info.plist */,
-				E388F9110FF1BE6000D948DE /* qcnlive-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -585,7 +559,7 @@
 		E3A499DD0D64E60400E51CDF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0640;
 			};
 			buildConfigurationList = E3A499DE0D64E60400E51CDF /* Build configuration list for PBXProject "qcn" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -691,6 +665,8 @@
 				ADDITIONAL_SDKS = "";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
@@ -719,9 +695,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../zlib-1.2.5\"",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Wall",
 					"-W",
@@ -731,6 +709,7 @@
 					"-DQCN_USB",
 					"-D_ZLIB",
 					"-D_DEBUG",
+					"-stdlib=libstdc++",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -743,7 +722,7 @@
 					Cocoa,
 				);
 				PRODUCT_NAME = qcnusb;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = ../bin;
 			};
 			name = Debug;
@@ -754,6 +733,8 @@
 				ADDITIONAL_SDKS = "";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
@@ -780,9 +761,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../zlib-1.2.5\"",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Wall",
 					"-W",
@@ -792,6 +775,7 @@
 					"-DQCN_USB",
 					"-D_ZLIB",
 					"-DNDEBUG",
+					"-stdlib=libstdc++",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -804,7 +788,7 @@
 					Cocoa,
 				);
 				PRODUCT_NAME = qcnusb;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = ../bin;
 				ZERO_LINK = NO;
 			};
@@ -814,11 +798,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx10.8;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$HOME/projects/boinc/api,
+					$HOME/projects/boinc/zip,
+					$HOME/projects/boinc/lib,
+				);
+				LIBRARY_SEARCH_PATHS = $HOME/projects/qcn/client/mac_build;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.9;
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_STYLE = "non-global";
 			};
@@ -828,11 +823,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx10.8;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$HOME/projects/boinc/api,
+					$HOME/projects/boinc/zip,
+					$HOME/projects/boinc/lib,
+				);
+				LIBRARY_SEARCH_PATHS = $HOME/projects/qcn/client/mac_build;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.9;
 			};
 			name = Release;
 		};
@@ -840,6 +846,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = ../bin;
 				COPY_PHASE_STRIP = NO;
@@ -868,10 +876,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../zlib-1.2.5\"",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OBJROOT = ../bin;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Wall",
 					"-W",
@@ -894,7 +904,7 @@
 					Cocoa,
 				);
 				PRODUCT_NAME = qcn;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = ../bin;
 				WRAPPER_EXTENSION = app;
 			};
@@ -905,6 +915,8 @@
 			buildSettings = {
 				ADDITIONAL_SDKS = "";
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = ../bin;
 				COPY_PHASE_STRIP = YES;
@@ -931,10 +943,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../zlib-1.2.5\"",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OBJROOT = ../bin;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Wall",
 					"-W",
@@ -957,7 +971,7 @@
 					Cocoa,
 				);
 				PRODUCT_NAME = qcn;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = ../bin;
 				WRAPPER_EXTENSION = app;
 			};
@@ -968,6 +982,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
@@ -997,9 +1013,11 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Wall",
 					"-DQCN",
@@ -1025,7 +1043,7 @@
 					"-ljpeg",
 				);
 				PRODUCT_NAME = qcn_graphics;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = ../bin;
 			};
 			name = Debug;
@@ -1035,6 +1053,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
@@ -1062,9 +1082,11 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-Wall",
 					"-DQCN",
@@ -1090,7 +1112,7 @@
 					"-ljpeg",
 				);
 				PRODUCT_NAME = qcn_graphics;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				SYMROOT = ../bin;
 				ZERO_LINK = NO;
 			};

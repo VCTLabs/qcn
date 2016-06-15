@@ -17,9 +17,9 @@ export MACOSX_DEPLOYMENT_TARGET=10.9
 export SDKROOT="/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk"
 
 export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT -arch $MARCH"
-export CPPFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
-export CFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
-export CXXFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CPPFLAGS="-stdlib=libstdc++ -O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CFLAGS="-stdlib=libstdc++ -O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CXXFLAGS="-stdlib=libstdc++ -O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
 
 ./configure --enable-shared=no --enable-static=yes --host=$MARCH
 make clean
@@ -28,15 +28,15 @@ mv src/.libs/libftgl.a libftgl_i386.a
 
 export MARCH=x86_64
 export LDFLAGS="-L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-syslibroot,$SDKROOT -arch $MARCH"
-export CPPFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
-export CFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
-export CXXFLAGS="-O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CPPFLAGS="-stdlib=libstdc++ -O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CFLAGS="-stdlib=libstdc++ -O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
+export CXXFLAGS="-stdlib=libstdc++ -O2 -I$HOME/projects/qcn/freetype-2.6/include -isysroot $SDKROOT -arch $MARCH"
 
 ./configure --enable-shared=no --enable-static=yes --host=$MARCH
 make clean
 make
 mv src/.libs/libftgl.a libftgl_x86_64.a
-
+#mv src/.libs/libftgl.a ../client/mac_build/libftgl-universal.a
 /usr/bin/lipo -arch i386 libftgl_i386.a -arch x86_64 libftgl_x86_64.a -create -output ../client/mac_build/libftgl-universal.a
 make clean
 rm *.a

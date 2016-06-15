@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
                BuildableName = "qcnlive.app"
-               BlueprintName = "QCNLive"
+               BlueprintName = "qcnlive"
                ReferencedContainer = "container:QCNLive.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,7 +34,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
             BuildableName = "qcnlive.app"
-            BlueprintName = "QCNLive"
+            BlueprintName = "qcnlive"
             ReferencedContainer = "container:QCNLive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -54,7 +54,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
             BuildableName = "qcnlive.app"
-            BlueprintName = "QCNLive"
+            BlueprintName = "qcnlive"
             ReferencedContainer = "container:QCNLive.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -73,7 +73,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
             BuildableName = "qcnlive.app"
-            BlueprintName = "QCNLive"
+            BlueprintName = "qcnlive"
             ReferencedContainer = "container:QCNLive.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

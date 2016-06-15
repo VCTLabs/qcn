@@ -3,7 +3,6 @@
  *  qcnqt
  *
  *  Created by Carl Christensen on 2/9/08.
- *  Copyright 2008 Stanford U All rights reserved.
  *
  */
  

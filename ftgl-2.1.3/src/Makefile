@@ -134,14 +134,14 @@ AUTOMAKE = ${SHELL} /Users/carlgt1/projects/qcn/ftgl-2.1.3/.auto/missing --run a
 AWK = awk
 CC = /Applications/Xcode.app/Contents/Developer/usr/bin/gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64 -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs
+CFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64 -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs
 CONVERT = no
 CPP = /Applications/Xcode.app/Contents/Developer/usr/bin/gcc -E
-CPPFLAGS = -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64 -I${top_srcdir}/src -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wshadow -Wsign-compare
+CPPFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64 -I${top_srcdir}/src -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wshadow -Wsign-compare
 CXX = /Applications/Xcode.app/Contents/Developer/usr/bin/g++
 CXXCPP = /Applications/Xcode.app/Contents/Developer/usr/bin/g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64
+CXXFLAGS = -stdlib=libstdc++ -O2 -I/Users/carlgt1/projects/qcn/freetype-2.6/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk -arch x86_64
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps

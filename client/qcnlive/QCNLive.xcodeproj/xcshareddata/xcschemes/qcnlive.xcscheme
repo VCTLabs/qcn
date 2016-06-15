@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0610"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
-               BuildableName = "qcnlive"
+               BuildableName = "qcnlive.app"
                BlueprintName = "qcnlive"
-               ReferencedContainer = "container:qcnlive.xcodeproj">
+               ReferencedContainer = "container:QCNLive.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "9E73BA301EF4580BE706E2EC"
                BuildableName = "Qt Test"
                BlueprintName = "Qt Test"
-               ReferencedContainer = "container:qcnlive.xcodeproj">
+               ReferencedContainer = "container:QCNLive.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
-            BuildableName = "qcnlive"
+            BuildableName = "qcnlive.app"
             BlueprintName = "qcnlive"
-            ReferencedContainer = "container:qcnlive.xcodeproj">
+            ReferencedContainer = "container:QCNLive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <CommandLineArguments>
@@ -64,13 +64,14 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
-            BuildableName = "qcnlive"
+            BuildableName = "qcnlive.app"
             BlueprintName = "qcnlive"
-            ReferencedContainer = "container:qcnlive.xcodeproj">
+            ReferencedContainer = "container:QCNLive.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -89,13 +90,14 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E8E57540B888D07B9A058FE0"
-            BuildableName = "qcnlive"
+            BuildableName = "qcnlive.app"
             BlueprintName = "qcnlive"
-            ReferencedContainer = "container:qcnlive.xcodeproj">
+            ReferencedContainer = "container:QCNLive.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

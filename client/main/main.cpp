@@ -270,8 +270,6 @@ int qcn_main(int argc, char **argv)
     optBOINC.direct_process_action = false;  // we'll handle quit/suspend/resume requests from BOINC
     optBOINC.check_heartbeat = true;
     optBOINC.handle_process_control = true;
-    optBOINC.handle_trickle_ups   = true;
-    optBOINC.handle_trickle_downs = true;
     optBOINC.send_status_msgs = true;
     //optBOINC.worker_thread_stack_size = 1048576L;
     //optBOINC.backwards_compatible_graphics = true;
