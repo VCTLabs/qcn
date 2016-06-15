@@ -445,6 +445,10 @@ typedef int sig_atomic_t;
 #if defined(WIN32) && !defined(USE_LWIPSOCK)
 #define ERRNO         ((int)GetLastError())
 #define SET_ERRNO(x)  (SetLastError((DWORD)(x)))
+#define ENOSPC        100000L
+#define EAFNOSUPPORT  100001L
+#define ERANGE        100002L
+#define EACCES        100003L
 #else
 #define ERRNO         (errno)
 #define SET_ERRNO(x)  (errno = (x))
