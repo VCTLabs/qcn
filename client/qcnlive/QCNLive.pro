@@ -20,7 +20,7 @@ BLIBDIR = $$BASEDIRBOINC/lib
 CURLDIR = $$BASEDIRQCN/curl-7.49.1/include
 BZDIR = $$BASEDIRQCN/bzip2-1.0.6
 
-CFLAGS = -Wall -Wno-deprecated
+QMAKE_CXXFLAGS = -Wall -Wno-deprecated
 #QMAKE_CFLAGS_DEBUG += $$CFLAGS -D_DEBUG -D_DEBUG_QCNLIVE -g -O0
 #QMAKE_CFLAGS_RELEASE += $$CFLAGS -O2
 #QMAKE_CXXFLAGS_DEBUG += $$QMAKE_CFLAGS_DEBUG
@@ -36,7 +36,10 @@ CXX=$$QUAKE_CXX
 MACOSX_DEPLOYMENT_TARGET=10.9
 QMAKE_MACOSX_DEPLOYMENT_TARGET=10.9
 QMAKE_MAC_SDK=macosx
-QTLIBDIR=/Developer/Qt/5.6/clang_64/lib
+QTLIBDIR=/Developer/Qt/5.4/clang_64/lib
+QMAKE_CXXFLAGS += -std=c++11 -stdlib=libstdc++
+QMAKE_CFLAGS += -stdlib=libstdc++
+QMAKE_LFLAGS += -stdlib=libstdc++
 
 # my own specific plist not the qmake generated one
 QMAKE_INFO_PLIST = "Info.plist.mac"
@@ -46,9 +49,10 @@ LIBS += -framework IOKit -L$$QTLIBDIR -framework Carbon -framework QtPrintSuppor
    -L$$BASEDIRQCN/client/mac_build \
      -lboinc_api -lboinc -lboinc_zip -lboinc_graphics2 \
     -ljpeg -lcurl-universal -lbz2-universal \
-     -lz-universal -lfreetype-universal -lftgl-universal
+     -lz-universal -lfreetype-universal -lftgl-universal -lpng-universal
 
-MACINC="/Developer/Qt/5.6/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers"
+#       /Developer/Qt/5.4/clang_64/lib/QtPrintSupport.framework/Versions/5/Headers/
+MACINC="/Developer/Qt/5.4/clang_64/lib/QtPrintSupport.framework/Versions/Current/Headers"
 
 ICON = qcnmac.icns
 RC_FILE = qcnmac.icns
