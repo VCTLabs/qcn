@@ -4,7 +4,7 @@ export XCB=/Developer/usr/bin/xcodebuild
 $XCB GCC_PREPROCESSOR_DEFINITIONS='$(value) QCN_RAW_DATA=1' -project QCNLive.xcodeproj -configuration Release -target QCNLive clean build 
 #make -f Makefile.mac clean
 #make -f Makefile.mac DEFINES='-D_USE_NTPDATE_EXEC_ -DFTGL_LIBRARY_STATIC -DQCNLIVE -DGRAPHICS_PROGRAM -DAPP_GRAPHICS -D_ZLIB -DQCN -D_THREAD_SAFE -DCURL_STATICLIB -D_ZLIB -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED -DQCN_RAW_DATA'
-/Developer/Qt/bin/macdeployqt ./QCNLive.app 
+/Developer/Qt/5.4/clang_64/bin/macdeployqt ./QCNLive.app
 #cp ../../doc/qcnmac.icns QCNLive.app/Contents/Resources/
 rm -rf QCNLive.app/Contents/Frameworks/QtSql.framework
 rm -rf QCNLive.app/Contents/Frameworks/QtXmlPatterns.framework
