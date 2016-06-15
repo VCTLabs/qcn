@@ -28,8 +28,37 @@ BEGIN
                time_received, 
                1 is_archive
             FROM sensor_archive.qcn_trigger t, host h, user u
+            WHERE hostid=h.id AND h.userid=u.id AND total_credit>0 ORDER BY time_trigger;
+
+
+         INSERT INTO sensor_archive.qcn_trigsummary (userid, hostid, teamid, result_name, total_credit, weight, time_received, is_archive) 
+            SELECT h.userid, hostid, u.teamid, result_name, 
+               IF(runtime_clock>86400.0, 50.0, CEIL(runtime_clock * 0.0005787)) total_credit,
+               EXP(-(ABS(unix_timestamp()-time_received))*0.69314718/604800.0) weight, 
+               time_received, 
+               1 is_archive
+            FROM sensor_archive.qcn_trigger t, host h, user u
             WHERE hostid=h.id AND h.userid=u.id AND runtime_clock>3600 ORDER BY time_trigger;
-    */
+
+
+   use sensor_archive;
+
+   CREATE TABLE qcn_trigsummary_tmp ( userid int(11), hostid int(11), teamid int(11), result_name varchar(254), total_credit double, weight double, time_received double, is_archive boolean );
+
+   CREATE INDEX qcn_trigsummary_tmp_result on qcn_trigsummary_tmp(result_name, total_credit);  
+
+   CREATE INDEX qcn_trigsummary_tmp_archive on qcn_trigsummary_tmp(is_archive);
+
+   LOAD DATA INFILE '/home/mysql/sensor_qcn_trigsummary.csv' 
+      INTO TABLE sensor_archive.qcn_trigsummary_tmp 
+          FIELDS TERMINATED BY ',' ENCLOSED BY '"';
+ 
+
+    INSERT INTO sensor.qcn_trigsummary 
+             (userid, hostid, teamid, result_name, total_credit, weight, time_received, is_archive)
+       SELECT userid, hostid, teamid, result_name, total_credit, weight, time_received, is_archive 
+          FROM sensor_archive.qcn_trigsummary_tmp;
+*/
 
      /* the following line returns trigger counts by year-month
        select concat(year(from_unixtime(time_received)), lpad(month(from_unixtime(time_received)), 2, '0')) ym, 
@@ -45,7 +74,7 @@ BEGIN
                time_received, 
                0 is_archive
             FROM qcn_trigger t, host h, user u
-            WHERE hostid=h.id AND h.userid=u.id AND runtime_clock>3600 ORDER BY time_trigger;
+            WHERE hostid=h.id AND h.userid=u.id AND total_credit>3600 ORDER BY time_trigger;
 
     TRUNCATE TABLE qcn_stats;
     INSERT INTO qcn_stats
