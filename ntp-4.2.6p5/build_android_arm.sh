@@ -30,6 +30,7 @@ export GDB_CFLAGS="--sysroot=$TCSYSROOT -Wall -g -I$TCINCLUDES/include"
 export PKG_CONFIG_SYSROOT_DIR=$TCSYSROOT
 
 # NTP - just build the necessary stuff ie libntp & ntpdate
+#./configure --host=arm-linux --disable-shared --enable-static
 ./configure --host=arm-linux --disable-shared --enable-static
 make clean
 cd libntp
