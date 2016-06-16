@@ -35,6 +35,7 @@ cd ../ftgl-2.1.3
 chmod uog+rx build.mac
 ./build.mac
 cd ../
+export XCB=/Applications/XCode.app/Contents/Developer/usr/bin/xcodebuild
 export CXX=
 export CC=
 export MARCH=
@@ -60,6 +61,7 @@ cd ../../qcn
     exit
   fi
 fi
+export XCB=/Applications/XCode.app/Contents/Developer/usr/bin/xcodebuild
 export CXX=
 export CC=
 export MARCH=

@@ -345,11 +345,11 @@ struct FDSET_GROUP {
 
 // the args used for ntpdate call for 8 samples, a timeout of 20 seconds, an unprivileged port, no adjtime, and no system update of the clock
 #ifdef _USE_NTPDATE_EXEC_
-  #define NTPDATE_ARGS "-t 20 -q pool.ntp.org"
-  #define NTPDATE_ARGC 4
+  #define NTPDATE_ARGS "-b -t 20 -q pool.ntp.org"
+  #define NTPDATE_ARGC 5
 #else
-  #define NTPDATE_ARGS { "-t", "20", "-q", "pool.ntp.org" }
-  #define NTPDATE_ARGC 4
+  #define NTPDATE_ARGS { "-b -t", "20", "-q", "pool.ntp.org" }
+  #define NTPDATE_ARGC 5
 #endif
 
 // search strings to parse in the reply for ntpdate
