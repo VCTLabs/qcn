@@ -247,16 +247,16 @@
 #define HAVE_STDLIB_H 1
 
 /* Define to 1 if locale is in namespace std:: */
-/* #undef HAVE_STD_LOCALE */
+#define HAVE_STD_LOCALE 1
 
 /* Define to 1 if max is in namespace std:: */
-/* #undef HAVE_STD_MAX */
+#define HAVE_STD_MAX 1
 
 /* Define to 1 if min is in namespace std:: */
-/* #undef HAVE_STD_MIN */
+#define HAVE_STD_MIN 1
 
 /* Define to 1 if transform is in namespace std:: */
-/* #undef HAVE_STD_TRANSFORM */
+#define HAVE_STD_TRANSFORM 1
 
 /* Define to 1 if you have the `strcasecmp' function. */
 #define HAVE_STRCASECMP 1
@@ -448,7 +448,7 @@
 /* #undef HOSTTYPEALT */
 
 /* "Define to 1 if largefile support causes missing symbols in C++" */
-#define LARGEFILE_BREAKS_CXX 1
+/* #undef LARGEFILE_BREAKS_CXX */
 
 /* Define to the name of libcurl's certification file */
 /* #undef LIBCURL_CABUNDLE */
@@ -495,9 +495,11 @@
 /* Defined if libcurl supports TELNET */
 /* #undef LIBCURL_PROTOCOL_TELNET */
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+/* #undef NO_MINUS_C_MINUS_O */
 
 /* Name of package */
 #define PACKAGE "qcn"
@@ -509,7 +511,7 @@
 #define PACKAGE_NAME "QCN"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "QCN 7.43"
+#define PACKAGE_STRING "QCN 7.36"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "qcn"
@@ -518,7 +520,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "8.04"
+#define PACKAGE_VERSION "7.36"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -549,7 +551,7 @@
 /* #undef UTMP_LOCATION */
 
 /* Version number of package */
-#define VERSION "8.04"
+#define VERSION "7.36"
 
 /* Define to prevent redefinition of INT32 in jconfig.h */
 /* #undef XMD_H */
@@ -587,7 +589,7 @@
 #define res_init() (0)
 #endif
 
-#include "project_specific_defines.h"
+//#include "project_specific_defines.h"
 
 /* end double-inclusion protection for config.h */
 #endif /* #ifndef BOINC_CONFIG_H */

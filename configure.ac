@@ -6,7 +6,7 @@ dnl not sure exactly what the minimum version is (but 2.13 wont work)
 AC_PREREQ(2.58)
 
 dnl Set the BOINC version here.  You can also use the set-version script.
-AC_INIT(QCN, 7.43)
+AC_INIT(QCN, 7.36)
 AC_CONFIG_MACRO_DIR([m4])
 LIBBOINC_VERSION=`echo ${PACKAGE_VERSION} | sed 's/\./:/g'`
 AC_SUBST([LIBBOINC_VERSION])
@@ -18,7 +18,7 @@ dnl AM_INIT_AUTOMAKE(dist-bzip2 dist-zip)
 AM_INIT_AUTOMAKE(dist-zip)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-AC_CONFIG_SRCDIR(client/main/main.cpp)
+#AC_CONFIG_SRCDIR(lib/shmem.cpp)
 
 AC_REVISION([$Revision$]) 
 REV=`echo '$Revision$' | awk "{print $2}"`
@@ -238,7 +238,7 @@ else
     build_state='Release'
 fi
 
-echo "--- Configuring QCN AC_PACKAGE_VERSION (${build_state}) ---"
+echo "--- Configuring BOINC AC_PACKAGE_VERSION (${build_state}) ---"
 echo "--- Build Components: (${configured_to_build}) ---"
 
 
@@ -265,14 +265,14 @@ or write to the Free Software Foundation, Inc.,
 
 AC_DEFUN([KC_STRIP_LEADING_ZEROS],[m4_bregexp([$*],[^0*\(..*\)],\1)])
 
-AC_DEFUN([QCN_SET_VERSION],[dnl
-AC_SUBST([QCN_MAJOR_VERSION],KC_STRIP_LEADING_ZEROS([$1]))
-AC_SUBST([QCN_MINOR_VERSION],KC_STRIP_LEADING_ZEROS([$2]))
-AC_SUBST([QCN_RELEASE],KC_STRIP_LEADING_ZEROS([$3]))
-AC_SUBST([QCN_VERSION_STRING],AC_PACKAGE_VERSION)
+AC_DEFUN([BOINC_SET_VERSION],[dnl
+AC_SUBST([BOINC_MAJOR_VERSION],KC_STRIP_LEADING_ZEROS([$1]))
+AC_SUBST([BOINC_MINOR_VERSION],KC_STRIP_LEADING_ZEROS([$2]))
+AC_SUBST([BOINC_RELEASE],KC_STRIP_LEADING_ZEROS([$3]))
+AC_SUBST([BOINC_VERSION_STRING],AC_PACKAGE_VERSION)
 ])
 
-QCN_SET_VERSION(translit(AC_PACKAGE_VERSION, [.], [,]))
+BOINC_SET_VERSION(translit(AC_PACKAGE_VERSION, [.], [,]))
 
 dnl Version information moved to version.h so removed from config.h
 dnl AC_DEFINE_UNQUOTED([BOINC_VERSION_STRING], "$BOINC_VERSION_STRING", [String representation of BOINC version number])
@@ -596,7 +596,7 @@ AH_BOTTOM([
 #define res_init() (0)
 #endif
 
-#include "project_specific_defines.h"
+//#include "project_specific_defines.h"
 
 /* end double-inclusion protection for config.h */
 #endif /* #ifndef BOINC_CONFIG_H */
@@ -755,6 +755,14 @@ dnl ---------- Sqlite3 ----------------------------------------------------
 if test "${enable_manager}" = yes ; then
   AM_PATH_SQLITE3
 fi
+
+dnl ---------- XCB --------------------------------------------------------
+if test "${enable_manager}" = yes; then
+    PKG_CHECK_MODULES(XCB,xcb,have_Xcb="yes",[echo "WARNING: Xcb not found, x11_screensaver will not be built"])
+    PKG_CHECK_MODULES(XCBATOM,xcb-atom,have_Xcbatom="yes",[echo "WARNING: Xcb-atom not found, x11_screensaver will not be built"])
+fi
+AM_CONDITIONAL(BUILD_X11_SCREENSAVER, [ test "$have_Xcb" = yes -a "$have_Xcbatom" = yes ]) 
+dnl -----------------------------------------------------------------------
 
 dnl Heres another way to set up host-specific stuff
 AM_CONDITIONAL(OS_DARWIN, [echo $host_os | grep '^darwin' > /dev/null])
@@ -955,5 +963,5 @@ AC_CONFIG_HEADERS([config.h])
 
 AC_OUTPUT
 
-echo "--- Configuring QCN AC_PACKAGE_VERSION (${build_state}) ---"
+echo "--- Configuring BOINC AC_PACKAGE_VERSION (${build_state}) ---"
 echo "--- Build Components: (${configured_to_build}) ---"

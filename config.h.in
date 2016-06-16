@@ -494,9 +494,11 @@
 /* Defined if libcurl supports TELNET */
 #undef LIBCURL_PROTOCOL_TELNET
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE
@@ -586,7 +588,7 @@
 #define res_init() (0)
 #endif
 
-#include "project_specific_defines.h"
+//#include "project_specific_defines.h"
 
 /* end double-inclusion protection for config.h */
 #endif /* #ifndef BOINC_CONFIG_H */
