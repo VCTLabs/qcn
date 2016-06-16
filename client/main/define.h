@@ -348,7 +348,7 @@ struct FDSET_GROUP {
   #define NTPDATE_ARGS "-b -t 20 -q pool.ntp.org"
   #define NTPDATE_ARGC 5
 #else
-  #define NTPDATE_ARGS { "-b -t", "20", "-q", "pool.ntp.org" }
+  #define NTPDATE_ARGS { "-b", "-t", "20", "-q", "pool.ntp.org" }
   #define NTPDATE_ARGC 5
 #endif
 
