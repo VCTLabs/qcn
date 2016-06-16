@@ -22,12 +22,11 @@ export TCSYSROOT="$ANDROIDTC/sysroot"
 export STDCPPTC="$TCLIBRARIES/libstdc++.a"
 
 export PATH="$TCBINARIES:$TCINCLUDES/bin:$PATH"
-export CC=arm-linux-androideabi-gcc
 export CXX=arm-linux-androideabi-g++
 export LD=arm-linux-androideabi-ld
-export CFLAGS="-I$HOME/projects/boinc/api -I$HOME/projects/boinc/lib --sysroot=$TCSYSROOT -DANDROID -DDECLARE_TIMEZONE -Wall -I$TCINCLUDES/include -O3 -fomit-frame-pointer"
-export CXXFLAGS="--sysroot=$TCSYSROOT -DANDROID -Wall -I$TCINCLUDES/include -funroll-loops -fexceptions -O3 -fomit-frame-pointer"
-export LDFLAGS="-L$TCLIBRARIES -lstdc++ -L$TCSYSROOT/usr/lib -L$TCINCLUDES/lib -L$HOME/projects/qcn/client/android -lboinc -lboinc_api -lboinc_zip -llog"
+export CFLAGS="-I$HOME/projects/boinc/api -I$HOME/projects/boinc/lib --sysroot=$TCSYSROOT -DANDROID -DDECLARE_TIMEZONE -Wall -I$TCINCLUDES/include -O3 -fomit-frame-pointer -fPIE"
+export CXXFLAGS="-I$HOME/projects/boinc/api -I$HOME/projects/boinc/lib --sysroot=$TCSYSROOT -DANDROID -Wall -I$TCINCLUDES/include -funroll-loops -fexceptions -O3 -fomit-frame-pointer -fPIE"
+export LDFLAGS="-L$TCLIBRARIES -lstdc++ -L$TCSYSROOT/usr/lib -L$TCINCLUDES/lib -L$HOME/projects/qcn/client/android -lboinc -lboinc_api -lboinc_zip -llog -fPIE -pie"
 export GDB_CFLAGS="--sysroot=$TCSYSROOT -Wall -g -I$TCINCLUDES/include"
 export PKG_CONFIG_SYSROOT_DIR=$TCSYSROOT
 
@@ -63,8 +62,12 @@ make clean && make
 echo "=============================NTP done============================="
 fi
 
+cp configure.ac_android_arm configure.ac
+cp Makefile.am_android_arm Makefile.am
 ./_autosetup
 ./configure --host=arm-linux --with-boinc-platform="arm-android-linux-gnu" --disable-client --disable-server --disable-manager --disable-shared --enable-static
+cp version.h.bak version.h
+cp configure configure_android_arm
 make clean 
 make
 
