@@ -16,9 +16,9 @@ export CXXFLAGS=
 #chmod uog+rx build.mac
 #./build.mac
 #cd ../jpeg-6b
-#cd jpeg-6b
-#chmod uog+rx build.mac
-#./build.mac
+cd jpeg-9b
+chmod uog+rx build.mac
+./build.mac
 cd bzip2-1.0.6
 chmod uog+rx build.mac
 ./build.mac
@@ -74,13 +74,13 @@ cd client/mac_build
 $XCB -project qcn.xcodeproj -configuration Release -target qcn clean build
 $XCB -project qcn.xcodeproj -configuration Release -target qcn_graphics clean build
 $XCB -project qcn.xcodeproj -configuration Release -target qcnusb clean build
-#$XCB -project qcn.xcodeproj -configuration Release -target QCNLive clean build
 cd ../qcnlive
 rm -rf QCNLive.app
 rm -rf ../bin/QCNLive.app
-$XCB -project QCNLive.xcodeproj -configuration Release -target QCNLive clean build
+#$XCB -project QCNLive.xcodeproj -configuration Release -target QCNLive clean build
+make -f Makefile.mac clean
+make -f Makefile.mac 
+mv qcnlive.app ../bin/QCNLive.app
 cd ../bin
-mv qcnlive.app QCNLive.app
-mv QCNLive.app/Contents/MacOS/qcnlive QCNLive.app/Contents/MacOS/QCNLive 
-/Developer/Qt5.2.0/5.2.0/clang_64/bin/macdeployqt QCNLive.app
+/Developer/Qt/5.4/clang_64/bin/macdeployqt QCNLive.app
 

@@ -794,7 +794,6 @@ moc_qcnqt.cpp: /Developer/Qt/5.4/clang_64/lib/QtWidgets.framework/Versions/5/Hea
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -1023,7 +1022,6 @@ moc_qcnopenglwidget.cpp: qcnqt.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -1251,7 +1249,6 @@ moc_myframe.cpp: qcnqt.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -1479,7 +1476,6 @@ moc_dlgsettings.cpp: qcnqt.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -1707,7 +1703,6 @@ moc_dlgmakequake.cpp: qcnqt.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -1954,7 +1949,6 @@ qcnopenglwidget.o: qcnopenglwidget.cpp /Developer/Qt/5.4/clang_64/lib/QtGui.fram
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -2182,7 +2176,6 @@ qcnqt.o: qcnqt.cpp qcnqt.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -2409,7 +2402,6 @@ myframe.o: myframe.cpp qcnqt.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -2645,7 +2637,6 @@ dlgsettings.o: dlgsettings.cpp dlgsettings.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -2881,7 +2872,6 @@ dlgmakequake.o: dlgmakequake.cpp dlgmakequake.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -2983,7 +2973,6 @@ qcn_shmem.o: ../main/qcn_shmem.cpp ../main/qcn_shmem.h \
 		../../../boinc/lib/boinc_win.h \
 		../../../qcn/config.h \
 		../../version.h \
-		../../project_specific_defines.h \
 		../../../boinc/lib/app_ipc.h \
 		../../../boinc/lib/filesys.h \
 		../../../boinc/lib/hostinfo.h \
@@ -3025,7 +3014,6 @@ qcn_thread_sensor.o: ../main/qcn_thread_sensor.cpp ../main/qcn_thread_sensor_uti
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3103,7 +3091,6 @@ qcn_thread_sensor_util.o: ../main/qcn_thread_sensor_util.cpp ../main/qcn_thread_
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3180,7 +3167,6 @@ qcn_thread_sensor_loop.o: ../main/qcn_thread_sensor_loop.cpp ../main/qcn_thread_
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3256,7 +3242,6 @@ qcn_thread_time.o: ../main/qcn_thread_time.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3310,7 +3295,6 @@ main.o: ../main/main.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3364,7 +3348,6 @@ cserialize.o: ../util/cserialize.cpp ../main/define.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3383,7 +3366,6 @@ sac.o: ../util/sac.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3438,7 +3420,6 @@ qcn_thread.o: ../util/qcn_thread.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3490,7 +3471,6 @@ trickleup.o: ../util/trickleup.cpp ../../../qcn/qcn_config_win.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../util/trickleup.h \
 		../../../boinc/api/boinc_api.h \
 		../../../boinc/lib/boinc_win.h \
@@ -3519,7 +3499,6 @@ trickledown.o: ../util/trickledown.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3577,7 +3556,6 @@ execproc.o: ../util/execproc.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3634,7 +3612,6 @@ qcn_util.o: ../util/qcn_util.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3689,7 +3666,6 @@ qcn_signal.o: ../util/qcn_signal.cpp ../util/qcn_signal.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3703,7 +3679,6 @@ qcn_curl.o: ../util/qcn_curl.cpp ../util/qcn_curl.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3721,7 +3696,6 @@ ttfont.o: ../util/ttfont.cpp ../util/ttfont.h \
 		../../../boinc/lib/boinc_win.h \
 		../../../qcn/config.h \
 		../../version.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3810,7 +3784,6 @@ csensor_mac_laptop.o: ../sensor/csensor_mac_laptop.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3865,7 +3838,6 @@ csensor_usb_phidgets.o: ../sensor/csensor_usb_phidgets.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3922,7 +3894,6 @@ csensor_mac_usb_onavi.o: ../sensor/csensor_mac_usb_onavi.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -3977,7 +3948,6 @@ csensor_mac_usb_jw.o: ../sensor/csensor_mac_usb_jw.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4032,7 +4002,6 @@ csensor_mac_usb_jw24f14.o: ../sensor/csensor_mac_usb_jw24f14.cpp ../main/main.h 
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4087,7 +4056,6 @@ csensor.o: ../sensor/csensor.cpp ../main/main.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4138,7 +4106,6 @@ qcn_graphics.o: ../graphics/qcn_graphics.cpp ../graphics/qcn_graphics.h \
 		../../../boinc/lib/boinc_win.h \
 		../../../qcn/config.h \
 		../../version.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4225,7 +4192,6 @@ qcn_2dplot.o: ../graphics/qcn_2dplot.cpp ../graphics/qcn_graphics.h \
 		../../../boinc/lib/boinc_win.h \
 		../../../qcn/config.h \
 		../../version.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4308,7 +4274,6 @@ qcn_earth.o: ../graphics/qcn_earth.cpp ../graphics/qcn_graphics.h \
 		../../../boinc/lib/boinc_win.h \
 		../../../qcn/config.h \
 		../../version.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4398,7 +4363,6 @@ qcn_cube.o: ../graphics/qcn_cube.cpp ../graphics/qcn_cube.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../main/define.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
@@ -4481,7 +4445,6 @@ qcn_game_match.o: ../graphics/qcn_game_match.cpp ../graphics/qcn_game_match.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../main/define.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
@@ -4565,7 +4528,6 @@ nation_boundary.o: ../graphics/nation_boundary.cpp ../graphics/nation_boundary.h
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4579,7 +4541,6 @@ coastline.o: ../graphics/coastline.cpp ../graphics/coastline.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
@@ -4593,7 +4554,6 @@ plate_boundary.o: ../graphics/plate_boundary.cpp ../graphics/plate_boundary.h \
 		../../../boinc/lib/str_util.h \
 		../../../boinc/win_build/win-config.h \
 		../../../qcn/config.h \
-		../../project_specific_defines.h \
 		../../../boinc/api/boinc_gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h \
 		/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glu.h \
