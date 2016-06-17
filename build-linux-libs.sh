@@ -8,8 +8,8 @@
   make clean && make
   cp libbz2.a ../client/linux_build/
 
-  # make sure there's a /usr/local/bin/libtool for jpeg-6b
-  cd ../jpeg-6b
+  # make sure there's a /usr/local/bin/libtool for jpeg-9b
+  cd ../jpeg-9b
   ./configure --enable-static
   make clean && make
   cp .libs/libjpeg.a ../client/linux_build/
@@ -24,9 +24,9 @@
   make clean && make
   cp objs/.libs/libfreetype.a ../client/linux_build/
 
-  export CFLAGS=-I$PWD/../freetype-2.4.6/include
-  export CPPFLAGS=-I$PWD/../freetype-2.4.6/include
-  export CXXFLAGS=-I$PWD/../freetype-2.4.6/include
+  export CFLAGS=-I$PWD/../freetype-2.6/include
+  export CPPFLAGS=-I$PWD/../freetype-2.6/include
+  export CXXFLAGS=-I$PWD/../freetype-2.6/include
   cd ../ftgl-2.1.3
   ./configure --enable-shared=no --enable-static=yes
   make clean && make
@@ -45,9 +45,8 @@
   #               zip/Makefile
   #               zip/zip/Makefile
   #               zip/unzip/Makefile
-  cd ../../boinc
   # always build the latest boinc libs
-  cd ../boinc
+  cd ../../boinc
   ./_autosetup
   ./configure --disable-client --disable-server --enable-libraries
   make clean && make
