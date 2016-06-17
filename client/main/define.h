@@ -334,7 +334,7 @@ struct FDSET_GROUP {
 // ntpdate exec can be obtained by boinc_resolve_filename, set ntpdate=ntpdate_4.2.4_i686-apple-darwin in boinc/apps/qcnalpha/*
 #define NTPDATE_EXEC "ntpdate"
 #ifdef ANDROID // had to bump up version from a to b
-  #define NTPDATE_EXEC_VERSION "ntpdate_4.2.6p5b"
+  #define NTPDATE_EXEC_VERSION "ntpdate_4.2.6p5c"
 #else
   #define NTPDATE_EXEC_VERSION "ntpdate_4.2.6p5a"
 #endif

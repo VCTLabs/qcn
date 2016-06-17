@@ -167,7 +167,7 @@ lock_old_archive_extraction=no
 LTCC="arm-linux-androideabi-gcc"
 
 # LTCC compiler flags.
-LTCFLAGS="-I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/lib --sysroot=/Users/carlgt1/androidarm-tc/sysroot -DANDROID -DDECLARE_TIMEZONE -Wall -I/Users/carlgt1/androidarm-tc/arm-linux-androideabi/include -O3 -fomit-frame-pointer -Wall"
+LTCFLAGS="-I/Users/carlgt1/projects/boinc/api -I/Users/carlgt1/projects/boinc/lib --sysroot=/Users/carlgt1/androidarm-tc/sysroot -DANDROID -DDECLARE_TIMEZONE -Wall -I/Users/carlgt1/androidarm-tc/arm-linux-androideabi/include -O3 -fomit-frame-pointer -fPIE -Wall"
 
 # Take the output of nm and produce a listing of raw symbols and C names.
 global_symbol_pipe="sed -n -e 's/^.*[	 ]\\([ABCDGIRSTW][ABCDGIRSTW]*\\)[	 ][	 ]*\\([_A-Za-z][_A-Za-z0-9]*\\)\$/\\1 \\2 \\2/p' | sed '/ __gnu_lto/d'"
