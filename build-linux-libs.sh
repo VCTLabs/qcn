@@ -14,12 +14,12 @@
   make clean && make
   cp .libs/libjpeg.a ../client/linux_build/
 
-  cd ../curl-7.25.0
+  cd ../curl-7.49.1
   ./configure --disable-crypto-auth --without-ssl --disable-ldap --disable-ldaps --disable-telnet --enable-static --disable-shared
   make clean && make
   cp lib/.libs/libcurl.a ../client/linux_build/
 
-  cd ../freetype-2.4.6
+  cd ../freetype-2.6
   ./configure --enable-shared=no --enable-static=yes
   make clean && make
   cp objs/.libs/libfreetype.a ../client/linux_build/

@@ -16,19 +16,19 @@
 # To install in $HOME instead of /usr/local, use:
 #    make install prefix=$HOME
 
-CC=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
+CC=gcc
 
-CFLAGS=-stdlib=libstdc++ -O2  -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//System/Library/Frameworks/Kernel.framework/Versions/A/Headers/ -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//usr/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -arch x86_64 -m64
+CFLAGS=-O3 -D_LARGEFILE64_SOURCE=1
 #CFLAGS=-O -DMAX_WBITS=14 -DMAX_MEM_LEVEL=7
 #CFLAGS=-g -DDEBUG
 #CFLAGS=-O3 -Wall -Wwrite-strings -Wpointer-arith -Wconversion \
 #           -Wstrict-prototypes -Wmissing-prototypes
 
-SFLAGS=-stdlib=libstdc++ -O2  -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//System/Library/Frameworks/Kernel.framework/Versions/A/Headers/ -I/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//usr/include -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -arch x86_64 -fPIC -m64
-LDFLAGS=-L/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk//usr/lib/ -isysroot /Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -Wl,-syslibroot,/Applications/XCode.app/Contents/Developer/Platforms/MacOSX.platform//Developer/SDKs/MacOSX10.9.sdk/ -arch x86_64 -L. libz.a
+SFLAGS=-O3 -fPIC -D_LARGEFILE64_SOURCE=1
+LDFLAGS= -L. libz.a
 TEST_LDFLAGS=-L. libz.a
-LDSHARED=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc
-CPP=/Applications/Xcode.app/Contents/Developer/usr/bin/gcc -E
+LDSHARED=gcc
+CPP=gcc -E
 
 STATICLIB=libz.a
 SHAREDLIB=
@@ -67,7 +67,7 @@ OBJS = $(OBJC) $(OBJA)
 
 PIC_OBJS = $(PIC_OBJC) $(PIC_OBJA)
 
-all: static
+all: static all64
 
 static: example$(EXE) minigzip$(EXE)
 
@@ -77,7 +77,7 @@ all64: example64$(EXE) minigzip64$(EXE)
 
 check: test
 
-test: all teststatic
+test: all teststatic test64
 
 teststatic: static
 	@if echo hello world | ./minigzip | ./minigzip -d && ./example; then \
