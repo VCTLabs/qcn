@@ -84,14 +84,14 @@ AUTOMAKE = ${SHELL} /home/carlgt1/projects/qcn/ftgl-2.1.3/.auto/missing --run au
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.4.6/include -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs
+CFLAGS = -I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.6/include -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs
 CONVERT = no
 CPP = gcc -E
-CPPFLAGS = -I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.4.6/include -I${top_srcdir}/src -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wshadow -Wsign-compare
+CPPFLAGS = -I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.6/include -I${top_srcdir}/src -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wshadow -Wsign-compare
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.4.6/include
+CXXFLAGS = -I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.6/include
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps

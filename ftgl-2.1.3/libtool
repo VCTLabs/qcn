@@ -161,7 +161,7 @@ lock_old_archive_extraction=no
 LTCC="gcc"
 
 # LTCC compiler flags.
-LTCFLAGS="-I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.4.6/include -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs"
+LTCFLAGS="-I/home/carlgt1/projects/qcn/freetype-2.6/../freetype-2.6/include -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs"
 
 # Take the output of nm and produce a listing of raw symbols and C names.
 global_symbol_pipe="sed -n -e 's/^.*[	 ]\\([ABCDGIRSTW][ABCDGIRSTW]*\\)[	 ][	 ]*\\([_A-Za-z][_A-Za-z0-9]*\\)\$/\\1 \\2 \\2/p' | sed '/ __gnu_lto/d'"

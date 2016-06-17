@@ -50,6 +50,9 @@
   ./_autosetup
   ./configure --disable-client --disable-server --enable-libraries
   make clean && make
+  cd zip
+  make clean && make
+  cd ..
   cp zip/libboinc_zip.a ../qcn/client/linux_build/
   cp lib/libboinc.a ../qcn/client/linux_build/
   cp api/libboinc_api.a ../qcn/client/linux_build/
