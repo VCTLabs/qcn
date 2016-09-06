@@ -1,20 +1,20 @@
-The latest QCN/BOINC server-side setup is as follows:
-
-1) Web and data server:  This will have the Apache HTTPD web server instance and appropriate libraries ie PHP, mySQL etc
-2) Database server:  This will contain the mySQL database server 
-
-
-The web server (qcn.usc.edu) should be available to the public for HTTP port 80.  The main website is currently (as of 9/2016) WordPress but that will change when IRIS takes over and puts up their own website.
-
-The WordPress (main) website is under /var/www/qcnwp   (the mySQL database for WordPress is "qcnwp")
-
-The BOINC parts (ie what the client software connects to) of the website are undr /var/www/boinc -- there are further subdrectories "sensor" and "continual" for the respective parts of the project (ie the "continual" polling of a clients sensor; versus the usual "trigger only" polling which is called the "sensor" project).
-
-At this point it may be useful to look at the BOINC project server setup (ie the generic open-source software that runs much of QCN):
-
-https://boinc.berkeley.edu/trac/wiki/ServerIntro
-
-
+The latest QCN/BOINC server-side setup is as follows:g
+g
+1) Web and data server:  This will have the Apache HTTPD web server instance and appropriate libraries ie PHP, mySQL etcg
+2) Database server:  This will contain the mySQL database server g
+g
+g
+The web server (qcn.usc.edu) should be available to the public for HTTP port 80.  The main website is currently (as of 9/2016) WordPress but that will change when IRIS takes over and puts up their own website.g
+g
+The WordPress (main) website is under /var/www/qcnwp   (the mySQL database for WordPress is "qcnwp")g
+g
+The BOINC parts (ie what the client software connects to) of the website are undr /var/www/boinc -- there are further subdrectories "sensor" and "continual" for the respective parts of the project (ie the "continual" polling of a clients sensor; versus the usual "trigger only" polling which is called the "sensor" project).g
+g
+At this point it may be useful to look at the BOINC project server setup (ie the generic open-source software that runs much of QCN):g
+g
+https://boinc.berkeley.edu/trac/wiki/ServerIntrog
+g
+g
 1) web / data server — this should be a fairly powerful server (8-16 CPU, 32-64GB RAM, 1TB+ disk space) with a fast and stable Internet connection.  
 
 Main programs:  
@@ -31,6 +31,8 @@ build script for Apache http in github:
 https://github.com/carlgt1/qcn/blob/master/server/config/httpdconfig
 
 ./configure LDFLAGS=-ldl --enable-dav --enable-ssl --with-apr=/usr/local/apr --with-ssl=/usr/local/ssl --enable-so --enable-rewrite --enable-cgi --enable-cache --enable-deflate
+
+Apache httpd configuration file is in /usr/local/apache2/conf/httpd.conf
 
 Account “boinc” is the user account for httpd and crontab scripts
 
