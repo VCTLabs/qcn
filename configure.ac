@@ -148,6 +148,8 @@ AC_PROG_RANLIB
 SAH_LINKS
 AM_PROG_CC_C_O
 
+AM_CONDITIONAL([BUILD_STATIC_LIBS],[test "x${enable_static}" != xno])
+
 dnl Check for docbook2x-man, which we use to create the manpages in
 dnl doc/manpages, and set the conditional HAVE_DOCBOOK2X_MAN to build
 dnl the manpages only if docbook2x-man is available.
@@ -509,7 +511,8 @@ dnl tell automake about whether to build client and/or server
 AM_CONDITIONAL(ENABLE_SERVER, [test "${enable_server}" = yes])
 AM_CONDITIONAL(ENABLE_CLIENT, [test "${enable_client}" = yes])
 
-
+AM_CONDITIONAL([ENABLE_CLIENT_RELEASE],[ ( test "${disable_static_linkage}" != yes ) && ( test "${enable_client_release}" = yes ) ])
+AM_CONDITIONAL(DYNAMIC_CLIENT, [test "${dynamic_client}" = yes])
 
 dnl ======================================================================
 dnl some more vodoo required for building portable client-binary (client, clientgui)

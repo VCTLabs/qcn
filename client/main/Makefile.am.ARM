@@ -37,7 +37,7 @@ if OS_DARWIN
            $(SENSORDIR)/csensor_usb_phidgets.cpp 
 else
    # must be Linux because I'm sure not using autoconf on Windows! ;-)
-   STACKSIZE = --stack=2000000
+   STACKSIZE = -Wl,-z,stack-size=2000000
    # LIBS += -z lazy -L$(LIBNTPDIR) -lntp -ldl $(BOINC_LIB) @CLIENTLIBS@
    LIBS += -z lazy -ldl $(BOINC_LIB) @CLIENTLIBS@
    GRAPHICS = $(UTILDIR)/texture.cpp

@@ -1,40 +1,72 @@
 include $(top_srcdir)/Makefile.incl
 
-AUTOMAKE_OPTIONS = std-options
+client-bin: @CLIENT_BIN_FILENAME@
 
-if ENABLE_CLIENT_RELEASE
-  AM_LDFLAGS += -static-libtool-libs
-## for an entirely statically linked library, you may want to try
-## -all-static instead.  There's a good chance it won't work properly,
-## so we'll use the safer "-static-libtool-libs" by default.
-else
-if DYNAMIC_CLIENT
-## if libtool starts to need flags for dynamic linking, add them here
-else
-  AM_LDFLAGS += -static
-endif
-endif ## ENABLE_CLIENT_RELEASE
+BINARY = @CLIENT_BIN_FILENAME@_$(QCN_VERSION_STRING)_$(build)
 
 QCNUSBDIR = $(BASEDIR)/client/qcnusb
 
-##   $(BOINC_DIR)/zip/libboinc_zip.la
-##BOINC_LIBS = $(BOINC_DIR)/api/libboinc_api.a $(BOINC_DIR)/lib/libboinc.a $(BOINC_DIR)/zip/libboinc_zip.a
-##BOINC_LIBS = -L$(BOINC_DIR)/api -lboinc_api -L$(BOINC_DIR)/lib -lboinc -L$(BOINC_DIR)/zip -lboinc_zip
-##BOINC_LIBS = $(BOINC_DIR)/api/libboinc_api.la $(BOINC_DIR)/lib/libboinc.la $(BOINC_DIR)/zip/libboinc_zip.la
-BOINC_LIBS = -L$(BOINC_DIR)/api -lboinc_api -L$(BOINC_DIR)/lib -lboinc -L$(BOINC_DIR)/zip -lboinc_zip
+#NTPBASEDIR = $(BASEDIR)/ntp-4.2.4p5
+#LIBNTPDIR        = $(NTPBASEDIR)/libntp
+#NTPINCLUDEDIR    = $(NTPBASEDIR)/include
+#NTPDATEDIR       = $(NTPBASEDIR)/ntpdate
 
+BASEDIR = $(top_builddir)
 
-BOINC_EXTRA_LIBS =  -L/home/carlgt1/androidarm-tc/arm-linux-androideabi/lib -lcurl -lssl -lcrypto -lz -L/home/carlgt1/androidarm-tc/arm-linux-androideabi -L/home/carlgt1/androidarm-tc/arm-linux-androideabi/lib -lssl -lcrypto   -ldl -lz
+#if ($(IS_I386)
+#   BOINC_DIR = $(BASEDIR)/../boinc/mac_build/build/`uname -p`_Deployment
+#else
+#   BOINC_DIR = $(BASEDIR)/../boinc/mac_build/build/`uname -p`_Deployment
+#endif
 
-CLIENTLIBS = -landroid -lz -lm $(STDCPPTC)
-SENSORS = $(SENSORDIR)/csensor_android_built_in.cpp
+BOINC_BASEDIR = $(BASEDIR)/../boinc
+BOINC_DIR = $(BOINC_BASEDIR)
+
+BOINC_LIB_DIR = /usr/local/lib
+BOINC_LIB_SHARED = -L$(BOINC_LIB_DIR) -lboinc -lboinc_api -lboinc_graphics2 -lboinc_zip
+
+BOINC_LIB_STATIC = $(BOINC_LIB_DIR)/libboinc_api.a $(BOINC_LIB_DIR)/libboinc_graphics2.a $(BOINC_LIB_DIR)/libboinc.a $(BOINC_LIB_DIR)/libboinc_zip.a
+LIBS_STATIC = -ljpeg -lfreetype -lftgl -lz -lbz2 -lcurl
 
 if OS_DARWIN
-   LIBS += -framework IOKit -framework Foundation -framework ScreenSaver -framework Cocoa -framework CoreServices
+   #  also note need to have the following settings in environment for Leopard and higher OS X (i.e. >=10.5)
+   # DEVELOPER_SDK_DIR=/Developer/SDKs
+   # LDFLAGS="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch i386"
+   # CPPFLAGS="-I/usr/include -I/usr/local/include -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386"
+   # CFLAGS="-I/usr/include -I/usr/local/include -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386"
+   # CXXFLAGS="-I/usr/include -I/usr/local/include -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386"
+   # SDKROOT="/Developer/SDKs/MacOSX10.4u.sdk"
+   # MACOSX_DEPLOYMENT_TARGET=10.4
+   # export DEVELOPER_SDK_DIR LDFLAGS CPPFLAGS CFLAGS CXXFLAGS SDKROOT MACOSX_DEPLOYMENT_TARGET
+   # LIBS += -Wl,-stack_size -Wl,2000000 -framework IOKit -framework Foundation -framework ScreenSaver -framework Carbon -framework Cocoa
+   STACKSIZE = -Wl,-stack_size -Wl,2000000
+   LIBS += -bind_at_load -framework IOKit -framework Foundation -framework ScreenSaver -framework Carbon -framework Cocoa
+   # LIBS += @CLIENTLIBS@ -L$(LIBNTPDIR) -lntp -ldl $(BOINC_LIB)
+   LIBS += @CLIENTLIBS@ -ldl $(BOINC_LIB)
+   # UTIL_CPP = $(UTILDIR)/qcn_util.cpp $(UTILDIR)/qcn_semaphore.cpp
+   GRAPHICS = 
+   SENSORS = \
+           $(SENSORDIR)/csensor_mac_laptop.cpp \
+           $(SENSORDIR)/csensor_mac_usb_generic.cpp \
+           $(SENSORDIR)/csensor_mac_usb_jw.cpp \
+           $(SENSORDIR)/csensor_usb_phidgets.cpp 
+else
+   # must be Linux because I'm sure not using autoconf on Windows! ;-)
+   STACKSIZE = -Wl,-z,stack-size=2000000
+   BOINC_LIB = $(BOINC_LIB_STATIC)
+   LIBS += -z lazy -ldl $(BOINC_LIB) -lphidget21 -lusb-1.0 -lrt @CLIENTLIBS@
+   LIBS += $(LIBS_STATIC)
+   GRAPHICS = $(UTILDIR)/texture.cpp
+   SENSORS  = \
+        $(SENSORDIR)/csensor_linux_usb_jw.cpp \
+        $(SENSORDIR)/csensor_linux_usb_jw24f14.cpp \
+        $(SENSORDIR)/csensor_linux_usb_onavi.cpp \
+        $(SENSORDIR)/csensor_usb_phidgets.cpp 
 endif
 
 bin_PROGRAMS = qcn qcndemo
 
+           #$(UTILDIR)/qcn_ntpdate.c 
 qcn_SOURCES = \
            $(UTILDIR)/sac.cpp \
            $(UTILDIR)/qcn_thread.cpp \
@@ -58,9 +90,11 @@ qcn_SOURCES = \
            $(MAINDIR)/main.cpp
 
 qcn_DEPENDENCIES =
-qcn_CPPFLAGS = $(AM_CPPFLAGS)
-qcn_LDFLAGS = $(AM_LDFLAGS)
-qcn_LDADD = $(CLIENTLIBS) $(PTHREAD_LIBS) $(BOINC_LIBS)
+#qcn_CFLAGS = -I$(NTPINCLUDEDIR) -I$(NTPDATEDIR) $(AM_CPPFLAGS) $(PTHREAD_CFLAGS)
+qcn_CPPFLAGS = -D_USE_NTPDATE_EXEC_ -I$(QCNUSBDIR) $(AM_CPPFLAGS) $(PTHREAD_CFLAGS)
+#qcn_CPPFLAGS = -I$(QCNUSBDIR) $(AM_CPPFLAGS) $(PTHREAD_CFLAGS)
+qcn_LDFLAGS = $(LIBS) $(AM_LDFLAGS) -lstdc++ $(STACKSIZE) $(PTHREAD_LIBS)
+qcn_LDADD = 
 
 qcndemo_SOURCES = \
            $(UTILDIR)/qcn_thread.cpp \
@@ -74,15 +108,32 @@ qcndemo_SOURCES = \
 
 qcndemo_DEPENDENCIES =
 qcndemo_CPPFLAGS = -DQCNDEMO $(qcn_CPPFLAGS)
-qcndemo_LDFLAGS = $(qcn_LDFLAGS) -L$(BOINC_DIR)/api -lboinc_api
-#qcndemo_LDADD = -L$(BOINC_DIR)/api -lboinc_api -L$(BOINC_DIR)/lib -lboinc $(CLIENTLIBS) $(PTHREAD_LIBS)
-qcndemo_LDADD = -L$(BOINC_DIR)/lib -lboinc -L$(BOINC_DIR)/zip -lboinc_zip $(CLIENTLIBS) $(PTHREAD_LIBS)
+qcndemo_LDFLAGS = $(qcn_LDFLAGS)
+qcndemo_LDADD = $(qcn_LDADD)
+
+.PHONY: moveover
 
 qcndir = $(BASEDIR)/bin
 
-all-local: qcn qcndemo 
+all-local: client-bin qcndemo moveover 
 
+moveover:
+	mv @CLIENT_BIN_FILENAME@ $(BINARY)
+	$(STRIP) $(BINARY)
+	mkdir -p $(top_srcdir)/client/test/projects/qcn.edu_qcn
+	mv $(BINARY) $(top_srcdir)/client/bin/
+	cp $(top_srcdir)/client/bin/$(BINARY) $(top_srcdir)/client/test/projects/qcn.edu_qcn/
+	$(STRIP) qcndemo
+	mv qcndemo ../test/
+
+## these source files need to be specified because no rule uses them.
+
+#EXTRA_DIST = *.h \
+#    mac \
+#    translation \
+#    win
+#
 clean-local:
-	rm -f @CLIENT_BIN_FILENAME@ ../test/qcndemo $(top_srcdir)/client/bin/*qcn_* $(top_srcdir)/client/test/projects/qcn.edu_qcn/*qcn_* 
+	rm -f @CLIENT_BIN_FILENAME@ $(BINARY) ../test/qcndemo $(top_srcdir)/client/bin/*qcn_* $(top_srcdir)/client/test/projects/qcn.edu_qcn/*qcn_* 
 
 
