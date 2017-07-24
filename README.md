@@ -30,13 +30,102 @@ be useful for academic use and experimentation in seismology.
 ---------------
 
 You will need various dependencies, some of which are included e.g. libcurl etc, but mainly you will need to get
-the BOINC libraries cloned parallel to the qcn directory:
-cd ..
-git clone git://boinc.berkeley.edu/boinc.git
+the BOINC libraries cloned parallel to the qcn directory (see below).
 
 basically the QCN client code is in the subdir "client" and the server code in "server" (duh)
 
 In client there is a subdirectory "qcnlive" for the Qt-based (you'll need to install Qt) QCNLive program - and makefiles
 for Linux and visual editor files for XCode (Mac) and Visual Studio (Windows)
-
 precompiled libraries and the visual studio/xcode files are also in win_build & mac_build respectively
+
+The Phidgets libraries (v21) are available upstream as deb packages (x86, armhf, armel)
+and generic source.
+
+Eg, for Linux follow the Linux guide: https://www.phidgets.com/docs/OS_-_Linux
+and install libphidget21-dev for the official USB sensor.
+
+
+For this fork (Stephen Arnold, July 2017)
+-----------------------------------------
+
+Note for the the buil steps below, only client/main and client/graphics are
+built.  The other targets (see Makefile.am) may build on the other two
+platforms but are not currently buildable on Linux ARM.
+
+Useful build deps (officially) for OpenEmbedded:
+
+apt-get install bash-completion sed wget cvs subversion git-core \
+	coreutils unzip texi2html texinfo docbook-utils gawk diffstat \
+	help2man make gcc build-essential g++ desktop-file-utils \
+	chrpath libxml2-utils xmlto apache2-utils docbook
+
+Actual build deps for debian armhf:
+
+apt-get install \
+	build-essential \
+	zlib1g-dev \
+	libbz2-dev \
+	libjpeg-dev \
+	libcurl4-openssl-dev \
+	libssl-dev \
+	libfreetype6-dev \
+	libxcb1-dev \
+	libxcb-util-dev \
+	libgss-dev \
+	libgssglue-dev \
+	freeglut3-dev \
+	libnotify-dev \
+	libxcb-screensaver0-dev \
+	libxss-dev \
+	libxmu-dev \
+	libxi-dev \
+	libftgl-dev \
+	libwxgtk3.0-dev \
+	libwxgtk-webview3.0-dev
+
+(note you may also need to install libstdc++6-4.7-dev)
+
+Seti app build deps:
+
+apt-get install \
+	libfftw3-dev \
+	m4 \
+	autoconf \
+	libcurl4-openssl-dev \
+	subversion
+
+To build native from source on Debian stretch or Ubuntu Xenial (armhf) follow
+these steps; you may need to "apt-cache search" to find correct package
+names for the above build deps.
+
+Starting in ~/src/:
+
+  $ cd ~/src
+  $ git clone https://github.com/sarnold/qcn
+  $ git clone git://boinc.berkeley.edu/boinc.git
+  $ cd boinc
+  $ git checkout origin/client_release/7/7.4 -b client-7.4
+  $ make distclean
+  $ rm -rf libltdl compile depcomp missing
+  $ ./_autosetup
+  $ ./configure --disable-server --disable-client --enable-shared --enable-static --with-pic
+  $ make
+  $ sudo make install
+  $ make -C zip/
+  $ sudo make -C zip/ install
+
+Next build the qcn app:
+
+  $ cd ../qcn
+  $ git checkout boinc-7.4.53
+  $ make distclean
+  $ ./_autosetup
+
+Note: make distclean and run _autosetup again if you get errors and either
+configure or _autosetup does not complete.
+
+  $ ./configure --disable-server --enable-shared --enable-static  --with-pic
+  $ make
+
+Look in client/test/projects/qcn.edu_qcn/ and client/bin/ for the armv7
+binaries.
