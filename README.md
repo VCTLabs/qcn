@@ -1,16 +1,21 @@
-This is the git repository for the Quake-Catcher Network project, Home Page:
+Quake Catcher Network (QCN) server and client software
+======================================================
 
-http://quakecatcher.net
+This is the working git repository for the Quake-Catcher Network project,
 
-All files are (c) 2007-2016 Incorporated Research Institutions for Seismology (IRIS)
+Home Page: http://quakecatcher.net
 
-Project formerly developed at Stanford University (2007-2014), the hosted at CalTech, now at USC via 
-the Southern California Earthquake Center with support by IRIS.
+All files are (c) 2007-2016 Incorporated Research Institutions for Seismology
+(IRIS).  Project originally developed at Stanford University (2007-2014), then
+hosted at CalTech (mainly on autopilot), now at USC via the Southern California
+Earthquake Center (SCEC) with support by IRIS.
 
-Primary author of all files unless otherwise noted is Carl Christensen, carlgt1@hotmail.com  (github: carlgt1)
+Original author unless otherwise noted is Carl Christensen, carlgt1@hotmail.com
+Maintenance by Stephen L Arnold <nerdboy@gentoo.org>
 
-This repository is released under the Lesser GNU Public License (LGPL), with the hopes that it will
-be useful for academic use and experimentation in seismology.
+This code is released under the Lesser GNU Public License (LGPL) version 3
+or higher, with the hopes that it will be useful for academic use and
+experimentation in seismology, education, community development, etc.
 
 -------------
 
@@ -29,40 +34,43 @@ be useful for academic use and experimentation in seismology.
 
 ---------------
 
-You will need various dependencies, some of which are included e.g. libcurl etc, but mainly you will need to get
-the BOINC libraries cloned parallel to the qcn directory (see below).
+You will need various dependencies, some of which are included e.g. libcurl
+etc, but mainly you will need to get the BOINC libraries cloned parallel to
+the qcn directory (see below). Basically the QCN client code is in the subdir
+"client" and the server code in "server" (duh)
 
-basically the QCN client code is in the subdir "client" and the server code in "server" (duh)
+In client there is a subdirectory "qcnlive" for the Qt-based (you'll need to
+install Qt) QCNLive program - and makefiles for Linux and visual editor files
+for XCode (Mac) and Visual Studio (Windows) precompiled libraries and the
+visual studio/xcode files are also in win_build & mac_build respectively.
 
-In client there is a subdirectory "qcnlive" for the Qt-based (you'll need to install Qt) QCNLive program - and makefiles
-for Linux and visual editor files for XCode (Mac) and Visual Studio (Windows)
-precompiled libraries and the visual studio/xcode files are also in win_build & mac_build respectively
-
-The Phidgets libraries (v21) are available upstream as deb packages (x86, armhf, armel)
-and generic source.
+The Phidgets libraries (v21) are available upstream as deb packages (x86,
+armhf, armel) and generic source.
 
 Eg, for Linux follow the Linux guide: https://www.phidgets.com/docs/OS_-_Linux
-and install libphidget21-dev for the official USB sensor.
+and install libphidget21-dev for the official USB sensors.
 
 
-For this fork (Stephen Arnold, July 2017)
------------------------------------------
+For this branch (Stephen Arnold, July 2017)
+-------------------------------------------
 
-Note for the the buil steps below, only client/main and client/graphics are
-built.  The other targets (see Makefile.am) may build on the other two
+Note for the the build steps below, only client/main and client/graphics are
+built.  The other (client) targets in Makefile.am* may build on the other two
 platforms but are not currently buildable on Linux ARM.
 
-Useful build deps (officially) for OpenEmbedded:
+Useful build deps (officially) for OpenEmbedded but good for ARM Linux:
 
 apt-get install bash-completion sed wget cvs subversion git-core \
 	coreutils unzip texi2html texinfo docbook-utils gawk diffstat \
 	help2man make gcc build-essential g++ desktop-file-utils \
 	chrpath libxml2-utils xmlto apache2-utils docbook
 
-Actual build deps for debian armhf:
+Actual build deps for QCN on debian/ubuntu armhf:
 
 apt-get install \
 	build-essential \
+	m4 \
+	autoconf \
 	zlib1g-dev \
 	libbz2-dev \
 	libjpeg-dev \
@@ -83,25 +91,17 @@ apt-get install \
 	libwxgtk3.0-dev \
 	libwxgtk-webview3.0-dev
 
-(note you may also need to install libstdc++6-4.7-dev)
-
-Seti app build deps:
-
-apt-get install \
-	libfftw3-dev \
-	m4 \
-	autoconf \
-	libcurl4-openssl-dev \
-	subversion
+Note you may also need to install libstdc++6-4.7-dev; the above will pull in
+many other dev dependencies as well.
 
 To build native from source on Debian stretch or Ubuntu Xenial (armhf) follow
-these steps; you may need to "apt-cache search" to find correct package
-names for the above build deps.
+these steps; you may need to "apt-cache search" to find correct package names
+for the above build deps.
 
 Starting in ~/src/:
 
   $ cd ~/src
-  $ git clone https://github.com/sarnold/qcn
+  $ git clone https://github.com/VCTTLabs/qcn
   $ git clone git://boinc.berkeley.edu/boinc.git
   $ cd boinc
   $ git checkout origin/client_release/7/7.4 -b client-7.4
