@@ -34,10 +34,13 @@ experimentation in seismology, education, community development, etc.
 
 ---------------
 
-You will need various dependencies, some of which are included e.g. libcurl
-etc, but mainly you will need to get the BOINC libraries cloned parallel to
-the qcn directory (see below). Basically the QCN client code is in the subdir
-"client" and the server code in "server" (duh)
+To build the  software, you will need various dependencies, some of which are
+included e.g. libcurl etc, but mainly you will need to get the BOINC libraries
+cloned parallel to the qcn directory (see below). Basically the QCN client
+code is in the subdir "client" and the server code in "server" (duh)
+
+QCN client software
+===================
 
 In client there is a subdirectory "qcnlive" for the Qt-based (you'll need to
 install Qt) QCNLive program - and makefiles for Linux and visual editor files
@@ -101,7 +104,7 @@ for the above build deps.
 Starting in ~/src/:
 
   $ cd ~/src
-  $ git clone https://github.com/VCTTLabs/qcn
+  $ git clone https://github.com/VCTLabs/qcn
   $ git clone git://boinc.berkeley.edu/boinc.git
   $ cd boinc
   $ git checkout origin/client_release/7/7.4 -b client-7.4
@@ -128,4 +131,32 @@ configure or _autosetup does not complete.
   $ make
 
 Look in client/test/projects/qcn.edu_qcn/ and client/bin/ for the armv7
-binaries.
+client binaries.
+
+QCN server software
+===================
+
+Although there are several client branches, there is only one branch with the
+name "server" in it (setiathome_server) so we'll start with master branch.
+
+  $ cd ~/src/boinc
+  $ cp -rf ../server/boincmods/* .
+  $ make distclean
+  $ ./_autosetup
+  $ ./configure --enable-server --disable-client --enable-shared --enable-static --with-pic
+  $ make
+  $ make -C sched/
+  $ make
+  $ sudo make install
+
+
+Code cleanup tasks
+==================
+
+* remove stale dependencies from source tree
+  - fix autotools to use pkg-config instead
+  - clean up/refactor configure.ac and associated Makefile.ams
+* check stale boincmods in qcn server/ against master
+  - merge into local boinc fork
+  - make patch(es) and deb package updates
+    (need one or more repeaetable build branches)
