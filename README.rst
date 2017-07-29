@@ -10,7 +10,7 @@ All files are (c) 2007-2016 Incorporated Research Institutions for Seismology
 hosted at CalTech (mainly on autopilot), now at USC via the Southern California
 Earthquake Center (SCEC) with support by IRIS.
 
-Original author unless otherwise noted is Carl Christensen, carlgt1@hotmail.com
+Original author unless otherwise noted is Carl Christensen <carlgt1@hotmail.com>
 Maintenance by Stephen L Arnold <nerdboy@gentoo.org>
 
 This code is released under the Lesser GNU Public License (LGPL) version 3
@@ -53,8 +53,8 @@ Eg, for Linux follow the Linux guide: https://www.phidgets.com/docs/OS_-_Linux
 and install libphidget21-dev for the official USB sensors.
 
 
-For this branch (Stephen Arnold, July 2017)
--------------------------------------------
+For this branch (Linux ARM update July 2017)
+--------------------------------------------
 
 Note for the the build steps below, only client/main and client/graphics are
 built.  The other (client) targets in Makefile.am* may build on the other two
