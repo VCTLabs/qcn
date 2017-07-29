@@ -17,22 +17,21 @@ This code is released under the Lesser GNU Public License (LGPL) version 3
 or higher, with the hopes that it will be useful for academic use and
 experimentation in seismology, education, community development, etc.
 
--------------
+::
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the Lesser GNU General Public License (LGPL) as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the Lesser GNU General Public License (LGPL) as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    Lesser GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  Lesser GNU General Public License for more details.
 
-    You should have received a copy of the Lesser GNU General Public License
-    along with this program (e.g. COPYING.LESSER).  If not, see http://www.gnu.org/licenses/lgpl.html
+  You should have received a copy of the Lesser GNU General Public License
+  along with this program (e.g. COPYING.LESSER).  If not, see http://www.gnu.org/licenses/lgpl.html
 
----------------
 
 To build the  software, you will need various dependencies, some of which are
 included e.g. libcurl etc, but mainly you will need to get the BOINC libraries
@@ -61,38 +60,38 @@ Note for the the build steps below, only client/main and client/graphics are
 built.  The other (client) targets in Makefile.am* may build on the other two
 platforms but are not currently buildable on Linux ARM.
 
-Useful build deps (officially) for OpenEmbedded but good for ARM Linux:
+Useful build deps (officially) for OpenEmbedded but good for ARM Linux::
 
-apt-get install bash-completion sed wget cvs subversion git-core \
-	coreutils unzip texi2html texinfo docbook-utils gawk diffstat \
-	help2man make gcc build-essential g++ desktop-file-utils \
-	chrpath libxml2-utils xmlto apache2-utils docbook
+  $ sudo apt-get install bash-completion sed wget cvs subversion git-core \
+    coreutils unzip texi2html texinfo docbook-utils gawk diffstat \
+    help2man make gcc build-essential g++ desktop-file-utils \
+    chrpath libxml2-utils xmlto apache2-utils docbook
 
-Actual build deps for QCN on debian/ubuntu armhf:
+Actual build deps for QCN on debian/ubuntu armhf::
 
-apt-get install \
-	build-essential \
-	m4 \
-	autoconf \
-	zlib1g-dev \
-	libbz2-dev \
-	libjpeg-dev \
-	libcurl4-openssl-dev \
-	libssl-dev \
-	libfreetype6-dev \
-	libxcb1-dev \
-	libxcb-util-dev \
-	libgss-dev \
-	libgssglue-dev \
-	freeglut3-dev \
-	libnotify-dev \
-	libxcb-screensaver0-dev \
-	libxss-dev \
-	libxmu-dev \
-	libxi-dev \
-	libftgl-dev \
-	libwxgtk3.0-dev \
-	libwxgtk-webview3.0-dev
+  $ apt-get install \
+    build-essential \
+    m4 \
+    autoconf \
+    zlib1g-dev \
+    libbz2-dev \
+    libjpeg-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libfreetype6-dev \
+    libxcb1-dev \
+    libxcb-util-dev \
+    libgss-dev \
+    libgssglue-dev \
+    freeglut3-dev \
+    libnotify-dev \
+    libxcb-screensaver0-dev \
+    libxss-dev \
+    libxmu-dev \
+    libxi-dev \
+    libftgl-dev \
+    libwxgtk3.0-dev \
+    libwxgtk-webview3.0-dev
 
 Note you may also need to install libstdc++6-4.7-dev; the above will pull in
 many other dev dependencies as well.
@@ -101,7 +100,7 @@ To build native from source on Debian stretch or Ubuntu Xenial (armhf) follow
 these steps; you may need to "apt-cache search" to find correct package names
 for the above build deps.
 
-Starting in ~/src/:
+Starting in ~/src/::
 
   $ cd ~/src
   $ git clone https://github.com/VCTLabs/qcn
@@ -117,15 +116,15 @@ Starting in ~/src/:
   $ make -C zip/
   $ sudo make -C zip/ install
 
-Next build the qcn app:
+Next build the qcn app::
 
   $ cd ../qcn
   $ git checkout boinc-7.4.53
   $ make distclean
   $ ./_autosetup
 
-Note: make distclean and run _autosetup again if you get errors and either
-configure or _autosetup does not complete.
+Note: run make distclean and _autosetup again if you get errors and either
+configure or _autosetup does not complete.  Now configure the client::
 
   $ ./configure --disable-server --enable-shared --enable-static  --with-pic
   $ make
@@ -137,7 +136,7 @@ QCN server software
 ===================
 
 Although there are several client branches, there is only one branch with the
-name "server" in it (setiathome_server) so we'll start with master branch.
+name "server" in it (setiathome_server) so we'll start with master branch::
 
   $ cd ~/src/boinc
   $ cp -rf ../server/boincmods/* .
@@ -153,10 +152,16 @@ name "server" in it (setiathome_server) so we'll start with master branch.
 Code cleanup tasks
 ==================
 
+* make repo manifest for primary build repos
+* make branches	to match workflow
+* move old branches to legacy namespace
 * remove stale dependencies from source tree
+
   - fix autotools to use pkg-config instead
   - clean up/refactor configure.ac and associated Makefile.ams
+
 * check stale boincmods in qcn server/ against master
+
   - merge into local boinc fork
   - make patch(es) and deb package updates
     (need one or more repeaetable build branches)
