@@ -166,4 +166,4 @@ Code cleanup tasks
 
   - merge into local boinc fork
   - make patch(es) and deb package updates
-    (need one or more repeaetable build branches)
+    (need one or more repeatable stable and development branches)
