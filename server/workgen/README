@@ -1,5 +1,7 @@
 Copy the program to /var/www/boinc/sensor or wherever you need to run it
 Also note the templates dir should be under /var/www/boinc/sensor !
 
-should just make clean && make -- it will move the executable qcn_workgen to /var/www/boinc/sensor/bin
+should just make clean && make -- it will move the executable qcn_workgen
+to /var/www/boinc/sensor/bin
 
+See howto-gen-work.rst for details.

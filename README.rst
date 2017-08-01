@@ -81,6 +81,8 @@ Actual build deps for QCN on debian/ubuntu armhf::
     libfreetype6-dev \
     libxcb1-dev \
     libxcb-util-dev \
+    libfcgi-dev \
+    libevent-dev \
     libgss-dev \
     libgssglue-dev \
     freeglut3-dev \
@@ -139,7 +141,7 @@ Although there are several client branches, there is only one branch with the
 name "server" in it (setiathome_server) so we'll start with master branch::
 
   $ cd ~/src/boinc
-  $ cp -rf ../server/boincmods/* .
+  $ cp -rf ../server/boincmods/* .  <= DO NOT DO THIS
   $ make distclean
   $ ./_autosetup
   $ ./configure --enable-server --disable-client --enable-shared --enable-static --with-pic
