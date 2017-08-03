@@ -1,11 +1,21 @@
-#include "boinc_db.h"
+#include <sys/param.h>
+#include <unistd.h>
+#include <cstdlib>
+#include <string>
+#include <cstring>
+
 #include "backend_lib.h"
-#include "sched_config.h"
-#include "sched_util.h"
+#include "boinc_db.h"
+#include "error_numbers.h"
+#include "filesys.h"
+#include "parse.h"
+#include "str_replace.h"
 #include "str_util.h"
 #include "util.h"
-#include "parse.h"
-#include "filesys.h"
+
+#include "sched_config.h"
+#include "sched_util.h"
+#include "sched_msgs.h"
 
 #define APP_SENSOR    "qcnsensor"
 #define APP_CONTINUAL "qcncontinual"
@@ -20,11 +30,12 @@ int main(int argc, char** argv) {
     long int lNumWU;
     char* wu_template = NULL;
     //char* infiles[3] = {"qcn_t1", "qcn_t2", "qcn_t3"};
-    char* infileA[1] = {"qcn_t5"};
-    char* infileB[1] = {"qcn_t2"};
-    char* infileC[1] = {"qcn_t3"};
-    char* infileD[1] = {"qcn_t4"};
+    const char* infileA[1] = {"qcn_t5"};
+//  const char* infileB[1] = {"qcn_t2"};
+//  const char* infileC[1] = {"qcn_t3"};
+//  const char* infileD[1] = {"qcn_t4"};
     char path[1024];
+    int retval;
 
     if (argc!=4) {
        fprintf(stdout, "Usage: bin/qcn_workgen wu_prefix num_wu appname\n"
@@ -41,25 +52,34 @@ int main(int argc, char** argv) {
     lNumWU = atol(argv[2]);
     strcpy(strApp, argv[3]);
 
-    SCHED_CONFIG config;
-    if (config.parse_file("./")) {
-     fprintf(stdout, "Cannot parse config file!\n");
-     return 2;
+    retval = config.parse_file();
+    if (retval) {
+        log_messages.printf(MSG_CRITICAL,
+            "Can't parse config.xml: %s\n", boincerror(retval)
+        );
+        exit(1);
     }
 
-    boinc_db.open(config.db_name, config.db_host, config.db_user, config.db_passwd);
+    retval = boinc_db.open(config.db_name, config.db_host, config.db_user, config.db_passwd);
+
+    if (retval) {
+        log_messages.printf(MSG_CRITICAL,
+            "boinc_db.open: %d; %s\n", retval, boinc_db.error_string()
+        );
+        return 3;
+    }
+
+    // DEBUG:  config vars
+//    fprintf(stdout, "name: '%s', host: '%s', user: '%s', app: '%s'\n", config.db_name, config.db_host, config.db_user, strApp);
+
+    char buf[64];
+    snprintf(buf, sizeof(buf), "where name='%s'", strApp);
+    if (app.lookup(buf)) {
+        log_messages.printf(MSG_CRITICAL, "can't find app %s\n", strApp);
+        exit(1);
+    }
 
     fprintf(stdout, "Creating workunits for app '%s' in database '%s'\n", strApp, config.db_name);
-
-    char strLookup[64];
-    sprintf(strLookup, "where name='%s'", strApp);
-    if (app.lookup(strLookup) || !app.get_id()) {
-       fprintf(stdout, "Error -- app ID for %s not found\n\n"
-         , strApp
-       );
-       fflush(stdout);
-       return 2;
-    }
 
     // write input file in the download directory
     //
@@ -110,8 +130,8 @@ int main(int argc, char** argv) {
     else
       read_file_malloc("templates/qcn_input.xml", wu_template);
 
-    float fShortTermAvg = 3.0f;
-    char **inFileUse = NULL;
+//    float fShortTermAvg = 3.0f;
+    const char **inFileUse = NULL;
 
     for (long int i = 0L; i < lNumWU; i++)  {
        wu.clear();     // zeroes all fields
