@@ -47,16 +47,34 @@ The qcn_workgen requires 3 arguments::
   qcn_input_continual.xml  qcn_output_continual.xml
   qcn_input.xml            qcn_output.xml
 
-So the prefix appears to be 'qcn' for both sensor and continual (since the
+So the prefix appears to be 'qcnuscX' for both sensor and continual (since the
 template files under /var/www/boinc/continual are identical.  First test of
 the arguments:
 
-* wu_prefix = qcn
-* num_wu = 100
+* wu_prefix = qcnusce
+* num_wu = 1000
 * appname = sensor
 
-  $ bin/qcn_workgen qcn 100 sensor
+  $ bin/qcn_workgen qcnusce 1000 sensor
 
-If you gat an app ID error, then check database connectivity, permissions,
-etc.
+If you get an app ID error, then check database connectivity, permissions,
+etc.  Also make sure you have the right db and app names.
+
+The qcn_workgen tool reads the database connection parameters from the .xml
+config files in the current "app" directory (ie, where you run the tool).
+The main config file is config.xml; the config_aux file is not being used.
+
+MySQL db settings and corresponding environment
+-----------------------------------------------
+
+Both the app and the workgen tool both use the global app config.xml (and
+aux if needed).
+
+Make sure there are no conflicting my.cnf settings in the user environment
+you are running the tool in.  If you sudo to the boinc or boincadm user to
+do this (which you should) make sure you pass the nominal environment::
+
+  $ sudo su - boinc
+
+The "dash" is important for su to pass the right environment variables, etc.
 
