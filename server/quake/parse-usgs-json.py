@@ -19,7 +19,7 @@ from xml.dom import minidom, Node
 from datetime import datetime
 from time import strptime, mktime
 
-URL_USGS_JSON = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson"
+URL_USGS_JSON = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson"
 
 FILE_USGS_JSON = "/var/www/boinc/sensor/usgs-quake.json"
 FILE_QCN  = "/var/www/boinc/sensor/qcn-quake.xml"
