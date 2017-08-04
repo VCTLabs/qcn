@@ -276,7 +276,7 @@ int handle_qcn_trigger(const DB_MSG_FROM_HOST* pmfh, const int iVariety, DB_QCN_
      parse_double(pmfh->xml, "<cpt>", qtrig.runtime_cpu);
      if (!parse_str(pmfh->xml, "<extip>", strIP, 32)) memset(strIP, 0x00, sizeof(char) * 32);
      parse_double(pmfh->xml, "<ctime>", qtrig.time_trigger);
-     if (isnan(qtrig.time_trigger)) qtrig.time_trigger= 0;
+     if (std::isnan(qtrig.time_trigger)) qtrig.time_trigger= 0;
      // check for follow up info
      if (!parse_int(pmfh->xml, "<follow>", iFollowUp)) iFollowUp = 0;
      bFollowUp = (bool) (iFollowUp == 1);  // must be exactly 1 else error
@@ -333,8 +333,8 @@ int handle_qcn_trigger(const DB_MSG_FROM_HOST* pmfh, const int iVariety, DB_QCN_
        if (!parse_double(pmfh->xml, "<fsig>", qtrig.significance)) qtrig.significance = 0;;
        if (!parse_double(pmfh->xml, "<fmag>", qtrig.magnitude)) qtrig.magnitude = 0;
        qtrig.varietyid = 0;
-       if (isnan(qtrig.significance)) qtrig.significance = 0;
-       if (isnan(qtrig.magnitude)) qtrig.magnitude = 0;
+       if (std::isnan(qtrig.significance)) qtrig.significance = 0;
+       if (std::isnan(qtrig.magnitude)) qtrig.magnitude = 0;
 
        // fudge database hack - if normal trigger - check for continual trigger amongst the real trig if sw version < 5.47
        if ( atof(qtrig.sw_version) < 5.47f && strstr(qtrig.result_name, "continual_") ) {
