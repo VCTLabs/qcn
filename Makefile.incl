@@ -44,7 +44,7 @@ AM_CPPFLAGS = \
 
 AM_CFLAGS = -Wall -Wextra -Wshadow -Wredundant-decls -Wdisabled-optimization -Wpointer-arith -Wstrict-aliasing -Wcast-align 
 
-AM_CXXFLAGS = $(AM_CFLAGS)
+AM_CXXFLAGS = $(AM_CFLAGS) -std=gnu++11
 
 AM_LDFLAGS =
 
