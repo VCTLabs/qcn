@@ -23,6 +23,17 @@ The general process is:
 
 where "xx" in the prefix is what you inserted.
 
+* inspect the app status, as boinc user
+
+  - $ cd /var/www/boinc/sensor
+  - $ bin/status
+  - tail log_qcn/transitioner.log
+
+Make sure the transitioner is running and log output looks nominal.  Inspect
+any critical errors or other anomalies. You should see new work units being
+transitioned successfully and eventually displayed on the server status page
+as "Tasks ready to send".  Clients should be taking new tasks as well.
+
 Using the workgen tool
 ======================
 
