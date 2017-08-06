@@ -19,6 +19,9 @@ The general process is:
 
   - mysql> select id,create_time,appid,name,fileset_id from workunit;
 
+  mysql> SELECT id,create_time,appid,name,fileset_id FROM workunit WHERE name LIKE 'qcnuscxx%';
+
+where "xx" in the prefix is what you inserted.
 
 Using the workgen tool
 ======================
@@ -53,9 +56,9 @@ the arguments:
 
 * wu_prefix = qcnusce
 * num_wu = 1000
-* appname = sensor
+* appname = qcnsensor
 
-  $ bin/qcn_workgen qcnusce 1000 sensor
+  $ bin/qcn_workgen qcnusce 1000 qcnsensor
 
 If you get an app ID error, then check database connectivity, permissions,
 etc.  Also make sure you have the right db and app names.
