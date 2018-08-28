@@ -108,20 +108,18 @@ Starting in ~/src/::
   $ git clone https://github.com/VCTLabs/qcn
   $ git clone git://boinc.berkeley.edu/boinc.git
   $ cd boinc
-  $ git checkout origin/client_release/7/7.4 -b client-7.4
+  $ git checkout qcn-master
   $ make distclean
   $ rm -rf libltdl compile depcomp missing
   $ ./_autosetup
   $ ./configure --disable-server --disable-client --enable-shared --enable-static --with-pic
   $ make
   $ sudo make install
-  $ make -C zip/
-  $ sudo make -C zip/ install
 
 Next build the qcn app::
 
   $ cd ../qcn
-  $ git checkout boinc-7.4.53
+  $ git checkout boinc-7.6.34
   $ make distclean
   $ ./_autosetup
 
@@ -134,22 +132,20 @@ configure or _autosetup does not complete.  Now configure the client::
 Look in client/test/projects/qcn.edu_qcn/ and client/bin/ for the armv7
 client binaries.
 
-QCN server software
-===================
+QCN (BOINC) server software
+===========================
 
 Although there are several client branches, there is only one branch with the
 name "server" in it (setiathome_server) so we'll start with master branch::
 
   $ cd ~/src/boinc
-  $ cp -rf ../server/boincmods/* .  <= DO NOT DO THIS
+  $ git checkout qcn-master
   $ make distclean
   $ ./_autosetup
-  $ ./configure --enable-server --disable-client --enable-shared --enable-static --with-pic
+  $ ./configure --enable-server --disable-client --disable-manager --enable-shared --enable-static --with-pic
   $ make
   $ make -C sched/
-  $ make
   $ sudo make install
-
 
 Code cleanup tasks
 ==================
