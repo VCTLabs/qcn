@@ -1,4 +1,4 @@
-CFLAGS = -O2 -Wall
+CFLAGS = -O2 -Wall -DUSE_QCN_TRIGGER_MEMORY_TABLE -DQCN_TRIGGER_MEMORY_TABLE -D_USING_TRIGMEM
 #CFLAGS = -g -O0 -Wall
 CC = g++
 BOINCDIR = ../../../boinc
@@ -14,7 +14,7 @@ else
 endif
 
 
-LIBS = -L$(MYSQLDIR)/lib -lmysqlclient_r \
+LIBS = -L$(MYSQLDIR)/lib -lmysqlclient \
   -L$(BOINCDIR)/lib -lboinc \
   -L$(SSLDIR)/lib -lcrypto -lssl \
   -L/usr/local/lib -lcurl
@@ -23,8 +23,9 @@ INCLUDES = -I$(BOINCDIR) -I$(SSLDIR)/include -I$(BOINCDIR)/lib -I$(BOINCDIR)/too
            -I$(MYSQLDIR)/include -I$(BOINCDIR)/sched -I/usr/local/include -I../../client/util
 
 SRCS = $(BOINCDIR)/db/db_base.cpp \
-  $(BOINCDIR)/sched/sched_msgs.cpp \
+  $(BOINCDIR)/lib/sched_msgs.cpp \
   $(BOINCDIR)/sched/sched_util.cpp \
+  $(BOINCDIR)/sched/sched_util_basic.cpp \
   $(BOINCDIR)/sched/sched_limit.cpp \
   $(BOINCDIR)/sched/sched_config.cpp \
   $(BOINCDIR)/lib/parse.cpp \
