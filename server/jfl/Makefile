@@ -1,12 +1,12 @@
 #CFLAGS = -O2 -Wall
-CFLAGS = -g -O0 -Wall
+CFLAGS = -g -O0 -Wall -DUSE_QCN_TRIGGER_MEMORY_TABLE -DQCN_TRIGGER_MEMORY_TABLE -D_USING_TRIGMEM
 CC = g++
 BOINCDIR = ../../../boinc
 MYSQLDIR = /usr/local/mysql
 SSLDIR = /usr/local/ssl
 INSTALLDIR = /var/www/boinc/sensor/bin
 
-LIBS = -L$(MYSQLDIR)/lib -lmysqlclient_r \
+LIBS = -L$(MYSQLDIR)/lib -lmysqlclient \
   -L$(BOINCDIR)/lib -lboinc \
   -L$(SSLDIR)/lib -lcrypto -lssl \
   -L/usr/local/lib -lcurl
@@ -15,8 +15,9 @@ INCLUDES = -I$(BOINCDIR) -I$(BOINCDIR)/lib -I$(BOINCDIR)/tools -I$(BOINCDIR)/db 
            -I$(MYSQLDIR)/include -I$(BOINCDIR)/sched -I/usr/local/include -I../../client/util
 
 SRCS = $(BOINCDIR)/db/db_base.cpp \
-  $(BOINCDIR)/sched/sched_msgs.cpp \
+  $(BOINCDIR)/lib/sched_msgs.cpp \
   $(BOINCDIR)/sched/sched_util.cpp \
+  $(BOINCDIR)/sched/sched_util_basic.cpp \
   $(BOINCDIR)/sched/sched_limit.cpp \
   $(BOINCDIR)/sched/sched_config.cpp \
   $(BOINCDIR)/lib/parse.cpp \
