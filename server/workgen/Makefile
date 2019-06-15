@@ -1,4 +1,4 @@
-CFLAGS = -g -Wall -DQCN_SERVER
+CFLAGS = -g -I/usr/include/mysql -Wall -DQCN_SERVER
 CXX = g++
 BOINCDIR = ../../../boinc
 

@@ -9,8 +9,8 @@
 
 CC    = gcc
 CXX   = g++
-INCLUDEDIR  = -I/usr/local/mysql/include
-BINDIR = /usr/local/mysql/lib/plugin/
+INCLUDEDIR  = -I/usr/include/mysql
+BINDIR = /usr/lib/mysql/plugin/
 ISMAC = $(shell uname -s)
 
 ifeq ($(ISMAC), Darwin)
