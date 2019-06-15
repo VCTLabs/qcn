@@ -14,7 +14,7 @@ INCLUDES = -I$(BOINCDIR) -I$(BOINCDIR)/lib -I$(BOINCDIR)/tools -I$(BOINCDIR)/db 
            -I$(MYSQLDIR)/include -I$(BOINCDIR)/sched -I/usr/local/include -I../../client/util
 
 SRCS = $(BOINCDIR)/db/db_base.cpp \
-  $(BOINCDIR)/sched/sched_msgs.cpp \
+  $(BOINCDIR)/lib/sched_msgs.cpp \
   $(BOINCDIR)/sched/sched_limit.cpp \
   $(BOINCDIR)/sched/sched_util.cpp \
   $(BOINCDIR)/sched/sched_config.cpp \
