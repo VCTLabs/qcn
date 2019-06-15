@@ -13,7 +13,7 @@ CXX      = g++
 LEX      = flex
 YACC     = yacc
 CFLAGS   = -pipe -Wall -W -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic  -DQT_NO_DEBUG -DQT_SHARED -DQT_THREAD_SUPPORT
-CXXFLAGS = -pipe -o3 -funroll-loops -frounding-math -fPIC -DONLINE -Wall -W -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic  -DQT_NO_DEBUG -DQT_SHARED -DQT_THREAD_SUPPORT
+CXXFLAGS = -pipe -o3 -funroll-loops -frounding-math -fPIC -DONLINE -Wall -W -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic  -DQT_NO_DEBUG -DQT_SHARED -DQT_THREAD_SUPPORT -DUSE_QCN_TRIGGER_MEMORY_TABLE -DQCN_TRIGGER_MEMORY_TABLE -D_USING_TRIGMEM
 LEXFLAGS = 
 YACCFLAGS= -d
 INCPATH  = -I/usr/lib64/qt-3.3/mkspecs/default -I. -I../../../boinc -I../../../boinc/lib -I../../../boinc/tools -I../../../boinc/db -I../../../boinc/sched -I/usr/local/mysql/include -I../trigger -I/usr/local/include -I../../../client/util -I$(QTDIR)/include
@@ -22,7 +22,7 @@ LFLAGS   =
 # CMC removed unneeded libraries
 #LIBS     = $(SUBLIBS) -L$(QTDIR)/lib -L/usr/local/mysql/lib -lmysqlclient_r -L/home/boinc/projects/boinc/lib -L/home/boinc/projects/boinc/lib/.libs -lboinc -L/usr/local/ssl/lib -lcrypto -lssl -L/usr/local/lib -lcurl
 #-lqt-mt -lXext -lX11 -lm
-LIBS     = -L/usr/local/mysql/lib -lmysqlclient_r -L/home/boinc/projects/boinc/lib -L/home/boinc/projects/boinc/lib/.libs -lboinc -L/usr/local/ssl/lib -lcrypto -lssl -L/usr/local/lib -lcurl
+LIBS     = -L/usr/local/mysql/lib -lmysqlclient -L/home/boinc/projects/boinc/lib -L/home/boinc/projects/boinc/lib/.libs -lboinc -L/usr/local/ssl/lib -lcrypto -lssl -L/usr/local/lib -lcurl
 AR       = ar cqs
 RANLIB   = 
 MOC      = $(QTDIR)/bin/moc
@@ -57,6 +57,7 @@ HEADERS = Crust2.h \
 SOURCES = ../../../boinc/db/db_base.cpp \
 		../../../boinc/sched/sched_msgs.cpp \
 		../../../boinc/sched/sched_util.cpp \
+		../../../boinc/sched/sched_util_basic.cpp \
 		../../../boinc/sched/sched_limit.cpp \
 		../../../boinc/sched/sched_config.cpp \
 		../../../boinc/lib/parse.cpp \
@@ -71,6 +72,7 @@ SOURCES = ../../../boinc/db/db_base.cpp \
 OBJECTS = db_base.o \
 		sched_msgs.o \
 		sched_util.o \
+		sched_util_basic.o \
 		sched_limit.o \
 		sched_config.o \
 		parse.o \
@@ -90,7 +92,7 @@ OBJMOC =
 DIST	   = qcn.pro
 QMAKE_TARGET = QCNTrigMonitor
 DESTDIR  = /var/www/boinc/sensor/bin/
-TARGET   = /var/www/boinc/sensor/bin/QCNTrigMonitor
+TARGET   = QCNTrigMonitor
 
 first: all
 ####### Implicit rules
@@ -126,8 +128,8 @@ uicables: $(UICDECLS) $(UICIMPLS)
 $(MOC): 
 	( cd $(QTDIR)/src/moc && $(MAKE) )
 
-Makefile: qcn.pro  /usr/lib64/qt-3.3/mkspecs/default/qmake.conf /usr/lib64/qt-3.3/lib/libqt-mt.prl
-	$(QMAKE) -o Makefile qcn.pro
+#Makefile: qcn.pro  /usr/lib64/qt-3.3/mkspecs/default/qmake.conf /usr/lib64/qt-3.3/lib/libqt-mt.prl
+#	$(QMAKE) -o Makefile qcn.pro
 qmake: 
 	@$(QMAKE) -o Makefile qcn.pro
 
@@ -158,21 +160,27 @@ FORCE:
 db_base.o: ../../../boinc/db/db_base.cpp ../../../boinc/db/db_base.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o db_base.o ../../../boinc/db/db_base.cpp
 
-sched_msgs.o: ../../../boinc/sched/sched_msgs.cpp ../../../boinc/sched/sched_msgs.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sched_msgs.o ../../../boinc/sched/sched_msgs.cpp
+sched_msgs.o: ../../../boinc/lib/sched_msgs.cpp ../../../boinc/lib/sched_msgs.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sched_msgs.o ../../../boinc/lib/sched_msgs.cpp
 
 sched_util.o: ../../../boinc/sched/sched_util.cpp ../../../boinc/sched/sched_config.h \
-		../../../boinc/sched/sched_msgs.h \
+		../../../boinc/lib/sched_msgs.h \
 		../../../boinc/sched/sched_util.h \
 		../../../boinc/sched/sched_limit.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sched_util.o ../../../boinc/sched/sched_util.cpp
+
+sched_util_basic.o: ../../../boinc/sched/sched_util_basic.cpp ../../../boinc/sched/sched_config.h \
+		../../../boinc/lib/sched_msgs.h \
+		../../../boinc/sched/sched_util.h \
+		../../../boinc/sched/sched_limit.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sched_util_basic.o ../../../boinc/sched/sched_util_basic.cpp
 
 sched_limit.o: ../../../boinc/sched/sched_limit.cpp ../../../boinc/sched/sched_main.h \
 		../../../boinc/sched/sched_limit.h \
 		../../../boinc/sched/sched_config.h \
 		../../../boinc/sched/sched_types.h \
 		../../../boinc/sched/sched_shmem.h \
-		../../../boinc/sched/sched_msgs.h \
+		../../../boinc/lib/sched_msgs.h \
 		../../../boinc/sched/edf_sim.h \
 		../../../qcn/server/trigger/qcn_types.h \
 		../../../boinc/sched/sched_util.h \
@@ -181,7 +189,7 @@ sched_limit.o: ../../../boinc/sched/sched_limit.cpp ../../../boinc/sched/sched_m
 		../../../boinc/sched/hr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sched_limit.o ../../../boinc/sched/sched_limit.cpp
 
-sched_config.o: ../../../boinc/sched/sched_config.cpp ../../../boinc/sched/sched_msgs.h \
+sched_config.o: ../../../boinc/sched/sched_config.cpp ../../../boinc/lib/sched_msgs.h \
 		../../../boinc/sched/sched_util.h \
 		../../../boinc/sched/sched_config.h \
 		../../../boinc/sched/sched_limit.h

@@ -5,7 +5,7 @@
 #include "QCNTrigger.h"
 
 #ifdef ONLINE
-#include "/home/boinc/projects/qcn/server/trigger/qcn_types.h"
+#include "../trigger/qcn_types.h"
 #endif
 
 using namespace std;

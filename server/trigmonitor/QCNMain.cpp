@@ -14,7 +14,8 @@
 #include "Crust2.h"
 #include "QCN.h"
 
-
+#include "sched_msgs.h"
+#include "sched_config.h"
 
 
 using namespace std;
