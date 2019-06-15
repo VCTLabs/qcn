@@ -19,6 +19,20 @@ The general process is:
 
   - mysql> select id,create_time,appid,name,fileset_id from workunit;
 
+  mysql> SELECT id,create_time,appid,name,fileset_id FROM workunit WHERE name LIKE 'qcnuscxx%';
+
+where "xx" in the prefix is what you inserted.
+
+* inspect the app status, as boinc user
+
+  - $ cd /var/www/boinc/sensor
+  - $ bin/status
+  - tail log_qcn/transitioner.log
+
+Make sure the transitioner is running and log output looks nominal.  Inspect
+any critical errors or other anomalies. You should see new work units being
+transitioned successfully and eventually displayed on the server status page
+as "Tasks ready to send".  Clients should be taking new tasks as well.
 
 Using the workgen tool
 ======================
@@ -53,9 +67,9 @@ the arguments:
 
 * wu_prefix = qcnusce
 * num_wu = 1000
-* appname = sensor
+* appname = qcnsensor
 
-  $ bin/qcn_workgen qcnusce 1000 sensor
+  $ bin/qcn_workgen qcnusce 1000 qcnsensor
 
 If you get an app ID error, then check database connectivity, permissions,
 etc.  Also make sure you have the right db and app names.
