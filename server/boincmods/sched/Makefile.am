@@ -16,6 +16,7 @@ libsched_sources = \
     sched_util_basic.cpp \
     sched_config.cpp \
     sched_limit.cpp \
+    sched_msgs.cpp \
     ../db/boinc_db.cpp \
     ../db/db_base.cpp \
     ../tools/process_result_template.cpp \
@@ -35,6 +36,7 @@ pkginclude_HEADERS = \
 	credit.h \
 	sched_config.h \
 	sched_limit.h \
+	sched_msgs.h \
 	sched_util.h \
 	sched_util_basic.h \
 	../tools/backend_lib.h \
@@ -279,7 +281,7 @@ trickle_echo_LDADD = $(SERVERLIBS)
 update_stats_SOURCES = update_stats.cpp
 update_stats_LDADD = $(SERVERLIBS)
 
-file_upload_handler_SOURCES = file_upload_handler.cpp sched_config.cpp sched_util_basic.cpp sched_limit.cpp
+file_upload_handler_SOURCES = file_upload_handler.cpp sched_msgs.cpp sched_config.cpp sched_util_basic.cpp sched_limit.cpp
 file_upload_handler_LDADD = $(FUHLIBS)
 
 make_work_SOURCES = make_work.cpp
@@ -319,7 +321,8 @@ fcgi_LDADD = $(SERVERLIBS_FCGI)
 
 fcgi_file_upload_handler_SOURCES = \
     file_upload_handler.cpp \
-    sched_config.cpp
+    sched_config.cpp \
+    sched_msgs.cpp 
 fcgi_file_upload_handler_CPPFLAGS = -D_USING_FCGI_ $(AM_CPPFLAGS)
 fcgi_file_upload_handler_LDADD = $(SERVERLIBS_FCGI)
 
