@@ -224,18 +224,6 @@
         transitioner -d 2
       </cmd>
     </daemon>
-    <daemon>
-      <disabled>1</disabled>
-      <cmd>
-        QCNTrigMonitor -d 2 -sleep_interval 3 -time_interval 120 -delete_interval 200
-      </cmd>
-    </daemon>
-    <daemon>
-      <disabled>1</disabled>
-      <cmd>
-        trigdisplay -d 2 -sleep_interval 4 -time_interval 15 
-      </cmd>
-    </daemon>
   </daemons>
 </boinc>
 
