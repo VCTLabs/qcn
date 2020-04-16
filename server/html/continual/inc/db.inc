@@ -56,6 +56,12 @@ if (MYSQLI) {
         global $mysqli;
         return mysqli_query($mysqli, $q);
     }
+    function _mysql_unbuffered_query($q) {
+        global $mysqli;
+	return $mysqli->query($q, MYSQLI_USE_RESULT);  // <-- THIS IS THE ISSUE
+
+	// https://www.php.net/manual/en/mysqli.real-query.php  <-- TRY THIS
+    }
     function _mysql_num_rows($r) {
         return mysqli_num_rows($r);
     }

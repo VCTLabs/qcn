@@ -9,9 +9,9 @@ $master_url = parse_config(get_config(), "<master_url>");
 $is_continual = (parse_config(get_config(), "<db_name>") == "continual");
 define ("IS_CONTINUAL", $is_continual ? true : false);
 define("PROJECT", "Quake-Catcher Network Sensor Monitoring");
-define("URL_BASE", "http://quakecatcher.net/sensor/");
+define("URL_BASE", "https://quakecatcher.net/sensor/");
 define("MAXMIND_URL", "https://geoip.maxmind.com/b?l=ILFoClxbJcfk");
-define("GOOGLE_MAPS_KEY", "AIzaSyDVxlyCoT9_i3eRxVF31dLKLPVTk22ZSS4");
+define("GOOGLE_MAPS_KEY", "AIzaSyCi5xpjvTma1yl-cDMtmLqyvt7g3V4dcYk");
 define("IMAGE_PATH", "../user_profile/images/");
 define("IMAGE_URL", "user_profile/images/");
 define("PROFILE_PATH", "../user_profile/");
@@ -19,9 +19,9 @@ define("USE_STOPFORUMSPAM", true);
 define("PROFILE_URL", "user_profile/");
 define("LANGUAGE_FILE", "languages.txt");
 define("STYLESHEET", "qcn.css");
-define("COPYRIGHT_HOLDER", "CalTech");
-define("SYS_ADMIN_EMAIL", "carlgt1@hotmail.com");
-define("UOTD_ADMIN_EMAIL", "carlgt1@hotmail.com"); # who gets user of the day pool running low e-mails?
+define("COPYRIGHT_HOLDER", "USC");
+define("SYS_ADMIN_EMAIL", "marquis@usc.edu");
+define("UOTD_ADMIN_EMAIL", "marquis@usc.edu"); # who gets user of the day pool running low e-mails?
 define("EMAIL_FROM_NAME", "Quake-Catcher Network  (Do Not Reply)");
 define("EMAIL_FROM", "noreply@quakecatcher.net");
 define("TITLE_COLOR", "");
@@ -41,6 +41,7 @@ define("MIN_MAGNITUDE_M", "4.0");
 define("MIN_MAGNITUDE_H", "3.0");
 define("MAX_NUM_TRIGGER", "500");
 define("FORUM_QA_MERGED_MODE", true);
+define("USE_STOPFORUMSPAM", true);
 
 // CMC have default global preferences
 define("GLOBAL_PREFS_DEFAULT", "<global_preferences>\n"
@@ -673,19 +674,24 @@ function disguise_curl($url)
 
 function show_trigger($hostid, $heading, $owner=false)
 {
-
    if ($hostid<1) return;
+
    // make a table of triggers for this host
    $tr = null;
    $colorPing = "\"#999999\"";
-   $db = BoincDb::get();
+
+   $db = BoincDb::get(true);
+
+   if (!$db) {
+	   print " error in BoincDb::get instance<br>";
+   }
 
    $result=$db->do_query("select count(*) from qcn_showhostlocation where hostid=$hostid");
    $bShowHostLocation = false;
-   if ($result && mysql_num_rows($result)>0) {
-      $row=mysql_fetch_array($result);
+   if ($result && _mysql_num_rows($result)>0) {
+      $row=_mysql_fetch_array($result);
       if ($row[0] == 1) $bShowHostLocation = true;
-      mysql_free_result($result);
+      _mysql_free_result($result);
    }
 
    // if not $owner just show lat/lng rounded to .01 so we're not showing exact addresses of participants!
@@ -706,13 +712,17 @@ function show_trigger($hostid, $heading, $owner=false)
        . "             LEFT JOIN qcn_sensor s ON t.qcn_sensorid = s.id "
        . "             LEFT JOIN qcn_quake q ON t.qcn_quakeid = q.id "
        . "WHERE hostid=$hostid order by time_trigger desc limit " . MAX_NUM_TRIGGER;
-   $result=$db->do_query($sql);
+
+   $result = $db->do_query($sql);
+
    $j = 0;
 
-   if ($result && mysql_num_rows($result)>0) {  // we found some records
+   if ($result && _mysql_num_rows($result)>0) {  // we found some records
+
       $i = 0;
       $j = 0;
-      while($row=mysql_fetch_array($result)) {
+
+      while($row=_mysql_fetch_array($result)) {
          if ($row[17]==1) { // it's a ping record
            $strTableFont = "<font color=$colorPing>";
            $strFontEnd = "</font>";
@@ -725,7 +735,7 @@ function show_trigger($hostid, $heading, $owner=false)
            $lat = $row[8];
            $lon = $row[9];
 
-   if ($j == 0) {
+           if ($j == 0) {
 
 // Plot sensor location (for first trigger only before printing the table of triggers)
     start_table();
@@ -760,10 +770,10 @@ function show_trigger($hostid, $heading, $owner=false)
              <th>Sensor Type</th>
              <th>Version</th>
              <th>GeoIP?</th>";
-    if ($owner) {
+            if ($owner) {
     echo "
              <th>OS</th>";
-    }
+            }
     echo "
              <th>WU CPU Time</th>
              <th>WU Run Time</th>
@@ -771,8 +781,9 @@ function show_trigger($hostid, $heading, $owner=false)
              <th>View</th>
              <th>Quake</th>
          </tr>";
-      $j = 1;
-         } }
+              $j = 1;
+	   }
+	 }
      
          $elev = $row[18]; // level/elevation data
 
@@ -869,17 +880,18 @@ mysql> select * from qcn_level;
               </font></tr>";
        //} // dumb logic to suppress ping triggers?
       }
-   } else {
-    start_table();
-    if ($owner) {
-       echo "<tr><td><a href=edit_host_info_form.php?hostid=".$hostid.">Click Here To Verify or Select Locations For This Computer</a></td></tr>\n"; 
-    }
-    echo "<tr><th align=\"left\">No recent triggers found in database.</th></tr></table>\n";
+     } else {
+       start_table();
+       if ($owner) {
+         echo "<tr><td><a href=edit_host_info_form.php?hostid=".$hostid.">Click Here To Verify or Select Locations For This Computer</a></td></tr>\n"; 
+     }
+
+     echo "<tr><th align=\"left\">No recent triggers found in database.</th></tr></table>\n";
+
+     _mysql_free_result($result);
    }
 
    end_table();
-
-
 
 }
 

@@ -26,8 +26,8 @@ if ($hostid) {
 else { // get the first host record for this user i.e. they may be a new user
   $sql = "SELECT id FROM host WHERE userid=" . $db->base_escape_string($user->id) . " ORDER BY id DESC LIMIT 1";
   $result=$db->do_query($sql);
-  if ($result && mysql_num_rows($result)>0) {  // we found some records
-     if ($row=mysql_fetch_array($result)) {
+  if ($result && _mysql_num_rows($result)>0) {  // we found some records
+     if ($row=_mysql_fetch_array($result)) {
        $hostid = $row[0];
      }
   }
@@ -47,22 +47,23 @@ if (!$hostid || !$host || $host->userid != $user->id)
 
 // first off get the sensor types
 $sqlsensor = "select id,description from qcn_level order by id";
-$result = mysql_query($sqlsensor);
+//$result = mysqli_query($sqlsensor);
+$result = $db->do_query($sqlsensor);
 $i = 0;
 $arrLevel = array();
 if ($result) {
-    while ($res = mysql_fetch_array($result)) {
+    while ($res = mysqli_fetch_array($result)) {
        $arrLevel[$i] = $res;
        $i++;
     }
-    mysql_free_result($result);
+    _mysql_free_result($result);
 }
 $clvlmax = sizeof($arrLevel) - 1;
 
 // get host qcn_showhostlocation info
 $result = $db->do_query("select count(hostid) from qcn_showhostlocation where hostid=" . $db->base_escape_string($hostid));
-  if ($result && mysql_num_rows($result)>0) {  // we found some records
-     if ($row=mysql_fetch_array($result)) {
+  if ($result && _mysql_num_rows($result)>0) {  // we found some records
+     if ($row=_mysql_fetch_array($result)) {
        $bMapExact = $row[0];
      }
   }
@@ -96,9 +97,9 @@ if (!$hll || !$buserset)
   // now ipaddr should be just the first 3, lookup in our table
   $sql = "SELECT latitude,longitude FROM qcn_geo_ipaddr WHERE ipaddr='" . $db->base_escape_string($ipaddr) . "'";
   $result=$db->do_query($sql);
-  if ($result && mysql_num_rows($result)>0) {  // we found some records
+  if ($result && _mysql_num_rows($result)>0) {  // we found some records
      // seed the startlat & startlng
-     if ($row=mysql_fetch_array($result)) {
+     if ($row=_mysql_fetch_array($result)) {
        $startlat = $row[0];
        $startlng = $row[1];
      }

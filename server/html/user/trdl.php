@@ -1,4 +1,5 @@
 <?php
+require_once("../inc/boinc_db.inc");
 require_once("../inc/util.inc");
 require_once("../inc/db.inc");
 require_once("../inc/sqlquerystring.inc");
@@ -6,10 +7,14 @@ require_once("../project/common.inc");
 
 db_init();
 
-set_time_limit(600);
+error_reporting(E_ALL ^ E_WARNING);
 
 // make sure they're logged in
 $user = get_logged_in_user(true);
+
+$db = BoincDb::get();
+
+set_time_limit(600);
 
 // if no querystring then we are coming in "fresh" so just show a small subset ie usgs-detected quakes
 $bNoQuery = ($_SERVER["QUERY_STRING"] == null);
@@ -25,8 +30,9 @@ $auth = true;
 $try_replica = false;
 $unixtimeArchive = mktime(0, 0, 0, date("n"), 1, date("Y")) - (60*24*3600); 
 $queryCount = 0;
+$config = get_config();
 
-    $config = get_config();
+/*
         $user = parse_config($config, "<db_user>");
         $pass = parse_config($config, "<db_passwd>");
     $host = null;
@@ -43,6 +49,8 @@ $queryCount = 0;
     if (!$link) {
         return 1;
     }
+ */
+
 $db_name = parse_config($config, "<db_name>");
 $db_archive = "";
 
@@ -74,24 +82,24 @@ FROM REPLACE_DB.qcn_trigger t LEFT OUTER JOIN sensor.qcn_quake q ON t.qcn_quakei
 // sort order options: tta/d  hosta/d  maga/d lata/d lona/d
 // get the archive time
 $queryTime = "SELECT value_int+1 as archive_time FROM sensor.qcn_constant WHERE description='ArchiveTime'";
-$result = mysql_query($queryTime);
+$result = _mysql_query($queryTime);
 if ($result) {
-  $row = mysql_fetch_row($result);
+  $row = _mysql_fetch_row($result);
   $unixtimeArchive = $row[0];
-  mysql_free_result($result);
+  _mysql_free_result($result);
 }
 
 // first off get the sensor types
 $sqlsensor = "select id,description from qcn_sensor order by id";
-$result = mysql_query($sqlsensor);
+$result = _mysql_query($sqlsensor);
 $i = 0;
 $arrSensor = array();
 if ($result) {
-    while ($res = mysql_fetch_array($result)) {
+    while ($res = _mysql_fetch_array($result)) {
        $arrSensor[$i] = $res;
        $i++;
     }
-    mysql_free_result($result);
+    _mysql_free_result($result);
 }
 
 $detail = null;
@@ -117,7 +125,6 @@ $bUseHost = get_int("cbUseHost", true);
 $bDownloadAll = get_int("cbDownloadAll", true);
 $strHostID = get_int("HostID", true);
 $strHostName = get_str("HostName", true);
-
 $quake_mag_min = get_str("quake_mag_min", true);
 $qcn_quake_mag_min = get_str("qcn_quake_mag_min", true);
 
@@ -192,9 +199,13 @@ if (!$sortOrder) $sortOrder = "ttd";  // triger time desc is default sort order
 
 if ($bDownloadAll)
 {
-$nresults = 1e9;
+    $nresults = 1e9;
 }
+
 if (!$nresults) $nresults = 200;
+
+// print "<br>HEY -- the maximum number of results is $nresults<br><br>";
+
 if ($nresults) {
     $entries_to_show = $nresults;
 } else {
@@ -762,9 +773,9 @@ if ($bUseCSV) {
 $bResultShow = false;
 // do an unbuffered query for huge selections
 if ($bDownloadAll)
-  $result = mysql_unbuffered_query($main_query);
+  $result = _mysql_unbuffered_query($main_query);  // <-- THIS IS A PROBLEM
 else
-  $result = mysql_query($main_query);
+  $result = _mysql_query($main_query);
 
 if ($result) {
 $arrSensor = array();
@@ -782,7 +793,7 @@ $arrSensor = array();
     $ie = 0;
     $mag_last=0;
     $queryCount = 0;
-    while ($res = mysql_fetch_object($result)) {
+    while ($res = _mysql_fetch_object($result)) {
         
         if ($bUseCSV && $ftmp) {
            fwrite($ftmp, qcn_trigger_detail_csv($res,$auth,$user));
@@ -813,7 +824,7 @@ if ($bDownloadAll) {
 }
 
     end_table();
-    mysql_free_result($result);
+    _mysql_free_result($result);
     if ($plot_map=="y") {
       $file_out = BASEPATH."/qcnwp/earthquakes/view/.temp.map.".rand(0,10000);
       $flocs = fopen($file_out,'w'); 
@@ -1197,10 +1208,10 @@ global $unixtimeArchive;
 
 function query_count($myquery) {
         $count_query = "select count(*) as cnt from ( $myquery ) mydb ";
-        $result = mysql_query($count_query);
+        $result = _mysql_query($count_query);
         if (!$result) return 0;
-        $res = mysql_fetch_object($result);
-        mysql_free_result($result);
+        $res = _mysql_fetch_object($result);
+        _mysql_free_result($result);
         return $res->cnt;
 }
 

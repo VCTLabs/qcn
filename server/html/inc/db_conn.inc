@@ -63,14 +63,18 @@ class DbConn {
     //
     function do_query($q) {
         global $generating_xml;
-        $q = str_replace('DBNAME', $this->db_name, $q);
-        //echo "query: $q<br>\n";
-        if (MYSQLI) {
+
+	//print "DO_Query is: $q<br>";
+
+	$q = str_replace('DBNAME', $this->db_name, $q);
+
+	if (MYSQLI) {
             $ret = $this->db_conn->query($q);
-        } else {
+	} else {
             $ret = mysql_query($q, $this->db_conn);
         }
-        if (!$ret) {
+
+	if (!$ret) {
             if (!$generating_xml) {
                 echo "Database Error<br>\n";
             }
@@ -79,7 +83,8 @@ class DbConn {
             //echo "</pre>query: $q\n";
             return null;
         }
-        return $ret;
+
+	return $ret;
     }
 
     // # rows affected by last query

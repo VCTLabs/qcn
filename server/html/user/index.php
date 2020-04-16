@@ -87,6 +87,7 @@ function show_nav() {
     echo "<div class=\"mainnav\">
         <h2 class=headline>About ".PROJECT."</h2>
     ";
+echo "<p><strong>Please Note: The Quake-Catcher Network is NOT accepting new computer participants at this time, as no more processing power is needed, and no Boinc credits will be earned.</strong></p><p><strong>Only school groups with sensors provided by the Quake-Catcher Network can sign up at this time.</strong></p><p><strong>Thank you.</strong></p>";
      echo "
         The Quake Catcher Network (QCN) is a research project that uses Internet-connected
         computers to do research, education, and outreach in seismology.
@@ -94,10 +95,10 @@ function show_nav() {
         on your computer.  Currently only certain Mac (OS X) PPC and Intel laptops are supported --
         recent ones which have a built-in accelerometer.  You can also buy an external USB accelerometer.
         <p>
-        QCN is based at the CalTech Division of Geological and Planetary Sciences (GPS).  From 2007 to 2015 QCN was based at the  Stanford University School of Earth Sciences.
+        QCN is based at the University of Southern California (USC). From 2015 to 2016, QCN was based at the Caltech Divisien of Geological and Planetary Sciences (GPS).  From 2007 to 2015 QCN was based at the Stanford University School of Earth Sciences.
         <ul>
         <li> <A HREF=\"" . BASEURL . "/index.php\">Quake Catcher Network Home Page</A>
-        <li> <A HREF=\"" . BASEURL . "/about-qcn/contact-us\">Project Personnel</A>
+        <li> <A HREF=\"" . BASEURL . "/help/contact_us\">Project Personnel</A>
         </ul>
        ";
 
